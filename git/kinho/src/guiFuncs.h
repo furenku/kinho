@@ -1,0 +1,1 @@
+/home/furenku/git/openFrameworks/apps/KINHOF/kinho/src/guiFuncs.h
