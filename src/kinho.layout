@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_layout_file>
+	<ActiveTarget name="Release" />
+	<File name="src/archive.cpp" open="1" top="0" tabpos="6">
+		<Cursor position="262" topLine="0" />
+	</File>
+	<File name="src/archive.h" open="1" top="1" tabpos="2">
+		<Cursor position="23062" topLine="101" />
+	</File>
+	<File name="src/baseGUIObjects.h" open="0" top="0" tabpos="1">
+		<Cursor position="12472" topLine="145" />
+	</File>
+	<File name="src/control.h" open="0" top="0" tabpos="4">
+		<Cursor position="5613" topLine="0" />
+	</File>
+	<File name="src/controllers.h" open="1" top="0" tabpos="1">
+		<Cursor position="3489" topLine="18" />
+	</File>
+	<File name="src/editor.h" open="0" top="0" tabpos="19">
+		<Cursor position="499" topLine="0" />
+	</File>
+	<File name="src/general.cpp" open="0" top="0" tabpos="16">
+		<Cursor position="0" topLine="0" />
+	</File>
+	<File name="src/geometryWidgets.h" open="0" top="0" tabpos="0">
+		<Cursor position="358" topLine="9" />
+	</File>
+	<File name="src/guiFuncs.h" open="0" top="0" tabpos="13">
+		<Cursor position="314" topLine="0" />
+	</File>
+	<File name="src/guiObjects.h" open="0" top="0" tabpos="2">
+		<Cursor position="3750" topLine="45" />
+	</File>
+	<File name="src/guiVideoObjects.h" open="0" top="0" tabpos="6">
+		<Cursor position="9491" topLine="50" />
+	</File>
+	<File name="src/kVideoPlayer.cpp" open="0" top="0" tabpos="24">
+		<Cursor position="0" topLine="0" />
+	</File>
+	<File name="src/kVideoPlayer.h" open="0" top="0" tabpos="22">
+		<Cursor position="2983" topLine="0" />
+	</File>
+	<File name="src/library.cpp" open="1" top="0" tabpos="10">
+		<Cursor position="4724" topLine="19" />
+	</File>
+	<File name="src/library.h" open="1" top="0" tabpos="9">
+		<Cursor position="1048" topLine="0" />
+	</File>
+	<File name="src/main.cpp" open="1" top="0" tabpos="4">
+		<Cursor position="415" topLine="0" />
+	</File>
+	<File name="src/mainClasses.h" open="0" top="0" tabpos="9">
+		<Cursor position="12897" topLine="60" />
+	</File>
+	<File name="src/ontologies.cpp" open="1" top="0" tabpos="8">
+		<Cursor position="0" topLine="0" />
+	</File>
+	<File name="src/ontologies.h" open="1" top="0" tabpos="7">
+		<Cursor position="358" topLine="0" />
+	</File>
+	<File name="src/outputs.h" open="0" top="0" tabpos="12">
+		<Cursor position="5258" topLine="0" />
+	</File>
+	<File name="src/scenes.cpp" open="0" top="0" tabpos="13">
+		<Cursor position="0" topLine="0" />
+	</File>
+	<File name="src/scenes.h" open="0" top="0" tabpos="14">
+		<Cursor position="11594" topLine="24" />
+	</File>
+	<File name="src/session.cpp" open="0" top="0" tabpos="16">
+		<Cursor position="0" topLine="0" />
+	</File>
+	<File name="src/session.h" open="0" top="0" tabpos="17">
+		<Cursor position="0" topLine="0" />
+	</File>
+	<File name="src/storage.cpp" open="0" top="0" tabpos="17">
+		<Cursor position="10529" topLine="0" />
+	</File>
+	<File name="src/storage.h" open="0" top="0" tabpos="15">
+		<Cursor position="10464" topLine="0" />
+	</File>
+	<File name="src/testApp.cpp" open="1" top="0" tabpos="3">
+		<Cursor position="11859" topLine="55" />
+	</File>
+	<File name="src/testApp.h" open="1" top="0" tabpos="5">
+		<Cursor position="3945" topLine="52" />
+	</File>
+	<File name="src/video.h" open="0" top="0" tabpos="23">
+		<Cursor position="420" topLine="0" />
+	</File>
+	<File name="src/videoObjects.h" open="0" top="0" tabpos="8">
+		<Cursor position="0" topLine="0" />
+	</File>
+	<File name="src/videoStorage.cpp" open="0" top="0" tabpos="4">
+		<Cursor position="2550" topLine="0" />
+	</File>
+	<File name="src/videoStorage.h" open="0" top="0" tabpos="14">
+		<Cursor position="3339" topLine="16" />
+	</File>
+	<File name="src/views.h" open="1" top="0" tabpos="11">
+		<Cursor position="35340" topLine="0" />
+	</File>
+</CodeBlocks_layout_file>
