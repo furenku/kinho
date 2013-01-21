@@ -455,6 +455,7 @@ class DBManager: public Storage {
         //atts
         shared_ptr<XMLManager> xml;
         string xmlFile;
+
 };
 
 

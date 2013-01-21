@@ -165,7 +165,7 @@ class PlayClip: public Functor {
         }
 
         void execute() {
-            output->changeClip ( scene->getCurrentClip()->getClip()->getFilename() );
+            output->changeClip ( scene->getCurrentClip()->getFilename() );
             output->play();
         }
 

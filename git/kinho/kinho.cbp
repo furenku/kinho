@@ -6,7 +6,7 @@
 		<Option makefile_is_custom="1" />
 		<Option pch_mode="2" />
 		<Option compiler="gcc" />
-		<Option virtualFolders="addons/;src/;addons/ofxXmlSettings/src/;build config/;src/gui/;src/browse/;src/main/;src/app/;src/video/;src/control/;src/scenes/;src/outputs/;src/ctl/;" />
+		<Option virtualFolders="addons/;src/;src/scheduling/;addons/ofxXmlSettings/src/;build config/;src/gui/;src/browse/;src/main/;src/app/;src/video/;src/control/;src/scenes/;src/outputs/;src/ctl/;" />
 		<Build>
 			<Target title="Debug">
 				<Option output="bin/$(PROJECT_NAME)_debug" prefix_auto="1" extension_auto="1" />
@@ -131,6 +131,18 @@
 		</Unit>
 		<Unit filename="src/testApp.h">
 			<Option virtualFolder="src/" />
+		</Unit>
+		<Unit filename="src/threadedClock.cpp">
+			<Option virtualFolder="src/scheduling/" />
+		</Unit>
+		<Unit filename="src/threadedClock.h">
+			<Option virtualFolder="src/scheduling/" />
+		</Unit>
+		<Unit filename="src/timeline.cpp">
+			<Option virtualFolder="src/scheduling/" />
+		</Unit>
+		<Unit filename="src/timeline.h">
+			<Option virtualFolder="src/scheduling/" />
 		</Unit>
 		<Unit filename="src/video.h">
 			<Option virtualFolder="src/video/" />

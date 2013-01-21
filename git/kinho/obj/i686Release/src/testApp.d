@@ -261,7 +261,8 @@ obj/i686Release/./src/testApp.d: src/testApp.cpp src/testApp.h \
  ../../../addons/goThreadedVideo2/src/goThreadedVideo2.h src/session.h \
  src/ontologies.h src/library.h src/guiVideoObjects.h src/views.h \
  src/archive.h src/control.h src/scenes.h src/editor.h src/outputs.h \
- src/controllers.h
+ src/controllers.h src/threadedClock.h \
+ ../../../addons/ofxThread/src/ofxThread.h
 
 src/testApp.h:
 
@@ -868,3 +869,7 @@ src/editor.h:
 src/outputs.h:
 
 src/controllers.h:
+
+src/threadedClock.h:
+
+../../../addons/ofxThread/src/ofxThread.h:

@@ -53,33 +53,52 @@ ofTrueTypeFont kinhoFont;
 
 
 
-
+//shared_ptr<threadedClock> clock;
 
 //--------------------------------------------------------------
 
+
+
+
 void testApp::setup(){
+//	synth.loadSound("sounds/1085.wav");
+//	synth.setVolume(0.75f);
 
 ofSetWindowPosition(1280,0);
 
+
+
+//{ THREADED CLOCK:
+
+
+    // Set up clock
+    tempo = 120.0f;
+    clock.notesPerPhrase = 4;
+    clock.start(this);
+
+
+
+
+//}
 
 //{ NEWCLIPS
     clip1 = make_shared<Clip>();
     clip1->setName("blood01");
     clip1->setDescription("blood flowing");
 //    clip->tags.push_back("tag1");
-    clip1 -> setFilename("movies/new/blood01.mov");
+    clip1 -> setFilename("movies/new/blood01.mp4");
 
     clip2 = make_shared<Clip>();
     clip2->setName("blood02");
     clip2->setDescription("blood flowing");
 //    clip->tags.push_back("tag1");
-    clip2->setFilename("movies/new/blood02.mov");
+    clip2->setFilename("movies/new/blood02.mp4");
 
     clip3 = make_shared<Clip>();
     clip3->setName("blood03");
     clip3->setDescription("blood flowing");
 //    clip->tags.push_back("tag1");
-    clip3->setFilename("movies/new/blood03.mov");
+    clip3->setFilename("movies/new/blood03.mp4");
 /*
     clip4 = make_shared<Clip>();
     clip4->setName("fingers");
@@ -548,6 +567,7 @@ cout << ofGetElapsedTimeMillis() << "  : "<<c->getEvent() << endl;
 //--------------------------------------------------------------
 void testApp::update(){
 
+//	ofSoundUpdate();
 
 }
 
@@ -696,3 +716,27 @@ void testApp::dragEvent(ofDragInfo dragInfo){
 
 
 
+
+
+
+
+//--------------------------------------------------------------
+void testApp::phraseComplete()
+{
+//synth.play();
+cout << "fuckjye" << endl;
+cout << ofGetElapsedTimeMillis()%100 << endl;
+
+    // Play sounds here
+    // This is called exactly at every four measures at 125bpm
+
+}
+
+//--------------------------------------------------------------
+int testApp::calculateNoteDuration()
+{
+
+    // Translate tempo to milliseconds
+    return (int)floor(60000.0000f / tempo);
+
+}

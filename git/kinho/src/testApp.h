@@ -39,6 +39,7 @@
 #include "outputs.h"
 #include "controllers.h"
 //#include "scene.h"
+#include "threadedClock.h"
 //#include "kinho.h"
 
 //#include "ontologies.h"
@@ -194,6 +195,25 @@ public:
     float red;
     float green;
     float blue;
+
+
+    void phraseComplete();
+
+    // Gets note duration
+    int calculateNoteDuration();
+
+    private:
+
+    // Clock
+    threadedClock clock;
+    float tempo;
+
+
+    ofSoundPlayer  synth;
+    float 		    synthPosition;
+
+
+
 };
 
 
