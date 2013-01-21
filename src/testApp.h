@@ -1,4 +1,4 @@
-
+#define TEMPO 6000
 
 #include "ofMain.h"
 #include "ofxXmlSettings.h"
@@ -198,20 +198,7 @@ public:
     float blue;
 
 
-    void phraseComplete();
 
-    // Gets note duration
-    int calculateNoteDuration();
-
-    private:
-
-    // Clock
-    threadedClock clock;
-    float tempo;
-
-
-    ofSoundPlayer  synth;
-    float 		    synthPosition;
 
 
 

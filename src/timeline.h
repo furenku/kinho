@@ -14,6 +14,40 @@
 #define timeline_h
 
 
+    class ClockManager {
+        public:
+            ClockManager(){
+                lastMs = 0;
+
+                // Set up clock
+                tempo = 60000.0f;
+                clock.ticksPerBar = 1;
+                clock.start(this);
+
+
+            }
+
+            int lastMs;
+
+            //--------------------------------------------------------------
+            void barDone() {
+                cout << ofGetElapsedTimeMillis() - lastMs << endl;
+                lastMs = ofGetElapsedTimeMillis();
+            }
+
+            //--------------------------------------------------------------
+            int calculateTickDuration()
+            {
+                // Translate tempo to milliseconds
+                return (int)floor(60000.0000f / tempo);
+            }
+
+
+            private:
+
+            threadedClock clock;
+            float tempo;
+    };
 
 
 class Timeline: public DBManager {

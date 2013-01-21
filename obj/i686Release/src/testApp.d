@@ -262,7 +262,7 @@ obj/i686Release/./src/testApp.d: src/testApp.cpp src/testApp.h \
  src/ontologies.h src/library.h src/guiVideoObjects.h src/views.h \
  src/archive.h src/control.h src/scenes.h src/editor.h src/outputs.h \
  src/controllers.h src/threadedClock.h \
- ../../../addons/ofxThread/src/ofxThread.h
+ ../../../addons/ofxThread/src/ofxThread.h src/timeline.h
 
 src/testApp.h:
 
@@ -873,3 +873,5 @@ src/controllers.h:
 src/threadedClock.h:
 
 ../../../addons/ofxThread/src/ofxThread.h:
+
+src/timeline.h:

@@ -58,7 +58,7 @@ ofTrueTypeFont kinhoFont;
 //--------------------------------------------------------------
 
 
-
+shared_ptr<ClockManager> clockmngr;
 
 void testApp::setup(){
 //	synth.loadSound("sounds/1085.wav");
@@ -70,13 +70,7 @@ ofSetWindowPosition(1280,0);
 
 //{ THREADED CLOCK:
 
-
-    // Set up clock
-    tempo = 120.0f;
-    clock.notesPerPhrase = 4;
-    clock.start(this);
-
-
+clockmngr = make_shared<ClockManager>( );
 
 
 //}
@@ -717,26 +711,3 @@ void testApp::dragEvent(ofDragInfo dragInfo){
 
 
 
-
-
-
-//--------------------------------------------------------------
-void testApp::phraseComplete()
-{
-//synth.play();
-cout << "fuckjye" << endl;
-cout << ofGetElapsedTimeMillis()%100 << endl;
-
-    // Play sounds here
-    // This is called exactly at every four measures at 125bpm
-
-}
-
-//--------------------------------------------------------------
-int testApp::calculateNoteDuration()
-{
-
-    // Translate tempo to milliseconds
-    return (int)floor(60000.0000f / tempo);
-
-}

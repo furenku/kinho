@@ -1,14 +1,19 @@
 /*
 THANKS TO: LetsGoOutside (http://forum.openframeworks.cc/index.php?topic=3404.0)
 */
+
+
+
     #ifndef _THREADED_CLOCK
     #define _THREADED_CLOCK
 
-    #include "ofMain.h"
+    #include "general.h"
+
+
     #define OF_ADDON_USING_OFXTHREAD
     #include "ofxThread.h"
 
-    class testApp;
+    class ClockManager;
 
     class threadedClock : public ofxThread
     {
@@ -16,19 +21,22 @@ THANKS TO: LetsGoOutside (http://forum.openframeworks.cc/index.php?topic=3404.0)
     public:
 
         // Timing properties
-        int notes;
-        int notesPerPhrase;
+        int ticks;
+        int ticksPerBar;
 
         // Methods
-        void start(testApp* p);
+        void start( ClockManager * parent );
         void stop();
         void threadedFunction();
 
     private:
 
-        // Parent application
-        testApp* parent;
+        // clock manager
+        ClockManager * parent;
 
     };
+
+
+
 
     #endif

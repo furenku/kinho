@@ -1,5 +1,6 @@
 obj/i686Release/./src/threadedClock.d: src/threadedClock.cpp \
- src/threadedClock.h ../../../libs/openFrameworks/ofMain.h \
+ src/threadedClock.h src/general.h src/storage.h \
+ ../../../libs/openFrameworks/ofMain.h \
  ../../../libs/openFrameworks/utils/ofConstants.h \
  ../../../libs/glew/include/GL/glew.h \
  ../../../libs/tess2/include/tesselator.h \
@@ -253,18 +254,22 @@ obj/i686Release/./src/threadedClock.d: src/threadedClock.cpp \
  ../../../libs/openFrameworks/video/ofGstVideoPlayer.h \
  ../../../libs/openFrameworks/3d/ofCamera.h \
  ../../../libs/openFrameworks/3d/ofEasyCam.h \
- ../../../addons/ofxThread/src/ofxThread.h src/testApp.h \
  ../../../addons/ofxXmlSettings/src/ofxXmlSettings.h \
- ../../../addons/ofxXmlSettings/libs/tinyxml.h \
- ../../../addons/ofxDirList/src/ofxDirList.h src/video.h src/storage.h \
- src/videoStorage.h src/general.h src/mainClasses.h src/baseGUIObjects.h \
- src/guiObjects.h src/geometryWidgets.h src/kVideoPlayer.h \
+ ../../../addons/ofxXmlSettings/libs/tinyxml.h src/videoStorage.h \
+ ../../../addons/ofxThread/src/ofxThread.h src/testApp.h \
+ ../../../addons/ofxDirList/src/ofxDirList.h src/video.h \
+ src/mainClasses.h src/baseGUIObjects.h src/guiObjects.h \
+ src/geometryWidgets.h src/kVideoPlayer.h \
  ../../../addons/goThreadedVideo2/src/goThreadedVideo2.h src/session.h \
  src/ontologies.h src/library.h src/guiVideoObjects.h src/views.h \
  src/archive.h src/control.h src/scenes.h src/editor.h src/outputs.h \
- src/controllers.h
+ src/controllers.h src/timeline.h
 
 src/threadedClock.h:
+
+src/general.h:
+
+src/storage.h:
 
 ../../../libs/openFrameworks/ofMain.h:
 
@@ -822,23 +827,19 @@ src/threadedClock.h:
 
 ../../../libs/openFrameworks/3d/ofEasyCam.h:
 
-../../../addons/ofxThread/src/ofxThread.h:
-
-src/testApp.h:
-
 ../../../addons/ofxXmlSettings/src/ofxXmlSettings.h:
 
 ../../../addons/ofxXmlSettings/libs/tinyxml.h:
 
+src/videoStorage.h:
+
+../../../addons/ofxThread/src/ofxThread.h:
+
+src/testApp.h:
+
 ../../../addons/ofxDirList/src/ofxDirList.h:
 
 src/video.h:
-
-src/storage.h:
-
-src/videoStorage.h:
-
-src/general.h:
 
 src/mainClasses.h:
 
@@ -873,3 +874,5 @@ src/editor.h:
 src/outputs.h:
 
 src/controllers.h:
+
+src/timeline.h:

@@ -1,3 +1,6 @@
+#pragma once
+
+
 #include "geometryWidgets.h"
 
 class kAudioView: virtual public kRectView{

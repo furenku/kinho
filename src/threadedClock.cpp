@@ -3,14 +3,14 @@
     #include "testApp.h"
 
     //--------------------------------------------------------------
-    void threadedClock::start(testApp* p)
+    void threadedClock::start( ClockManager * _p)
     {
 
         // Get parent app
-        parent = p;
+        parent = _p;
 
         // Initialize note count
-        notes = 0;
+        ticks = 0;
 
         // Start thread -- blocking, venbose
         startThread(true, false);
@@ -39,23 +39,23 @@
             {
 
                 // Increment count and unlock
-                notes++;
+                ticks++;
                 unlock();
 
                 // Phrase complete
-                if (notes >= notesPerPhrase)
+                if (ticks >= ticksPerBar)
                 {
 
                     // Call function on main app
-                    parent->phraseComplete();
+                    parent->barDone();
 
                     // Reset count
-                    notes = 0;
+                    ticks = 0;
 
                 }
 
                 // Sleep for duration of one note
-                ofSleepMillis(parent->calculateNoteDuration());
+                ofSleepMillis(parent->calculateTickDuration());
 
             }
 
