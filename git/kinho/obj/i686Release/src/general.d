@@ -1,1 +1,1 @@
-/home/furenku/git/openFrameworks/apps/KINHOF/kinho/obj/i686Release/src/general.d
+obj/i686Release/./src/general.d: src/general.cpp

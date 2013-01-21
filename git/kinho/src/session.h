@@ -1,1 +1,15 @@
-/home/furenku/git/openFrameworks/apps/KINHOF/kinho/src/session.h
+/*
+SessionManager
+    string
+        XMLpath
+        libraryFile
+        kinhoFile
+            scenes
+            outputs
+        archivoFile
+    ()
+        type="sessionManager"
+
+    ()
+
+    */

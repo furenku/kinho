@@ -1,1 +1,48 @@
-/home/furenku/git/openFrameworks/apps/KINHOF/kinho/bin/data/xml/archivo01test.xml~
+<CATEGORY>
+	<NAME>
+	"cat 1"
+	</NAME>
+
+	<TAG>
+		<NAME>
+		"tag 1"
+		</NAME>
+		<CLIP>
+		"clip 1"
+		</CLIP>
+	</TAG>
+
+	<TAG>
+		<NAME>
+		"tag 2"
+		</NAME>
+		<CLIP>
+		"clip 2"
+		</CLIP>
+	</TAG>
+
+</CATEGORY>
+<CATEGORY>
+	<NAME>
+	"cat 2"
+	</NAME>
+
+	<TAG>
+		<NAME>
+		"tag 3"
+		</NAME>
+		<CLIP>
+		"clip 2"
+		</CLIP>
+	</TAG>
+
+	<TAG>
+		<NAME>
+		"tag 4"
+		</NAME>
+		<CLIP>
+		"clip 1"
+		</CLIP>
+	</TAG>
+
+</CATEGORY>

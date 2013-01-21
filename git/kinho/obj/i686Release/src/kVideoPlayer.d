@@ -1,1 +1,1 @@
-/home/furenku/git/openFrameworks/apps/KINHOF/kinho/obj/i686Release/src/kVideoPlayer.d
+obj/i686Release/./src/kVideoPlayer.d: src/kVideoPlayer.cpp

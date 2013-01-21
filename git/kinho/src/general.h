@@ -1,1 +1,7 @@
-/home/furenku/git/openFrameworks/apps/KINHOF/kinho/src/general.h
+#pragma once
+
+//#include "testApp.h"
+#include "storage.h"
+#include "videoStorage.h"
+
+

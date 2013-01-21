@@ -1,1 +1,1 @@
-/home/furenku/git/openFrameworks/apps/KINHOF/kinho/src/session.cpp
+#include "session.h"

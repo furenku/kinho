@@ -1,1 +1,1 @@
-/home/furenku/git/openFrameworks/apps/KINHOF/kinho/obj/i686Release/src/guiObjects.d
+obj/i686Release/./src/guiObjects.d: src/guiObjects.cpp

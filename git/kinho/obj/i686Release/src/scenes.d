@@ -1,1 +1,1 @@
-/home/furenku/git/openFrameworks/apps/KINHOF/kinho/obj/i686Release/src/scenes.d
+obj/i686Release/./src/scenes.d: src/scenes.cpp
