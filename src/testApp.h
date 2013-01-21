@@ -40,6 +40,7 @@
 #include "controllers.h"
 //#include "scene.h"
 #include "threadedClock.h"
+#include "timeline.h"
 //#include "kinho.h"
 
 //#include "ontologies.h"
