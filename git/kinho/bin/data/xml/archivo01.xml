@@ -1,0 +1,24 @@
+<CATEGORY>
+	<NAME>
+	"cat 1"
+	</NAME>
+
+	<TAG>
+		<NAME>
+		"tag 1"
+		</NAME>
+		<CLIP>
+		"clip 1"
+		</CLIP>
+	</TAG>
+
+	<TAG>
+		<NAME>
+		"tag 2"
+		</NAME>
+		<CLIP>
+		"clip 2"
+		</CLIP>
+	</TAG>
+
+</CATEGORY>

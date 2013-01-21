@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6" />
+	<Project>
+		<Option title="kinho" />
+		<Option makefile_is_custom="1" />
+		<Option pch_mode="2" />
+		<Option compiler="gcc" />
+		<Option virtualFolders="addons/;src/;addons/ofxXmlSettings/src/;build config/;src/gui/;src/browse/;src/main/;src/app/;src/video/;src/control/;src/scenes/;src/outputs/;src/ctl/;" />
+		<Build>
+			<Target title="Debug">
+				<Option output="bin/$(PROJECT_NAME)_debug" prefix_auto="1" extension_auto="1" />
+				<Option working_dir="bin" />
+				<Option object_output="obj/Debug/" />
+				<Option external_deps="../../../libs/openFrameworksCompiled/lib/linux/libopenFrameworksDebug.a;" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Option projectLinkerOptionsRelation="2" />
+			</Target>
+			<Target title="Release">
+				<Option output="bin/$(PROJECT_NAME)" prefix_auto="1" extension_auto="1" />
+				<Option working_dir="bin" />
+				<Option object_output="obj/Release/" />
+				<Option external_deps="../../../libs/openFrameworksCompiled/lib/linux/libopenFrameworks.a;" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Option projectLinkerOptionsRelation="2" />
+			</Target>
+		</Build>
+		<Unit filename="../../../addons/ofxXmlSettings/src/ofxXmlSettings.cpp">
+			<Option virtualFolder="addons/ofxXmlSettings/src" />
+		</Unit>
+		<Unit filename="../../../addons/ofxXmlSettings/src/ofxXmlSettings.h">
+			<Option virtualFolder="addons/ofxXmlSettings/src" />
+		</Unit>
+		<Unit filename="config.make">
+			<Option virtualFolder="build config" />
+		</Unit>
+		<Unit filename="src/archive.cpp">
+			<Option virtualFolder="src/browse/" />
+		</Unit>
+		<Unit filename="src/archive.h">
+			<Option virtualFolder="src/browse/" />
+		</Unit>
+		<Unit filename="src/baseGUIObjects.h">
+			<Option virtualFolder="src/gui/" />
+		</Unit>
+		<Unit filename="src/control.h">
+			<Option virtualFolder="src/control/" />
+		</Unit>
+		<Unit filename="src/controllers.h">
+			<Option virtualFolder="src/ctl/" />
+		</Unit>
+		<Unit filename="src/db.h">
+			<Option virtualFolder="src/gui/" />
+		</Unit>
+		<Unit filename="src/editor.h">
+			<Option virtualFolder="src/browse/" />
+		</Unit>
+		<Unit filename="src/general.cpp">
+			<Option virtualFolder="src/main/" />
+		</Unit>
+		<Unit filename="src/general.h">
+			<Option virtualFolder="src/main/" />
+		</Unit>
+		<Unit filename="src/geometryWidgets.h">
+			<Option virtualFolder="src/gui/" />
+		</Unit>
+		<Unit filename="src/guiCtl.h">
+			<Option virtualFolder="src/gui/" />
+		</Unit>
+		<Unit filename="src/guiFuncs.h">
+			<Option virtualFolder="src/gui/" />
+		</Unit>
+		<Unit filename="src/guiObjects.h">
+			<Option virtualFolder="src/gui/" />
+		</Unit>
+		<Unit filename="src/guiVideoObjects.h">
+			<Option virtualFolder="src/gui/" />
+		</Unit>
+		<Unit filename="src/kVideoPlayer.cpp">
+			<Option virtualFolder="src/video/" />
+		</Unit>
+		<Unit filename="src/kVideoPlayer.h">
+			<Option virtualFolder="src/video/" />
+		</Unit>
+		<Unit filename="src/library.cpp">
+			<Option virtualFolder="src/browse/" />
+		</Unit>
+		<Unit filename="src/library.h">
+			<Option virtualFolder="src/browse/" />
+		</Unit>
+		<Unit filename="src/main.cpp">
+			<Option virtualFolder="src/" />
+		</Unit>
+		<Unit filename="src/mainClasses.h">
+			<Option virtualFolder="src/main/" />
+		</Unit>
+		<Unit filename="src/model.h">
+			<Option virtualFolder="src/gui/" />
+		</Unit>
+		<Unit filename="src/ontologies.cpp">
+			<Option virtualFolder="src/browse/" />
+		</Unit>
+		<Unit filename="src/ontologies.h">
+			<Option virtualFolder="src/browse/" />
+		</Unit>
+		<Unit filename="src/outputs.h">
+			<Option virtualFolder="src/outputs/" />
+		</Unit>
+		<Unit filename="src/scenes.cpp">
+			<Option virtualFolder="src/scenes/" />
+		</Unit>
+		<Unit filename="src/scenes.h">
+			<Option virtualFolder="src/scenes/" />
+		</Unit>
+		<Unit filename="src/session.cpp">
+			<Option virtualFolder="src/app/" />
+		</Unit>
+		<Unit filename="src/session.h">
+			<Option virtualFolder="src/app/" />
+		</Unit>
+		<Unit filename="src/storage.cpp">
+			<Option virtualFolder="src/main/" />
+		</Unit>
+		<Unit filename="src/storage.h">
+			<Option virtualFolder="src/main/" />
+		</Unit>
+		<Unit filename="src/testApp.cpp">
+			<Option virtualFolder="src/" />
+		</Unit>
+		<Unit filename="src/testApp.h">
+			<Option virtualFolder="src/" />
+		</Unit>
+		<Unit filename="src/video.h">
+			<Option virtualFolder="src/video/" />
+		</Unit>
+		<Unit filename="src/videoObjects.h">
+			<Option virtualFolder="src/gui/" />
+		</Unit>
+		<Unit filename="src/videoStorage.cpp">
+			<Option virtualFolder="src/video/" />
+		</Unit>
+		<Unit filename="src/videoStorage.h">
+			<Option virtualFolder="src/video/" />
+		</Unit>
+		<Unit filename="src/views.h">
+			<Option virtualFolder="src/gui/" />
+		</Unit>
+		<Extensions>
+			<code_completion />
+			<envvars />
+			<debugger />
+		</Extensions>
+	</Project>
+</CodeBlocks_project_file>
