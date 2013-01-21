@@ -67,11 +67,11 @@ void testApp::setup(){
 ofSetWindowPosition(1280,0);
 
 
-
-//{ THREADED CLOCK:
+//{ CLOCK:
 
 clockmngr = make_shared<ClockManager>( );
 
+clockmngr->addTimeline( make_shared<Timeline>() );
 
 //}
 

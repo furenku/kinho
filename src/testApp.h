@@ -37,6 +37,7 @@
 
 #include "editor.h"
 #include "outputs.h"
+#include "functors.h"
 #include "controllers.h"
 //#include "scene.h"
 #include "threadedClock.h"

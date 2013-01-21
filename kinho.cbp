@@ -57,6 +57,9 @@
 		<Unit filename="src/editor.h">
 			<Option virtualFolder="src/browse/" />
 		</Unit>
+		<Unit filename="src/functors.h">
+			<Option virtualFolder="src/ctl/" />
+		</Unit>
 		<Unit filename="src/general.cpp">
 			<Option virtualFolder="src/main/" />
 		</Unit>

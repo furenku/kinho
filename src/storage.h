@@ -3,7 +3,6 @@
 #ifndef storage_h
 #define storage_h
 
-//{ clases
 
 
 #include <map>
@@ -567,11 +566,6 @@ class TestDB: public DBManager {
 
 
 
-
-
-
-
-//}
 
 
 

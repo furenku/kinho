@@ -263,7 +263,7 @@ obj/i686Release/./src/threadedClock.d: src/threadedClock.cpp \
  ../../../addons/goThreadedVideo2/src/goThreadedVideo2.h src/session.h \
  src/ontologies.h src/library.h src/guiVideoObjects.h src/views.h \
  src/archive.h src/control.h src/scenes.h src/editor.h src/outputs.h \
- src/controllers.h src/timeline.h
+ src/functors.h src/controllers.h src/timeline.h
 
 src/threadedClock.h:
 
@@ -872,6 +872,8 @@ src/scenes.h:
 src/editor.h:
 
 src/outputs.h:
+
+src/functors.h:
 
 src/controllers.h:
 
