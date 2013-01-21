@@ -20,7 +20,7 @@
                 lastMs = 0;
 
                 // Set up clock
-                tempo = 60000.0f;
+                tempo = 6000.0f;
                 clock.ticksPerBar = 1;
                 clock.start(this);
 

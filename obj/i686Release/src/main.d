@@ -262,7 +262,7 @@ obj/i686Release/./src/main.d: src/main.cpp \
  src/ontologies.h src/library.h src/guiVideoObjects.h src/views.h \
  src/archive.h src/control.h src/scenes.h src/editor.h src/outputs.h \
  src/controllers.h src/threadedClock.h \
- ../../../addons/ofxThread/src/ofxThread.h \
+ ../../../addons/ofxThread/src/ofxThread.h src/timeline.h \
  ../../../libs/openFrameworks/app/ofAppGlutWindow.h \
  ../../../libs/openFrameworks/app/ofAppBaseWindow.h
 
@@ -875,6 +875,8 @@ src/controllers.h:
 src/threadedClock.h:
 
 ../../../addons/ofxThread/src/ofxThread.h:
+
+src/timeline.h:
 
 ../../../libs/openFrameworks/app/ofAppGlutWindow.h:
 
