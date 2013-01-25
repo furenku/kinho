@@ -446,6 +446,12 @@ class kWidget: virtual public MouseObject, virtual public DrawObject {
             view->widgetRects[ shared_from_this() ] = rect;
         }
 
+        void setRectInViewNoArrange(){
+            ofRectangle rect = ofRectangle(x,y,width,height);
+            view->widgetRects[ shared_from_this() ] = rect;
+        }
+
+
         ofRectangle getRectInView() {
 
             if(view) {

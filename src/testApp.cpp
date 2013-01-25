@@ -715,7 +715,7 @@ kinhoFont.drawString("KINHO", ofGetWidth()/2-100, 30 );
 //kinhoFont.drawString(ofToString(ofGetFrameRate(),2), 30, 30 );
 
 ofSetColor(142,32,222);
-//ofDrawBitmapString(ofToString(ofGetFrameRate(),2),50,100);
+ofDrawBitmapString(ofToString(ofGetFrameRate(),2),50,100);
 ////ofDrawBitmapString(ofToString(ofGetElapsedTimeMillis()%int(0.5f*1000)),10,60);
 
 

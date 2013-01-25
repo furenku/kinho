@@ -8,13 +8,13 @@
 		<Cursor position="8948" topLine="0" />
 	</File>
 	<File name="src/baseGUIObjects.h" open="1" top="0" tabpos="2">
-		<Cursor position="15163" topLine="107" />
+		<Cursor position="12291" topLine="127" />
 	</File>
 	<File name="src/control.h" open="0" top="0" tabpos="18">
 		<Cursor position="5613" topLine="0" />
 	</File>
-	<File name="src/controllers.h" open="1" top="1" tabpos="8">
-		<Cursor position="1753" topLine="15" />
+	<File name="src/controllers.h" open="0" top="0" tabpos="8">
+		<Cursor position="1753" topLine="0" />
 	</File>
 	<File name="src/editor.h" open="0" top="0" tabpos="19">
 		<Cursor position="499" topLine="0" />
@@ -29,7 +29,7 @@
 		<Cursor position="0" topLine="0" />
 	</File>
 	<File name="src/geometryWidgets.h" open="0" top="0" tabpos="0">
-		<Cursor position="358" topLine="9" />
+		<Cursor position="358" topLine="0" />
 	</File>
 	<File name="src/guiFuncs.h" open="0" top="0" tabpos="13">
 		<Cursor position="314" topLine="0" />
@@ -55,8 +55,8 @@
 	<File name="src/main.cpp" open="0" top="0" tabpos="4">
 		<Cursor position="415" topLine="0" />
 	</File>
-	<File name="src/mainClasses.h" open="0" top="0" tabpos="22">
-		<Cursor position="469" topLine="0" />
+	<File name="src/mainClasses.h" open="1" top="0" tabpos="8">
+		<Cursor position="634" topLine="0" />
 	</File>
 	<File name="src/ontologies.cpp" open="0" top="0" tabpos="8">
 		<Cursor position="0" topLine="0" />
@@ -86,7 +86,7 @@
 		<Cursor position="2978" topLine="11" />
 	</File>
 	<File name="src/testApp.cpp" open="1" top="0" tabpos="4">
-		<Cursor position="12662" topLine="76" />
+		<Cursor position="12662" topLine="60" />
 	</File>
 	<File name="src/testApp.h" open="1" top="0" tabpos="3">
 		<Cursor position="0" topLine="45" />
@@ -100,8 +100,8 @@
 	<File name="src/timeline.cpp" open="0" top="0" tabpos="20">
 		<Cursor position="0" topLine="0" />
 	</File>
-	<File name="src/timeline.h" open="1" top="0" tabpos="5">
-		<Cursor position="13009" topLine="101" />
+	<File name="src/timeline.h" open="1" top="1" tabpos="5">
+		<Cursor position="14555" topLine="76" />
 	</File>
 	<File name="src/video.h" open="0" top="0" tabpos="23">
 		<Cursor position="420" topLine="0" />

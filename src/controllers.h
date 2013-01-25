@@ -223,15 +223,25 @@ shared_ptr<ClockManager> clockmngr;
         }
 
         void makeTimelines(){
+            clockmngr = make_shared<ClockManager>( );
 
             timeline = make_shared<TimelineTrack>( );
-            timeline->set(100,100,600,300);
+            timeline->set(100,100,600,100);
             timeline->applySettings(settings);
             timeline->setWidgetSettings(settings2);
             timeline->initialize();
             timeline->arrangeWidgets();
 
+            clockmngr->addTimeline( timeline );
 
+            timeline = make_shared<TimelineTrack>( );
+            timeline->set(100,200,600,100);
+            timeline->applySettings(settings);
+            timeline->setWidgetSettings(settings2);
+            timeline->initialize();
+            timeline->arrangeWidgets();
+
+            clockmngr->addTimeline( timeline );
 
 //            timelines = make_shared<TimelineView>( );
 //            timelines->set(100,100,600,300);
@@ -240,11 +250,8 @@ shared_ptr<ClockManager> clockmngr;
 //            timelines->initialize();
 //            timelines->arrangeWidgets();
 
-            //{ CLOCK:
 
-            clockmngr = make_shared<ClockManager>( );
 
-            clockmngr->addTimeline( timeline );
 
             //}
         }
