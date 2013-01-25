@@ -58,22 +58,102 @@ ofTrueTypeFont kinhoFont;
 //--------------------------------------------------------------
 
 
-shared_ptr<ClockManager> clockmngr;
 
 void testApp::setup(){
+
+    cout << "listening for osc messages on port " << PORT << "\n";
+	receiver.setup( PORT );
+
+	current_msg_string = 0;
+	mouseX = 0;
+	mouseY = 0;
+	mouseButtonState = "";
+
+//{ pruebas mapa:
+
+
+
+//std::map<long,int> timelineEvents;
+//timelineEvents[1111]=10;
+//timelineEvents[2222]=20;
+//timelineEvents[2552]=20;
+//timelineEvents[3333]=30;
+//timelineEvents[4444]=40;
+//
+//std::map<long,int>::iterator afterPlayhead, beforeEnd, walker;
+//afterPlayhead = timelineEvents.lower_bound(1000);  beforeEnd= timelineEvents.upper_bound(4460);
+//
+//beforeEnd--;
+//
+////afterPlayhead--;
+//int dist = distance( afterPlayhead, beforeEnd ) + 1;
+//
+//walker = afterPlayhead;
+//
+//
+//if(afterPlayhead != timelineEvents.end() && beforeEnd != timelineEvents.end()) {}
+//    for (int i=0; i<dist; i++)
+//    {
+//        if(walker!=timelineEvents.end())
+//            cout << walker->first << endl;
+//        walker++;
+//    }
+
+
+
+
+////  std::map<long,int> mymap;
+////  mymap[1111]=10;
+////  mymap[2222]=20;
+////  mymap[2552]=20;
+////  mymap[3333]=30;
+////  mymap[4444]=40;
+////
+////long test;
+//
+////std::map<long,int>::iterator lo, hi, walker;
+////  hi = mymap.lower_bound(1000); lo = mymap.upper_bound(4460);
+////lo--;
+////
+////cout << lo->first <<"  " << hi->first<< endl;
+////
+//////lo--;
+////int dist = distance( hi, lo ) +1;
+////
+////walker = hi;
+////
+////
+////if(lo != mymap.end() && hi != mymap.end()) {}
+////    for (int i=0; i<dist; i++)
+////    {
+////        if(walker!=mymap.end())
+////            cout << walker->first << endl;
+////        walker++;
+////    }
+
+
+//}
+
+
+//  std::pair<std::map<char,int>::iterator,std::map<char,int>::iterator> ret;
+//  ret = mymap.equal_range('b');
+//
+//  std::cout << "lower bound points to: ";
+//  std::cout << ret.first->first << " => " << ret.first->second << '\n';
+//
+//  std::cout << "upper bound points to: ";
+//  std::cout << ret.second->first << " => " << ret.second->second << '\n';
+
+//  return 0;
+
+
 //	synth.loadSound("sounds/1085.wav");
 //	synth.setVolume(0.75f);
 
 ofSetWindowPosition(1280,0);
 
 
-//{ CLOCK:
 
-clockmngr = make_shared<ClockManager>( );
-
-clockmngr->addTimeline( make_shared<Timeline>() );
-
-//}
 
 //{ NEWCLIPS
     clip1 = make_shared<Clip>();
@@ -148,9 +228,9 @@ clockmngr->addTimeline( make_shared<Timeline>() );
 
     ctl = make_shared<MainController>( );
 
-    ctl->makeLogins();
-
-
+//    ctl->makeLogins();
+//
+//
 
 
 
@@ -560,6 +640,68 @@ cout << ofGetElapsedTimeMillis() << "  : "<<c->getEvent() << endl;
 
 //--------------------------------------------------------------
 void testApp::update(){
+
+
+// hide old messages
+	for ( int i=0; i<NUM_MSG_STRINGS; i++ )
+	{
+		if ( timers[i] < ofGetElapsedTimef() )
+			msg_strings[i] = "";
+	}
+
+	// check for waiting messages
+	while( receiver.hasWaitingMessages() )
+	{
+		// get the next message
+		ofxOscMessage m;
+		receiver.getNextMessage( &m );
+
+		// check for mouse moved message
+		if ( m.getAddress() == "/kinho/tweet" )
+		{
+
+			cout << m.getArgAsString( 0 ) << endl;
+			// both the arguments are int32's
+			mouseX = m.getArgAsInt32( 0 );
+			mouseY = m.getArgAsInt32( 1 );
+		}
+		// check for mouse button message
+		else if ( m.getAddress() == "/mouse/button" )
+		{
+			// the single argument is a string
+			mouseButtonState = m.getArgAsString( 0 ) ;
+		}
+		else
+		{
+			// unrecognized message: display on the bottom of the screen
+			string msg_string;
+			msg_string = m.getAddress();
+			msg_string += ": ";
+			for ( int i=0; i<m.getNumArgs(); i++ )
+			{
+				// get the argument type
+				msg_string += m.getArgTypeName( i );
+				msg_string += ":";
+				// display the argument - make sure we get the right type
+				if( m.getArgType( i ) == OFXOSC_TYPE_INT32 )
+					msg_string += ofToString( m.getArgAsInt32( i ) );
+				else if( m.getArgType( i ) == OFXOSC_TYPE_FLOAT )
+					msg_string += ofToString( m.getArgAsFloat( i ) );
+				else if( m.getArgType( i ) == OFXOSC_TYPE_STRING )
+					msg_string += m.getArgAsString( i );
+				else
+					msg_string += "unknown";
+			}
+			// add to the list of strings to display
+			msg_strings[current_msg_string] = msg_string;
+			timers[current_msg_string] = ofGetElapsedTimef() + 5.0f;
+			current_msg_string = ( current_msg_string + 1 ) % NUM_MSG_STRINGS;
+			// clear the next line
+			msg_strings[current_msg_string] = "";
+		}
+
+	}
+
 
 //	ofSoundUpdate();
 

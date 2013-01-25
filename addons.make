@@ -1,3 +1,4 @@
+ofxOsc
 goThreadedVideo2
 ofxXmlSettings
 ofxDirList

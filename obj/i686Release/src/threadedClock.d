@@ -257,13 +257,29 @@ obj/i686Release/./src/threadedClock.d: src/threadedClock.cpp \
  ../../../addons/ofxXmlSettings/src/ofxXmlSettings.h \
  ../../../addons/ofxXmlSettings/libs/tinyxml.h src/videoStorage.h \
  ../../../addons/ofxThread/src/ofxThread.h src/testApp.h \
- ../../../addons/ofxDirList/src/ofxDirList.h src/video.h \
- src/mainClasses.h src/baseGUIObjects.h src/guiObjects.h \
+ ../../../addons/ofxDirList/src/ofxDirList.h \
+ ../../../addons/ofxOsc/src/ofxOsc.h \
+ ../../../addons/ofxOsc/src/ofxOscArg.h \
+ ../../../addons/ofxOsc/src/ofxOscMessage.h \
+ ../../../addons/ofxOsc/src/ofxOscSender.h \
+ ../../../addons/ofxOsc/libs/oscpack/include/osc/OscTypes.h \
+ ../../../addons/ofxOsc/libs/oscpack/include/osc/OscOutboundPacketStream.h \
+ ../../../addons/ofxOsc/libs/oscpack/include/osc/OscTypes.h \
+ ../../../addons/ofxOsc/libs/oscpack/include/osc/OscException.h \
+ ../../../addons/ofxOsc/src/ofxOscBundle.h \
+ ../../../addons/ofxOsc/src/ofxOscReceiver.h \
+ ../../../addons/ofxOsc/libs/oscpack/include/osc/OscPacketListener.h \
+ ../../../addons/ofxOsc/libs/oscpack/include/osc/OscReceivedElements.h \
+ ../../../addons/ofxOsc/libs/oscpack/include/osc/../ip/PacketListener.h \
+ ../../../addons/ofxOsc/libs/oscpack/include/ip/UdpSocket.h \
+ ../../../addons/ofxOsc/libs/oscpack/include/ip/NetworkingUtils.h \
+ ../../../addons/ofxOsc/libs/oscpack/include/ip/IpEndpointName.h \
+ src/video.h src/mainClasses.h src/baseGUIObjects.h src/guiObjects.h \
  src/geometryWidgets.h src/kVideoPlayer.h \
  ../../../addons/goThreadedVideo2/src/goThreadedVideo2.h src/session.h \
  src/ontologies.h src/library.h src/guiVideoObjects.h src/views.h \
  src/archive.h src/control.h src/scenes.h src/editor.h src/outputs.h \
- src/functors.h src/controllers.h src/timeline.h
+ src/functors.h src/timeline.h src/controllers.h
 
 src/threadedClock.h:
 
@@ -839,6 +855,38 @@ src/testApp.h:
 
 ../../../addons/ofxDirList/src/ofxDirList.h:
 
+../../../addons/ofxOsc/src/ofxOsc.h:
+
+../../../addons/ofxOsc/src/ofxOscArg.h:
+
+../../../addons/ofxOsc/src/ofxOscMessage.h:
+
+../../../addons/ofxOsc/src/ofxOscSender.h:
+
+../../../addons/ofxOsc/libs/oscpack/include/osc/OscTypes.h:
+
+../../../addons/ofxOsc/libs/oscpack/include/osc/OscOutboundPacketStream.h:
+
+../../../addons/ofxOsc/libs/oscpack/include/osc/OscTypes.h:
+
+../../../addons/ofxOsc/libs/oscpack/include/osc/OscException.h:
+
+../../../addons/ofxOsc/src/ofxOscBundle.h:
+
+../../../addons/ofxOsc/src/ofxOscReceiver.h:
+
+../../../addons/ofxOsc/libs/oscpack/include/osc/OscPacketListener.h:
+
+../../../addons/ofxOsc/libs/oscpack/include/osc/OscReceivedElements.h:
+
+../../../addons/ofxOsc/libs/oscpack/include/osc/../ip/PacketListener.h:
+
+../../../addons/ofxOsc/libs/oscpack/include/ip/UdpSocket.h:
+
+../../../addons/ofxOsc/libs/oscpack/include/ip/NetworkingUtils.h:
+
+../../../addons/ofxOsc/libs/oscpack/include/ip/IpEndpointName.h:
+
 src/video.h:
 
 src/mainClasses.h:
@@ -875,6 +923,6 @@ src/outputs.h:
 
 src/functors.h:
 
-src/controllers.h:
-
 src/timeline.h:
+
+src/controllers.h:

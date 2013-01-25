@@ -1,4 +1,6 @@
-obj/i686Release/./src/testApp.d: src/testApp.cpp src/testApp.h \
+obj/i686Release/addons/ofxOsc/src/ofxOscReceiver.d: \
+ ../../../addons/ofxOsc/src/ofxOscReceiver.cpp \
+ ../../../addons/ofxOsc/src/ofxOscReceiver.h \
  ../../../libs/openFrameworks/ofMain.h \
  ../../../libs/openFrameworks/utils/ofConstants.h \
  ../../../libs/glew/include/GL/glew.h \
@@ -253,36 +255,19 @@ obj/i686Release/./src/testApp.d: src/testApp.cpp src/testApp.h \
  ../../../libs/openFrameworks/video/ofGstVideoPlayer.h \
  ../../../libs/openFrameworks/3d/ofCamera.h \
  ../../../libs/openFrameworks/3d/ofEasyCam.h \
- ../../../addons/ofxXmlSettings/src/ofxXmlSettings.h \
- ../../../addons/ofxXmlSettings/libs/tinyxml.h \
- ../../../addons/ofxDirList/src/ofxDirList.h \
- ../../../addons/ofxOsc/src/ofxOsc.h \
- ../../../addons/ofxOsc/src/ofxOscArg.h \
- ../../../addons/ofxOsc/src/ofxOscMessage.h \
- ../../../addons/ofxOsc/src/ofxOscSender.h \
  ../../../addons/ofxOsc/libs/oscpack/include/osc/OscTypes.h \
- ../../../addons/ofxOsc/libs/oscpack/include/osc/OscOutboundPacketStream.h \
- ../../../addons/ofxOsc/libs/oscpack/include/osc/OscTypes.h \
- ../../../addons/ofxOsc/libs/oscpack/include/osc/OscException.h \
- ../../../addons/ofxOsc/src/ofxOscBundle.h \
- ../../../addons/ofxOsc/src/ofxOscReceiver.h \
  ../../../addons/ofxOsc/libs/oscpack/include/osc/OscPacketListener.h \
  ../../../addons/ofxOsc/libs/oscpack/include/osc/OscReceivedElements.h \
+ ../../../addons/ofxOsc/libs/oscpack/include/osc/OscTypes.h \
+ ../../../addons/ofxOsc/libs/oscpack/include/osc/OscException.h \
  ../../../addons/ofxOsc/libs/oscpack/include/osc/../ip/PacketListener.h \
  ../../../addons/ofxOsc/libs/oscpack/include/ip/UdpSocket.h \
  ../../../addons/ofxOsc/libs/oscpack/include/ip/NetworkingUtils.h \
  ../../../addons/ofxOsc/libs/oscpack/include/ip/IpEndpointName.h \
- src/video.h src/storage.h src/videoStorage.h src/general.h \
- src/mainClasses.h src/baseGUIObjects.h src/guiObjects.h \
- src/geometryWidgets.h src/kVideoPlayer.h \
- ../../../addons/goThreadedVideo2/src/goThreadedVideo2.h src/session.h \
- src/ontologies.h src/library.h src/guiVideoObjects.h src/views.h \
- src/archive.h src/control.h src/scenes.h src/editor.h src/outputs.h \
- src/functors.h src/threadedClock.h \
- ../../../addons/ofxThread/src/ofxThread.h src/timeline.h \
- src/controllers.h
+ ../../../addons/ofxOsc/src/ofxOscMessage.h \
+ ../../../addons/ofxOsc/src/ofxOscArg.h
 
-src/testApp.h:
+../../../addons/ofxOsc/src/ofxOscReceiver.h:
 
 ../../../libs/openFrameworks/ofMain.h:
 
@@ -840,35 +825,15 @@ src/testApp.h:
 
 ../../../libs/openFrameworks/3d/ofEasyCam.h:
 
-../../../addons/ofxXmlSettings/src/ofxXmlSettings.h:
-
-../../../addons/ofxXmlSettings/libs/tinyxml.h:
-
-../../../addons/ofxDirList/src/ofxDirList.h:
-
-../../../addons/ofxOsc/src/ofxOsc.h:
-
-../../../addons/ofxOsc/src/ofxOscArg.h:
-
-../../../addons/ofxOsc/src/ofxOscMessage.h:
-
-../../../addons/ofxOsc/src/ofxOscSender.h:
-
 ../../../addons/ofxOsc/libs/oscpack/include/osc/OscTypes.h:
-
-../../../addons/ofxOsc/libs/oscpack/include/osc/OscOutboundPacketStream.h:
-
-../../../addons/ofxOsc/libs/oscpack/include/osc/OscTypes.h:
-
-../../../addons/ofxOsc/libs/oscpack/include/osc/OscException.h:
-
-../../../addons/ofxOsc/src/ofxOscBundle.h:
-
-../../../addons/ofxOsc/src/ofxOscReceiver.h:
 
 ../../../addons/ofxOsc/libs/oscpack/include/osc/OscPacketListener.h:
 
 ../../../addons/ofxOsc/libs/oscpack/include/osc/OscReceivedElements.h:
+
+../../../addons/ofxOsc/libs/oscpack/include/osc/OscTypes.h:
+
+../../../addons/ofxOsc/libs/oscpack/include/osc/OscException.h:
 
 ../../../addons/ofxOsc/libs/oscpack/include/osc/../ip/PacketListener.h:
 
@@ -878,52 +843,6 @@ src/testApp.h:
 
 ../../../addons/ofxOsc/libs/oscpack/include/ip/IpEndpointName.h:
 
-src/video.h:
+../../../addons/ofxOsc/src/ofxOscMessage.h:
 
-src/storage.h:
-
-src/videoStorage.h:
-
-src/general.h:
-
-src/mainClasses.h:
-
-src/baseGUIObjects.h:
-
-src/guiObjects.h:
-
-src/geometryWidgets.h:
-
-src/kVideoPlayer.h:
-
-../../../addons/goThreadedVideo2/src/goThreadedVideo2.h:
-
-src/session.h:
-
-src/ontologies.h:
-
-src/library.h:
-
-src/guiVideoObjects.h:
-
-src/views.h:
-
-src/archive.h:
-
-src/control.h:
-
-src/scenes.h:
-
-src/editor.h:
-
-src/outputs.h:
-
-src/functors.h:
-
-src/threadedClock.h:
-
-../../../addons/ofxThread/src/ofxThread.h:
-
-src/timeline.h:
-
-src/controllers.h:
+../../../addons/ofxOsc/src/ofxOscArg.h:

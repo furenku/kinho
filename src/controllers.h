@@ -56,6 +56,147 @@ class MainController: public Controller {
 
 
 
+
+
+shared_ptr<TimelineView> timelines;
+shared_ptr<TimelineTrack> timeline;
+shared_ptr<ClockManager> clockmngr;
+
+        void createModules() {
+            makeTimelines();
+
+/*
+            vector<string>c = loadAllClips();
+            vector<string> clips;
+            vector<string> thumbs;
+            for (int i=0; i<c.size(); i++)
+            {
+            	int index = c[i].find(".");
+
+            	if ( c[i].substr(index+1, 3) == "png" )
+                    thumbs.push_back(c[i]);
+                else
+                    clips.push_back(c[i]);
+            }
+
+            for (int i=0; i<clips.size(); i++)
+            {
+
+                shared_ptr<Clip> clip= make_shared<Clip>();
+                string clipName = clips[i].substr(clips[i].find_last_of("/")+1,clips[i].find(".")-1);
+//                cout << clipName << endl;
+                clip->setName( clipName );
+                clip->setDescription("...");
+            //    clip->tags.push_back("tag1");
+                clip -> setFilename(clips[i]);
+                media.push_back(clip);
+
+            }
+
+            loadSession();
+
+            makeVideoOutput();
+
+            makeEditor();
+            editor->hide();
+            editor->disable();
+
+
+
+            makeArchive();
+
+            //{archive
+
+
+        //    cout << archive->getMedia()[0]->getX() << endl;
+        //
+        //
+//            archive->connect(
+//                archive->getWidgets()[0],
+//                archive->getWidgets()[1]
+//            );
+//
+//            for (int i=0; i<4; i++)
+//            {
+//                archive->setHierarchy(
+//                    archive->getWidgets().back(),
+//                    archive->getWidgets()[i*2]
+//                );
+//            }
+
+            //}
+
+
+            makeLibrary();
+//
+            makeScene();
+
+            scene->hide();
+            scene->disable();
+
+            makeSelected();
+
+
+            makeChooser();
+
+
+
+
+//            login(archive,"release",make_shared<Say>("yeah"));//make_shared<DragLibraryItem>( library,archive ));
+
+//            login(archive,"release",make_shared<Say>("yeah"));//make_shared<DragLibraryItem>( library,archive ));
+
+            //{ outputs
+
+
+//            outputs = make_shared<Outputs>( );
+
+//            vector<shared_ptr<ofRectangle> > rectvec;
+//
+//            rectvec.push_back( make_shared<ofRectangle>(900,650,280,130) );
+////            rectvec.push_back( make_shared<ofRectangle>(50,50,30,20) );
+//
+//            outputs->addVideoOutput( rectvec );
+//
+//            outputs->getVideoOutput( 0 )->changeClip("movies/fingers.mov");
+//            outputs->getVideoOutput( 0 )->play();
+
+//            login(outputs,"videoEnd", ChangeVideo( playlists, outputs ) );
+            //}
+*/
+        }
+
+        void makeLogins(){
+
+
+            // archive
+            login(archive,"release",make_shared<DragLibraryItem>( library,archive ));
+            login(archive,"addMedia",make_shared<AddMedia>( archive, selected ));
+            login(archive,"openMedia",make_shared<Say>( "openit" ));
+            login(archive,"connectOntology",make_shared<ConnectOntology>( archive, library ));
+            login(archive,"connectClip",make_shared<ConnectOntology>( archive, library ));
+
+            // selected
+            login(selected,"clipDragged",make_shared<SetDraggingClip>(scene,selected));
+
+
+            // scene
+//            login(scene,"release",make_shared<AddSceneClip>(scene, selected));
+            login(scene,"openMedia",make_shared<Say>( "openit" ));
+            login(scene,"playClip",make_shared<PlayClip>( scene,output ));
+            login(scene,"sceneEnd",make_shared<VideoStop>( output ));
+
+            // videoplayer
+            login(output,"videoEnd",make_shared<EndClip>( scene ));
+            login(output,"videoEnd",make_shared<Say>( "endit" ));
+
+
+        }
+
+
+
+
+
         void loadSession() {
             //library
                 // load all video clips
@@ -79,6 +220,33 @@ class MainController: public Controller {
             editor->setWidgetSettings(settings);
             editor->initialize();
             editor->set(50,50,1200,700);
+        }
+
+        void makeTimelines(){
+
+            timeline = make_shared<TimelineTrack>( );
+            timeline->set(100,100,600,300);
+            timeline->applySettings(settings);
+            timeline->setWidgetSettings(settings2);
+            timeline->initialize();
+            timeline->arrangeWidgets();
+
+
+
+//            timelines = make_shared<TimelineView>( );
+//            timelines->set(100,100,600,300);
+//            timelines->applySettings(settings);
+//            timelines->setWidgetSettings(settings2);
+//            timelines->initialize();
+//            timelines->arrangeWidgets();
+
+            //{ CLOCK:
+
+            clockmngr = make_shared<ClockManager>( );
+
+            clockmngr->addTimeline( timeline );
+
+            //}
         }
 
         void makeArchive(){
@@ -257,135 +425,6 @@ class MainController: public Controller {
 
 
         }
-
-        void createModules() {
-
-            vector<string>c = loadAllClips();
-            vector<string> clips;
-            vector<string> thumbs;
-            for (int i=0; i<c.size(); i++)
-            {
-            	int index = c[i].find(".");
-
-            	if ( c[i].substr(index+1, 3) == "png" )
-                    thumbs.push_back(c[i]);
-                else
-                    clips.push_back(c[i]);
-            }
-
-            for (int i=0; i<clips.size(); i++)
-            {
-
-                shared_ptr<Clip> clip= make_shared<Clip>();
-                string clipName = clips[i].substr(clips[i].find_last_of("/")+1,clips[i].find(".")-1);
-//                cout << clipName << endl;
-                clip->setName( clipName );
-                clip->setDescription("...");
-            //    clip->tags.push_back("tag1");
-                clip -> setFilename(clips[i]);
-                media.push_back(clip);
-
-            }
-
-            loadSession();
-
-            makeVideoOutput();
-
-            makeEditor();
-            editor->hide();
-            editor->disable();
-
-
-            makeArchive();
-
-            //{archive
-
-
-        //    cout << archive->getMedia()[0]->getX() << endl;
-        //
-        //
-//            archive->connect(
-//                archive->getWidgets()[0],
-//                archive->getWidgets()[1]
-//            );
-//
-//            for (int i=0; i<4; i++)
-//            {
-//                archive->setHierarchy(
-//                    archive->getWidgets().back(),
-//                    archive->getWidgets()[i*2]
-//                );
-//            }
-
-            //}
-
-
-            makeLibrary();
-//
-            makeScene();
-
-            scene->hide();
-            scene->disable();
-
-            makeSelected();
-
-
-            makeChooser();
-
-
-
-
-//            login(archive,"release",make_shared<Say>("yeah"));//make_shared<DragLibraryItem>( library,archive ));
-
-//            login(archive,"release",make_shared<Say>("yeah"));//make_shared<DragLibraryItem>( library,archive ));
-
-            //{ outputs
-
-
-//            outputs = make_shared<Outputs>( );
-
-//            vector<shared_ptr<ofRectangle> > rectvec;
-//
-//            rectvec.push_back( make_shared<ofRectangle>(900,650,280,130) );
-////            rectvec.push_back( make_shared<ofRectangle>(50,50,30,20) );
-//
-//            outputs->addVideoOutput( rectvec );
-//
-//            outputs->getVideoOutput( 0 )->changeClip("movies/fingers.mov");
-//            outputs->getVideoOutput( 0 )->play();
-
-//            login(outputs,"videoEnd", ChangeVideo( playlists, outputs ) );
-            //}
-
-        }
-
-        void makeLogins(){
-
-
-            // archive
-            login(archive,"release",make_shared<DragLibraryItem>( library,archive ));
-            login(archive,"addMedia",make_shared<AddMedia>( archive, selected ));
-            login(archive,"openMedia",make_shared<Say>( "openit" ));
-            login(archive,"connectOntology",make_shared<ConnectOntology>( archive, library ));
-            login(archive,"connectClip",make_shared<ConnectOntology>( archive, library ));
-
-            // selected
-            login(selected,"clipDragged",make_shared<SetDraggingClip>(scene,selected));
-
-
-            // scene
-//            login(scene,"release",make_shared<AddSceneClip>(scene, selected));
-            login(scene,"openMedia",make_shared<Say>( "openit" ));
-            login(scene,"playClip",make_shared<PlayClip>( scene,output ));
-            login(scene,"sceneEnd",make_shared<VideoStop>( output ));
-
-            // videoplayer
-            login(output,"videoEnd",make_shared<EndClip>( scene ));
-            login(output,"videoEnd",make_shared<Say>( "endit" ));
-
-
-        }
-
 
         vector<shared_ptr<MediaHolder> > media;
         shared_ptr<Editor>  editor;

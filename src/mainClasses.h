@@ -277,7 +277,7 @@ class Observable: public Object, public enable_shared_from_this<Observable> {
         }
 
         virtual void saveEvent(string _cmd){
-            shared_ptr<ofEvent<widgetEvent> > event (new ofEvent<widgetEvent>);
+            shared_ptr<ofEvent<widgetEvent> > event = make_shared< ofEvent<widgetEvent> >();
             events.insert(_cmd, event );
         }
 

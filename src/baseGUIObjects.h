@@ -1524,24 +1524,30 @@ class kRectView: virtual public kView, virtual public kRect{
                 return y + height*0.5f;
             }
             else {
+
                 if(height>0){
 
-                    float newY=y;
+                    float newY=0;
                     float totalHeight=0;
+
+                    for (int i=0; i<widgets.size(); i++)
+                    	if(widgets[i]->height>spacingY)
+                            totalHeight+=widgets[i]->height;
+                        else
+                            totalHeight+=spacingY;
+
                     for (int i=0; i<_i; i++)
-                    	totalHeight+=widgets[i]->height;
+                        if(widgets[i]->height>spacingY)
+                            newY+=widgets[i]->height;
+                        else
+                            newY+=spacingY;
 
-                    totalHeight += widgets[_i]->height;
 
+                    float offsetY = (height - totalHeight)/2;
 
-                    newY = y + (height/2) + totalHeight/2 - widgets[_i]->height;
+                    newY +=  (x + offsetY)+widgets[_i]->height/2;
 
                     return newY;
-
-//                    int noWidgets=widgets.size();
-//                    float step = height / noWidgets;
-//                    float newY = y + step*_i + step/2;
-//                    return newY;
                 }
                 else {
                     cout << "view has 0 h" << endl;

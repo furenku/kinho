@@ -52,7 +52,7 @@
 			<Option virtualFolder="src/ctl/" />
 		</Unit>
 		<Unit filename="src/db.h">
-			<Option virtualFolder="src/gui/" />
+			<Option virtualFolder="src/main/" />
 		</Unit>
 		<Unit filename="src/editor.h">
 			<Option virtualFolder="src/browse/" />

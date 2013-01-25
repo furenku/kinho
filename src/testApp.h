@@ -1,8 +1,19 @@
+#pragma once
+
+
+#ifndef testapp_h
+#define testapp_h
+
+// listen on port 12345
+#define PORT 12345
+#define NUM_MSG_STRINGS 20
+
 #define TEMPO 6000
 
 #include "ofMain.h"
 #include "ofxXmlSettings.h"
 #include "ofxDirList.h"
+#include "ofxOsc.h"
 #include "video.h"
 #include "storage.h"
 #include "videoStorage.h"
@@ -38,19 +49,18 @@
 #include "editor.h"
 #include "outputs.h"
 #include "functors.h"
-#include "controllers.h"
-//#include "scene.h"
 #include "threadedClock.h"
 #include "timeline.h"
+#include "controllers.h"
+//#include "scene.h"
 //#include "kinho.h"
 
 //#include "ontologies.h"
 
 
-#pragma once
 
-#ifndef testapp_h
-#define testapp_h
+
+
 
 
 
@@ -149,6 +159,8 @@ class TSTVW: public kRectView{
 
         string dragBtn;
 };
+
+
 class testApp : public ofBaseApp
 {
 
@@ -199,6 +211,16 @@ public:
     float blue;
 
 
+
+		ofTrueTypeFont		font;
+		ofxOscReceiver	receiver;
+
+		int				current_msg_string;
+		string		msg_strings[NUM_MSG_STRINGS];
+		float			timers[NUM_MSG_STRINGS];
+
+		int				mouseX, mouseY;
+		string			mouseButtonState;
 
 
 
