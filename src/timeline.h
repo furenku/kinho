@@ -1,13 +1,15 @@
+#include "testApp.h"
 
 #pragma once
 
+//#include "ofMain.h"
 
 //#include "ontologies.h"
-#include "mainClasses.h"
-#include "baseGUIObjects.h"
-#include "guiObjects.h"
-#include "guiVideoObjects.h"
-#include "views.h"
+//#include "mainClasses.h"
+//#include "baseGUIObjects.h"
+//#include "guiObjects.h"
+//#include "guiVideoObjects.h"
+//#include "views.h"
 
 
 #ifndef timeline_h
@@ -72,7 +74,81 @@ class NameSayer: public EventTarget {
 
 };
 
+class LogData{
 
+    public:
+
+    LogData(){}
+
+    void setInt( string _key , int _value ){
+        if( ints.find( _key ) != ints.end() ){
+            ints[ _key ] = _value;
+        }
+        else
+            cout << "int not in vector!" << endl;
+    }
+    void setFloat( string _key , float _value ){
+        if( floats.find( _key ) != floats.end() ){
+            floats[ _key ] = _value;
+        }
+        else
+            cout << "float not in vector!" << endl;
+    }
+    void setString( string _key, string _value  ){
+        if( strings.find( _key ) != strings.end() ){
+            strings[ _key ] = _value;
+        }
+        else
+            cout << "string not in vector!" << endl;
+    }
+    void setBool( string _key, bool _value  ){
+        if( bools.find( _key ) != bools.end() ){
+            bools[ _key ] = _value;
+        }
+        else
+            cout << "bool not in vector!" << endl;
+    }
+
+    int getInt( string _key ){
+        if( ints.find( _key ) != ints.end() ){
+            return ints[ _key ];
+        }
+        else
+        return -1;
+    }
+    float getFloat( string _key ){
+        if( floats.find( _key ) != floats.end() ){
+            return floats[ _key ];
+        }
+        else
+        return -1;
+    }
+    string getString( string _key ){
+        if( strings.find( _key ) != strings.end() ){
+            return strings[ _key ];
+        }
+        else
+        return "";
+    }
+    bool getBool( string _key ){
+        if( bools.find( _key ) != bools.end() ){
+            return bools[ _key ];
+        }
+        else
+        return false;
+    }
+
+//    int getIntNo(){     return ints.size();     }
+//    int getFloatNo(){   return strings.size();  }
+//    int getStringNo(){  return strings.size();  }
+//    int getBoolNo(){    return boolean.size();  }
+
+    protected:
+        map<string,int> ints;
+        map<string,float> floats;
+        map<string,string> strings;
+        map<string,bool> bools;
+};
 
 class Event: public StoreObject {
     public:
@@ -86,6 +162,8 @@ class Event: public StoreObject {
             loopTimes = 1;
             loopCount = 0;
             updateTotalDuration();
+            logData = make_shared<LogData>( );
+
         }
 
         void execute(){
@@ -132,7 +210,7 @@ class Event: public StoreObject {
         bool    getTriggered(){     return hasBeenTriggered;    }
         shared_ptr<EventSource> getSource(){ return source;     }
         shared_ptr<EventTarget> getTarget(){ return target;     }
-
+        virtual shared_ptr<LogData> getLogData(){ return logData; }
 
 
         void setDuration( float _duration ) {
@@ -165,6 +243,8 @@ class Event: public StoreObject {
 
         shared_ptr< EventSource > source;
         shared_ptr< EventTarget > target;
+
+        shared_ptr<LogData> logData;
 
 };
 
@@ -254,10 +334,19 @@ class TimelineEventWidget: public TimelineEvent, virtual public kRectView, virtu
 
 };
 
+class Log{
 
+public:
+    void addEntry(long _time, shared_ptr<LogData> _logData){
+        events[_time] = _logData;
+    }
 
+    void saveLog() {
+     // iterate through all maps and print them on target
+    }
 
-
+    map < long, shared_ptr<LogData > > events;
+};
 
 class Timeline: public DBManager, public EventSource, public EventTarget {
 
@@ -274,6 +363,10 @@ class Timeline: public DBManager, public EventSource, public EventTarget {
             scopeStart = 0;
             scopeEnd = 60000;
             scroll = 0;
+
+            log = make_shared<Log>();
+
+            latency = 10;
 
 //            iiinit();
         }
@@ -329,7 +422,6 @@ class Timeline: public DBManager, public EventSource, public EventTarget {
             playHead += _ms;
             playHead %= totalTime;
 
-
             setScopeEnd ( ( playHead - scroll ) + getScopeLength() );
             setScopeStart( playHead - scroll );
 
@@ -343,40 +435,56 @@ class Timeline: public DBManager, public EventSource, public EventTarget {
                 eventTotalDuration = long( event->getTotalDuration() * 1000 );
                 eventTriggered = event->getTriggered();
 
-                eventTriggerLogic( event );
+                if( scopeStart > eventTime ) {
+                    eventTriggerLogic( event );
+                }
+
+
             }
 
         }
 
 
-        void eventTriggerLogic( shared_ptr < TimelineEvent > _event){
+
+        virtual void eventTriggerLogic( shared_ptr < TimelineEvent > _event ){
+
             // if playHead greater than event time but shorter than time + duration
-            if( playHead > eventTime && playHead < eventTime + eventTotalDuration ) {
+            if( scopeStart > eventTime && scopeStart < eventTime + eventTotalDuration ) {
 
                 // check if has been triggered
                 if( !eventTriggered ){
                     // if not trigger it, which locks it from retriggering until it ends
-                    _event->trigger();
+                    triggerEvent( _event );
+
+                    log->addEntry(eventTime, _event->getLogData() );
+
                     _event->setLoopCount( eventLoopCount  + 1 );
                 }
                 else {
-                    // if already triggered, find out if its 'duration' * 1000 has already ended
-                    if( playHead > eventTime + eventLoopCount *eventDuration ){
+                    // if already triggered, find out if its 'duration'  has already ended
+//                    if( playHead > eventTime + (eventLoopCount * eventDuration)*1000 ){
+
+                    if( playHead + latency >= eventTime + eventDuration ){
                         // if so, free it
-                        _event->free();
+                        freeEvent( playHead, _event );
                     }
                 }
             }
-            else{
-                // if still locked, and its 'totalDuration' * 1000 has already ended, free it
-                if( eventTriggered ){
-                    _event->free();
-                    _event->setLoopCount( 0 );
-
-                }
-            }
+//            else if ( scopeStart > eventTime + eventTotalDuration ){
+//                // if still locked, and its 'totalDuration' * 1000 has already ended, free it
+//                if( eventTriggered ){
+//                    _event->free();
+//                }
+//            }
         }
 
+        virtual void triggerEvent( shared_ptr<TimelineEvent> _event){
+            _event->trigger();
+        }
+
+        virtual void freeEvent( long _time,  shared_ptr < TimelineEvent > _event ){
+            _event->free();
+        }
         // get  / set{
 
         long getTotalTime(){ return totalTime; }
@@ -407,15 +515,43 @@ class Timeline: public DBManager, public EventSource, public EventTarget {
         long totalTime;
         long scopeStart, scopeEnd, scroll;
 
+        int latency;
+
         int eventLoopCount;
         long eventTime, eventDuration, eventTotalDuration;
         bool eventTriggered;
+
+        shared_ptr<Log> log;
 
         map < long, shared_ptr<TimelineEvent> > timelineEvents;
         map < long, shared_ptr < TimelineEvent > >::iterator iter;
 
 };
 
+
+
+class ChangeWindowEvent: public TimelineEventWidget{
+    public:
+        ChangeWindowEvent() { init(); }
+
+        void trigger(){
+            Event::trigger();
+            setColor(ofRandomuf()*255,ofRandomuf()*255,ofRandomuf()*255);
+        }
+
+        void stop(){
+            Event::stop();
+            setColor(0,0,0);
+        }
+
+        void setColor( int _r, int _g, int _b ){
+
+            cout << "changeWindow!!" << endl;
+//            (testApp*)ofGetAppPtr() -> setColor(_r,_g,_b);
+        }
+
+//        shared_ptr<testApp> app;
+};
 
 class TimelineTrack: public Timeline, public kRectView {
 
@@ -458,7 +594,7 @@ class TimelineTrack: public Timeline, public kRectView {
             widgetUpdateCounter++;
             widgetUpdateCounter%=8;
 
-            shared_ptr<TimelineEventWidget> w;
+            shared_ptr<ChangeWindowEvent> w;
             long time;
             float newX;
 
@@ -469,15 +605,12 @@ class TimelineTrack: public Timeline, public kRectView {
                 for (iter = timelineEvents.begin(); iter != timelineEvents.end(); iter++) {
 
                     time = iter->first;
-
                     w.reset();
-
-                    w = dynamic_pointer_cast<TimelineEventWidget>( iter->second );
-
+                    w = dynamic_pointer_cast<ChangeWindowEvent>( iter->second );
     //                float oldHeight = w -> getHeight();
+                    long duration = w->getDuration();
 
                     newX = timeToX( time ) * width;
-
                     if(newX>0){
                         rect = w->getRectInView();
 
@@ -486,13 +619,16 @@ class TimelineTrack: public Timeline, public kRectView {
                         w->setX(newX+x);
                         w->arrangeWidgets();
                     }
-
                     if( time - scopeStart <= 0 ) {
+
+                        // delete widget:
                         w->hide();
                         w->disable();
                         w->disableUpdate();
-                        removeWidget(w);
-                        timelineEvents.erase(time);
+
+//                        freeEvent( time, w );
+//                        removeWidget(w);
+//                        timelineEvents.erase(time);
 //
                     }
 
@@ -679,7 +815,6 @@ class TimelineTrack: public Timeline, public kRectView {
             return pct;
         }
 
-
         // mouse
         void mousePressed(ofMouseEventArgs & mouse){
 
@@ -703,7 +838,7 @@ class TimelineTrack: public Timeline, public kRectView {
                     makeMarker( xToTime(mouse.x) );
                 }
 
-                shared_ptr<TimelineEventWidget>  event = make_shared<TimelineEventWidget>( );
+                shared_ptr< ChangeWindowEvent >  event = make_shared<ChangeWindowEvent>( );
 
                 float duration;
 
@@ -727,6 +862,52 @@ class TimelineTrack: public Timeline, public kRectView {
                 addEvent( event , timeMs );
 
             }
+        }
+
+
+        void eventTriggerLogic( shared_ptr < TimelineEvent > _event ){
+
+            // if playHead greater than event time but shorter than time + duration
+            if( scopeStart > eventTime && scopeStart < eventTime + eventTotalDuration ) {
+
+                // check if has been triggered
+                if( !eventTriggered ){
+                    // if not trigger it, which locks it from retriggering until it ends
+                    triggerEvent( dynamic_pointer_cast<ChangeWindowEvent>( _event ) );
+
+                    log->addEntry(eventTime, _event->getLogData() );
+
+                    _event->setLoopCount( eventLoopCount  + 1 );
+                }
+                else {
+                    // if already triggered, find out if its 'duration'  has already ended
+//                    if( playHead > eventTime + (eventLoopCount * eventDuration)*1000 ){
+
+                    if( playHead + latency >= eventTime + eventDuration ){
+                        // if so, free it
+                        freeEvent( playHead, _event );
+                    }
+                }
+            }
+//            else if ( scopeStart > eventTime + eventTotalDuration ){
+//                // if still locked, and its 'totalDuration' * 1000 has already ended, free it
+//                if( eventTriggered ){
+//                    _event->free();
+//                }
+//            }
+        }
+
+        void triggerEvent( shared_ptr<ChangeWindowEvent> _event){
+            dynamic_pointer_cast<ChangeWindowEvent>(_event)->trigger();
+        }
+
+        void freeEvent( long _time, shared_ptr < TimelineEvent > _event ){
+            cout << "endit!!!!!!!" << endl;
+            _event->free();
+            removeWidget( dynamic_pointer_cast< TimelineEventWidget > ( _event ) );
+            timelineEvents.erase( _time );
+
+
         }
 
         //callback

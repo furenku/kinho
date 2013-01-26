@@ -46,6 +46,8 @@
 
 
 
+#include "GraphUtils.h"
+
 #include "editor.h"
 #include "outputs.h"
 #include "functors.h"
@@ -190,6 +192,23 @@ public:
 
 //		vector <shared_ptr<kWidget> > deleteWidgets;
 
+//{ twitter
+
+void twitterPop() {
+    cout << "twitterPop" << endl;
+}
+
+void twitterClear() {
+    cout << "twitterClear" << endl;
+}
+
+void twitterPush(int _x, int _y, string _fontName, int _fontSize, string _text ) {
+    cout << "twitterPush" << endl;
+    cout << "x: " << _x << " y: " << _y << " name: " << _fontName << " size: " << _fontSize << " text: " << _text << endl;
+}
+
+//}
+
 
 
     ofxXmlSettings XML;
@@ -210,7 +229,9 @@ public:
     float green;
     float blue;
 
-
+        void setColor( int _r, int _g, int _b ){
+            red = _r; green = _g; blue = _b;
+        }
 
 		ofTrueTypeFont		font;
 		ofxOscReceiver	receiver;
@@ -223,6 +244,12 @@ public:
 		string			mouseButtonState;
 
 
+
+
+		void testGraphSetup();
+		void testGraphUpdate();
+
+        Graph myGraph;
 
 
 };

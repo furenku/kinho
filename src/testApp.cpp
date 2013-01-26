@@ -657,15 +657,33 @@ void testApp::update(){
 		receiver.getNextMessage( &m );
 
 		// check for mouse moved message
-		if ( m.getAddress() == "/kinho/tweet" )
+		if ( m.getAddress() == "/kinho/pop" )
 		{
-
-			cout << m.getArgAsString( 0 ) << endl;
-			// both the arguments are int32's
-			mouseX = m.getArgAsInt32( 0 );
-			mouseY = m.getArgAsInt32( 1 );
+            twitterPop();
+			int i = m.getArgAsInt32( 0 );
 		}
-		// check for mouse button message
+		else if ( m.getAddress() == "/kinho/clear" )
+		{
+            twitterClear();
+
+			int i = m.getArgAsInt32( 0 );
+		}
+		else if ( m.getAddress() == "/kinho/push" )
+		{
+			int x = m.getArgAsFloat( 0 );
+			int y = m.getArgAsFloat( 1 );
+
+			string fontName = m.getArgAsString( 2 ) ;
+
+			int fontSize= m.getArgAsInt32( 3 ) ;
+
+			string text = m.getArgAsString( 4 ) ;
+
+            twitterPush(x, y, fontName, fontSize, text );
+
+		}
+
+        // check for mouse button message
 		else if ( m.getAddress() == "/mouse/button" )
 		{
 			// the single argument is a string
@@ -710,6 +728,11 @@ void testApp::update(){
 //--------------------------------------------------------------
 void testApp::draw(){
 //
+
+
+ofBackground(red,green,blue);
+
+
 ofSetColor(255);
 kinhoFont.drawString("KINHO", ofGetWidth()/2-100, 30 );
 //kinhoFont.drawString(ofToString(ofGetFrameRate(),2), 30, 30 );
@@ -781,6 +804,7 @@ ofDrawBitmapString(ofToString(ofGetFrameRate(),2),50,100);
 //
 
 }
+
 int ccounter = 0;
 //--------------------------------------------------------------
 void testApp::keyPressed(int key){
@@ -853,3 +877,44 @@ void testApp::dragEvent(ofDragInfo dragInfo){
 
 
 
+
+
+
+
+void testApp::testGraphSetup(){
+	vector<GraphNode*> someGraphNodes;
+	int numGraphNodes = 100;
+	int numEdges = 800;
+	for(int i=0; i<numGraphNodes; ++i){
+		GraphNode *n = new GraphNode("v"+ofToString(i));
+		someGraphNodes.push_back(n);
+	}
+
+	for(int i=0; i<numEdges; ++i){
+		int edgeCost = (int)(ofRandom(2)+1);
+		string edgeType = (edgeCost<2)?"cat":"tag";
+		Edge *e = new Edge(edgeType+ofToString(i), edgeCost);
+		int npe = (int)ofRandom(numEdges/numGraphNodes);
+		for(int j=0; j<npe; ++j){
+			// pick random node
+			GraphNode *n = someGraphNodes.at((int)ofRandom(someGraphNodes.size()));
+			n->addEdge(e);
+		}
+	}
+
+	GraphNode *n0 = someGraphNodes.at((int)ofRandom(someGraphNodes.size()));
+//	long long unsigned int t0 = AbsoluteToDuration(UpTime());
+//	myGraph.calculateDists(*n0);
+//	long long unsigned int et = AbsoluteToDuration(UpTime())-t0;
+//	cout << "calculated from: " << n0->getName()+ " in: " << et << " millis"<<endl;
+	myGraph.orderGraph();
+	myGraph.printGraph();
+}
+
+void testApp::testGraphUpdate(){
+//	myGraph.calculateDists();
+//	long long unsigned int t0 = AbsoluteToDuration(UpTime());
+//	myGraph.orderGraph();
+//	long long unsigned int et = AbsoluteToDuration(UpTime())-t0;
+//	cout << "ordered graph in: " << et << " millis"<<endl;
+}

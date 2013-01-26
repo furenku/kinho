@@ -278,8 +278,8 @@ obj/i686Release/./src/threadedClock.d: src/threadedClock.cpp \
  src/geometryWidgets.h src/kVideoPlayer.h \
  ../../../addons/goThreadedVideo2/src/goThreadedVideo2.h src/session.h \
  src/ontologies.h src/library.h src/guiVideoObjects.h src/views.h \
- src/archive.h src/control.h src/scenes.h src/editor.h src/outputs.h \
- src/functors.h src/timeline.h src/controllers.h
+ src/archive.h src/control.h src/scenes.h src/GraphUtils.h src/editor.h \
+ src/outputs.h src/functors.h src/timeline.h src/controllers.h
 
 src/threadedClock.h:
 
@@ -916,6 +916,8 @@ src/archive.h:
 src/control.h:
 
 src/scenes.h:
+
+src/GraphUtils.h:
 
 src/editor.h:
 
