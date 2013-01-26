@@ -1,4 +1,4 @@
-#include "testApp.h"
+//#include "testApp.h"
 
 #pragma once
 
@@ -10,6 +10,8 @@
 //#include "guiObjects.h"
 //#include "guiVideoObjects.h"
 //#include "views.h"
+
+testApp * app;
 
 
 #ifndef timeline_h
