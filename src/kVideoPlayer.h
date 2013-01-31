@@ -1,5 +1,9 @@
+#ifndef KVIDEOPLAYER_H
+#define KVIDEOPLAYER_H
+
 #include "goThreadedVideo2.h"
 
+//#pragma once
 
 class kVideoPlayer {
 
@@ -212,3 +216,5 @@ cout << "load : "<<_movie << endl;
 
 };
 
+
+#endif

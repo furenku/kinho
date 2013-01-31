@@ -1,6 +1,36 @@
+
 #pragma once
 #ifndef functors_h
 #define functors_h
+
+#include "timeline.h"
+#include "scenes.h"
+#include "outputs.h"
+
+//#include "ontologies.h"
+//#include "library.h"
+//#include "archive.h"
+//#include "control.h"
+//
+//#include "scenes.h"
+//
+//
+//
+//#include "GraphUtils.h"
+//
+//
+//#include "editor.h"
+//#include "outputs.h"
+//#include "threadedClock.h"
+
+//#include "timeline.h"
+//#include "scenes.h"
+//#include "library.h"
+
+//#pragma once
+
+
+
 
 //
 //
@@ -58,6 +88,60 @@ class DragLibraryItem: public Functor {
 };
 
 
+class SetTimelineClip: public Functor {
+
+    public:
+        SetTimelineClip( shared_ptr<kClipScrollView> _clipView, shared_ptr<TimelineTrack> _timeline) {
+            clipView = _clipView; timeline = _timeline;
+        }
+
+        void execute() {
+
+            timeline->setNextClip(clipView->clickedClip);
+//cout << "dropppp" << endl;
+//            if(clipView->getDraggingClip()){
+//
+//cout << "isdraggoinnnnnn" << endl;
+//                timeline->addEvent(ofGetAppPtr()->mouseX,ofGetAppPtr()->mouseX,clipView->getDraggingClip());
+//            }
+
+
+            /*
+//            if(archive->inside(archive->getX(),archive->getY())){
+            float clickedX = archive->getMouseX() - archive->getX();
+            float clickedY = archive->getMouseY() - archive->getY();
+
+            float newX = (clickedX / archive->getWidth()) +  archive->getScrollPctX();
+            float newY = (clickedY / archive->getHeight()) + archive->getScrollPctY();
+
+            if( library->draggingClip  ) {
+                archive->addClip( library->draggingClip, newX, newY );
+                archive->arrangeWidgets();
+            }
+
+            if( library->draggingOntology != ""  ) {
+                string ontname = library->draggingOntology;
+                archive->addOntology( library->getOntology( ontname ), newX, newY );
+                archive->arrangeWidgets();
+            }
+
+            library->draggingOntology="";
+            library->draggingClip.reset();
+
+            */
+
+//            }
+
+        }
+
+
+        shared_ptr<kClipScrollView> clipView; shared_ptr<TimelineTrack> timeline;
+};
+
+
+
+
+
 class AddMedia: public Functor {
 
     public:
@@ -102,58 +186,58 @@ cout << "connnnn" << endl;
         shared_ptr<Library> library; shared_ptr<Archive> archive;
 };
 
+//
+//class SetDraggingClip: public Functor {
+//
+//    public:
+//        SetDraggingClip( shared_ptr<SceneBuilder> _scene, shared_ptr<kClipScrollView> _selected) {
+//            selected = _selected; scene = _scene;
+//        }
+//
+//        void execute() {
+//            if(selected->draggingClip) {
+//                scene->setDraggingClip( selected->draggingClip );
+//            }
+//        }
+//
+//        shared_ptr<kClipScrollView> selected; shared_ptr<SceneBuilder> scene;
+//
+//};
+//
+//
+//class SetClipPosition: public Functor {
+//
+//    public:
+//        SetClipPosition( shared_ptr<SceneBuilder> _scene, shared_ptr<VideoOutput> _output) {
+//            output = _output; scene = _scene;
+//        }
+//
+//        void execute() {
+//            scene->savePosition( output->getPosition() );
+//        }
+//
+//        shared_ptr<VideoOutput> output; shared_ptr<SceneBuilder> scene;
+//
+//};
 
-class SetDraggingClip: public Functor {
+//
+//class EndClip: public Functor {
+//
+//    public:
+//        EndClip( shared_ptr<SceneBuilder> _scene ) {
+//            scene = _scene;
+//        }
+//
+//        void execute() {
+//            scene->mediaEnd();
+//        }
+//
+//        shared_ptr<SceneBuilder> scene;
+//
+//};
 
-    public:
-        SetDraggingClip( shared_ptr<SceneBuilder> _scene, shared_ptr<kClipScrollView> _selected) {
-            selected = _selected; scene = _scene;
-        }
-
-        void execute() {
-            if(selected->draggingClip) {
-                scene->setDraggingClip( selected->draggingClip );
-            }
-        }
-
-        shared_ptr<kClipScrollView> selected; shared_ptr<SceneBuilder> scene;
-
-};
-
-
-class SetClipPosition: public Functor {
-
-    public:
-        SetClipPosition( shared_ptr<SceneBuilder> _scene, shared_ptr<VideoOutput> _output) {
-            output = _output; scene = _scene;
-        }
-
-        void execute() {
-            scene->savePosition( output->getPosition() );
-        }
-
-        shared_ptr<VideoOutput> output; shared_ptr<SceneBuilder> scene;
-
-};
-
-
-class EndClip: public Functor {
-
-    public:
-        EndClip( shared_ptr<SceneBuilder> _scene ) {
-            scene = _scene;
-        }
-
-        void execute() {
-            scene->mediaEnd();
-        }
-
-        shared_ptr<SceneBuilder> scene;
-
-};
-
-
-
+//
+//
 class PlayClip: public Functor {
 
     public:
@@ -172,41 +256,60 @@ class PlayClip: public Functor {
 
 };
 
-
-
-
-class SetAlpha: public Functor {
+class PlayTimelineClip: public Functor {
 
     public:
-        SetAlpha( shared_ptr< AlphaControl > _alpha,  shared_ptr<VideoOutput> _output ) {
+        PlayTimelineClip( shared_ptr<TimelineTrack> _timeline,  shared_ptr<VideoOutput> _output ) {
             output = _output;
-            alpha = _alpha;
+            timeline = _timeline;
         }
 
         void execute() {
-            output->setAlpha(alpha->getAlpha());
+            output->changeClip ( timeline->getNextPlayClip()->getFilename() );
+            output->play();
         }
 
-        shared_ptr<AlphaControl> alpha;
+        shared_ptr<TimelineTrack> timeline;
         shared_ptr<VideoOutput> output;
 
 };
 
 
-class VideoStop: public Functor {
+//
+//
+//class SetAlpha: public Functor {
+//
+//    public:
+//        SetAlpha( shared_ptr< AlphaControl > _alpha,  shared_ptr<VideoOutput> _output ) {
+//            output = _output;
+//            alpha = _alpha;
+//        }
+//
+//        void execute() {
+//            output->setAlpha(alpha->getAlpha());
+//        }
+//
+//        shared_ptr<AlphaControl> alpha;
+//        shared_ptr<VideoOutput> output;
+//
+//};
+//
+//
+//class VideoStop: public Functor {
+//
+//    public:
+//        VideoStop( shared_ptr<VideoOutput> _output ) {
+//            output = _output;
+//        }
+//
+//        void execute() {
+//            output->stop();
+//        }
+//
+//        shared_ptr<VideoOutput> output;
+//
+//};
 
-    public:
-        VideoStop( shared_ptr<VideoOutput> _output ) {
-            output = _output;
-        }
-
-        void execute() {
-            output->stop();
-        }
-
-        shared_ptr<VideoOutput> output;
-
-};
 /*
 vector<string> sortAlpha(vector<string> sortThis)
 {
@@ -236,4 +339,78 @@ vector<string> sortAlpha(vector<string> sortThis)
 
 
 
-#endif;
+class SelectOntology: public Functor {
+
+    public:
+        SelectOntology( shared_ptr< WordSelect > _wordSelect,  shared_ptr<GraphBrowser> _graphBrowser ) {
+            graphBrowser = _graphBrowser;
+            wordSelect = _wordSelect;
+        }
+
+        void execute() {
+            graphBrowser->browse( wordSelect->getSelected());
+        }
+
+        shared_ptr<WordSelect> wordSelect;
+        shared_ptr<GraphBrowser> graphBrowser;
+
+};
+
+
+
+class ClearOntology: public Functor {
+
+    public:
+        ClearOntology( shared_ptr< WordSelect > _wordSelect ) {
+            wordSelect = _wordSelect;
+        }
+
+        void execute() {
+
+            vector< shared_ptr < kWidget > > widgets = wordSelect->getWidgets();
+
+            for (int j=0; j<widgets.size(); j++)
+            {
+                widgets[j]->disable();
+//                ofRemoveListener( *widgets[j]->events.lookup("press"),this,&kBrowseArchive::btnClicked);
+            }
+    //                graphBrowser[i]->clearWidgets();
+//                graphBrowser[i]->clearSamples();
+                wordSelect->clearWidgets();
+//                removeWidget(clipScrollViews[i]);
+//                clipScrollViews[i].reset();
+        }
+
+        shared_ptr<WordSelect> wordSelect;
+
+};
+
+
+
+/*
+class OpenOntology: public Functor {
+
+    public:
+        OpenOntology( shared_ptr< WordSelect > _wordSelect, string _type, shared_ptr< LibraryManager > _lib, shared_ptr<kScrollClipView> _clipview ) {
+            wordSelect = _wordSelect;
+            lib = _lib;
+            type = _type;
+            clipview = _clipview;
+        }
+
+        void execute() {
+            if(type=="cat"){
+
+            }
+            if(type=="tag"){
+
+            }
+        }
+
+        shared_ptr<WordSelect> wordSelect;
+        shared_ptr<LibraryManager> lib;
+
+};
+
+*/
+#endif

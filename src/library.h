@@ -1,3 +1,4 @@
+
 #pragma once
 
 
@@ -109,7 +110,7 @@ class Library: public LibraryManager, virtual public kView{
             initView();
         }
 
-        shared_ptr<kBrowseArchive> getView(){ return view; }
+        shared_ptr<kBrowseArchive> getView();
 
         void initView();
 
@@ -127,24 +128,12 @@ class Library: public LibraryManager, virtual public kView{
 
         void setClips();
 
-        shared_ptr<MediaHolder> getDraggingMedia() { if(draggingMedia) return draggingMedia; }
-        shared_ptr<Clip> getDraggingClip() { if(draggingClip) return draggingClip; }
-        string getDraggingOntology() { if(draggingOntology!="") return draggingOntology; }
+        shared_ptr<MediaHolder> getDraggingMedia();
+        shared_ptr<Clip> getDraggingClip();
+        string getDraggingOntology();
 
 
-        void mouseReleased(ofMouseEventArgs & mouse) {
-//            kView::mouseReleased(mouse);
-//            draggingOntology="";
-//            draggingClip.reset();
-//            draggingMedia.reset();
-
-            if(view->inside(mouse.x, mouse.y)) {
-                draggingOntology="";
-                cout << "ins" << endl;
-            }
-        }
-
-
+        void mouseReleased(ofMouseEventArgs & mouse);
 
 //    protected:
 
@@ -155,6 +144,53 @@ class Library: public LibraryManager, virtual public kView{
         shared_ptr<MediaHolder> draggingMedia, nextMedia;
 
 };
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+class WordSelect:public kScrollView{
+    public:
+        WordSelect();
+
+        void initialize();
+
+        void btnClicked(widgetEvent & _event);
+
+        void makeButton(string _str);
+
+        vector<string> & getSelected();
+
+    /*
+        toggleButton press ->p
+
+    */
+
+
+    protected:
+        vector<string> selectedStrings;
+
+};
+
+
+
+class GraphBrowser{
+    public: GraphBrowser();
+
+    void browse( vector<string> & _selectedStrings );
+
+};
+
+
 
 
 

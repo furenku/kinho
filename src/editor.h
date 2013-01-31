@@ -1,11 +1,11 @@
-#pragma once
+/*
+//#pragma once
+
+//#ifndef editor_h
+//#define editor_h
 
 #include "library.h"
 #include "guiVideoObjects.h"
-
-#ifndef editor_h
-#define editor_h
-
 
 class Editor: virtual public kRectView {
 
@@ -52,4 +52,5 @@ class Editor: virtual public kRectView {
 
 
 
-#endif
+//#endif
+*/

@@ -1,7 +1,7 @@
-#pragma once
+//#pragma once
 
-#include "testApp.h"
-#include "storage.h"
-#include "videoStorage.h"
+//#include "testApp.h"
+//#include "storage.h"
+//#include "videoStorage.h"
 
 

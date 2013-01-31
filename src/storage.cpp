@@ -3,6 +3,24 @@
 
 //{ attribute
 
+Attribute::Attribute(){
+    init();
+}
+
+void Attribute::init(){
+
+    boolValue=false;
+    charValue=0;
+    intValue=0;
+    floatValue=0.0f;
+    stringValue="";
+//range&interpolation
+    intRangeMin=intRangeMax=intInterpMin=intInterpMax = 0;
+    floatRangeMin=floatInterpMin=0.0f;
+    floatRangeMax=floatInterpMax=1.0f;
+
+}
+
 void Attribute::setValue(bool _bool){ boolValue=_bool; }
 void Attribute::setValue(char _char){ charValue=_char; }
 void Attribute::setValue(int _int) { intValue=_int; }
@@ -187,6 +205,18 @@ vector< shared_ptr< string >  > AttributeGroup::getAttributeNames() {
 //{ store object
 
 
+    AbstractStoreObject::AbstractStoreObject(){
+        init();
+    }
+    AbstractStoreObject::~AbstractStoreObject(){}
+
+    void AbstractStoreObject::init() {
+        setInfo("","",0);
+    }
+
+    StoreObject::StoreObject(){
+        attgrps.push_back(make_shared<AttributeGroup>());
+    }
 
 int StoreObject::getIndexByName(vector< shared_ptr<StoreObject> > _objs,string _name){
     int index=-1;
@@ -489,34 +519,192 @@ vector< shared_ptr<StoreObject> > Storage::getObjects(){
 //}
 
 
+//{ RELATIONSHIPS
+
+
+    //set
+        void Relationships::setRelated(shared_ptr<StoreObject> _obj1, shared_ptr<StoreObject> _obj2) {
+            related[_obj1].push_back(_obj2);
+            related[_obj2].push_back(_obj1);
+        }
+
+        void Relationships::removeRelated(shared_ptr<StoreObject> _obj1, shared_ptr<StoreObject> _obj2) {
+            vector < shared_ptr<StoreObject> > & v1 = getRelated(_obj1);
+            vector < shared_ptr<StoreObject> > & v2 = getRelated(_obj2);
+            v1.erase(remove(v1.begin(), v1.end(), _obj2), v1.end());
+            v2.erase(remove(v2.begin(), v2.end(), _obj1), v2.end());
+        }
+
+        void Relationships::setHierarchy(shared_ptr<StoreObject> _obj1, shared_ptr<StoreObject> _obj2){
+            children[_obj1].push_back(_obj2);
+            parents[_obj2].push_back(_obj1);
+        }
+
+        void Relationships::removeHierarchy(shared_ptr<StoreObject> _obj1, shared_ptr<StoreObject> _obj2){
+            vector < shared_ptr<StoreObject> > & v1 = getChildren(_obj1);
+            vector < shared_ptr<StoreObject> > & v2 = getParents(_obj2);
+            v1.erase(remove(v1.begin(), v1.end(), _obj2), v1.end());
+            v2.erase(remove(v2.begin(), v2.end(), _obj1), v2.end());
+
+        }
+
+        void Relationships::removeRelated(shared_ptr<StoreObject> _obj) {
+            vector < shared_ptr<StoreObject> > vr = related[_obj];
+
+            for (u_int i=0; i < vr.size(); i++) {
+                vector < shared_ptr<StoreObject> > & vrr=getRelated(vr[i]);
+                vrr.erase(remove(vrr.begin(), vrr.end(), _obj), vrr.end());
+            }
+            vr.clear();
+
+            related.erase(_obj);
+        }
+
+        void Relationships::removeHierarchy(shared_ptr<StoreObject> _obj){
+            vector < shared_ptr<StoreObject> > vc = children[_obj];
+            vector < shared_ptr<StoreObject> > vp = parents[_obj];
+
+
+
+            for (u_int i=0; i<vc.size(); i++) {
+                vector < shared_ptr<StoreObject> > & vcp = getParents(vc[i]);
+                vcp.erase(remove(vcp.begin(), vcp.end(), _obj), vcp.end());
+            }
+            for (u_int i=0; i<vp.size(); i++) {
+                vector < shared_ptr<StoreObject> > & vpc = getChildren(vp[i]);
+                vpc.erase(remove(vpc.begin(), vpc.end(), _obj), vpc.end());
+            }
+            vp.clear();
+            vc.clear();
+            children.erase(_obj);
+            parents.erase(_obj);
+
+        }
+
+
+    //get
+        vector< shared_ptr<StoreObject> > & Relationships::getParents( shared_ptr<StoreObject> _obj ) {
+            return parents[_obj];
+        }
+
+        vector< shared_ptr<StoreObject> > & Relationships::getChildren( shared_ptr<StoreObject> _obj ){
+            return children[_obj];
+        }
+
+        vector< shared_ptr<StoreObject> > & Relationships::getRelated( shared_ptr<StoreObject> _obj ){
+            return related[_obj];
+        }
+
+        vector< shared_ptr<StoreObject> > Relationships::getDescendants( shared_ptr<StoreObject> _obj ) {
+            descendants.clear();
+            addAllChildren(_obj);
+            return descendants;
+        }
+
+        vector< shared_ptr<StoreObject> > Relationships::getAncestors( shared_ptr<StoreObject> _obj ) {
+            ancestors.clear();
+            addAllAncestors(_obj);
+            return ancestors;
+        }
+
+        vector< shared_ptr<StoreObject> > Relationships::getSiblings( shared_ptr<StoreObject> _obj ){
+            vector< shared_ptr<StoreObject> > parentsVec = parents[_obj];
+            for(u_int i = 0; i<parentsVec.size(); i++ ) {
+                vector<shared_ptr<StoreObject> > childrenVec = getChildren(parentsVec[i]);
+                for(u_int j = 0; j<childrenVec.size(); j++ ) {
+                    siblings.push_back(childrenVec[j]);
+                }
+            }
+            return siblings;
+        }
+
+
+
+        void Relationships::addAllChildren( shared_ptr<StoreObject> _obj )  {
+            cout << "fkkkp"<<1 << endl;
+            vector< shared_ptr<StoreObject> > & vc = getChildren( _obj );
+
+            cout << "fkkkp"<<3 << endl;
+            for(int i = 0 ; i < vc.size(); i++ ) {
+                descendants.push_back( vc[i] );
+                cout << "fkkkp"<<4 << endl;
+            }
+            for(int i = 0 ; i < vc.size(); i++ ) {
+                cout << vc[i]->getName()<<5 << endl;
+                addAllChildren( vc[i] );
+
+            }
+
+        }
+
+
+        void Relationships::addAllAncestors( shared_ptr<StoreObject> _obj )  {
+
+            vector< shared_ptr<StoreObject> > & vp = getParents( _obj );
+
+            for(int i = 0 ; i < vp.size(); i++ )  {
+                ancestors.push_back( vp[i] );
+            }
+            for(int i = 0 ; i < vp.size(); i++ )  {
+                addAllAncestors( vp[i] );
+            }
+
+
+        }
+
+
+//}
+
+
 //{ xmlmanager
 
+//void XMLManager::setRelated( shared_ptr<StoreObject>,shared_ptr<StoreObject>){}
+//void XMLManager::setHierarchy( shared_ptr<StoreObject>,shared_ptr<StoreObject>){}
+//void XMLManager::eraseRelationships(shared_ptr<StoreObject> _strobj){}
+//void XMLManager::eraseRelationships(shared_ptr<StoreObject> _strobj1, shared_ptr<StoreObject> _strobj2){}
+////xml
+//void XMLManager::addAndPushTag(string _tag){}
+//void XMLManager::popTag(){}
+//void XMLManager::addToTag(shared_ptr<StoreObject> _strobj, string _tag){}
+////read
+//string XMLManager::readTag(string _tag1, string _tag2){}
+//void XMLManager::writeObject(shared_ptr<StoreObject> _strobj) {
+//}
+//void XMLManager::deleteObject(shared_ptr<StoreObject> _strobj) {
+//    eraseRelationships(_strobj);
+//}
+//vector< shared_ptr<StoreObject> > XMLManager::loadObjects(){
+//    //navigate xml
+//    //check type
+//    //factory->make obj func
+//}
+//
 
 
 //write
 //object
 //association
-void XMLManager::setRelated( shared_ptr<StoreObject>,shared_ptr<StoreObject>){}
-void XMLManager::setHierarchy( shared_ptr<StoreObject>,shared_ptr<StoreObject>){}
-void XMLManager::eraseRelationships(shared_ptr<StoreObject> _strobj){}
-void XMLManager::eraseRelationships(shared_ptr<StoreObject> _strobj1, shared_ptr<StoreObject> _strobj2){}
-//xml
-void XMLManager::addAndPushTag(string _tag){}
-void XMLManager::popTag(){}
-void XMLManager::addToTag(shared_ptr<StoreObject> _strobj, string _tag){}
-//read
-string XMLManager::readTag(string _tag1, string _tag2){}
-void XMLManager::writeObject(shared_ptr<StoreObject> _strobj) {
-}
-void XMLManager::deleteObject(shared_ptr<StoreObject> _strobj) {
-    eraseRelationships(_strobj);
-}
-vector< shared_ptr<StoreObject> > XMLManager::loadObjects(){
-    //navigate xml
-    //check type
-    //factory->make obj func
-}
-
+//void XMLManager::setRelated( shared_ptr<StoreObject>,shared_ptr<StoreObject>){}
+//void XMLManager::setHierarchy( shared_ptr<StoreObject>,shared_ptr<StoreObject>){}
+//void XMLManager::eraseRelationships(shared_ptr<StoreObject> _strobj){}
+//void XMLManager::eraseRelationships(shared_ptr<StoreObject> _strobj1, shared_ptr<StoreObject> _strobj2){}
+////xml
+//void XMLManager::addAndPushTag(string _tag){}
+//void XMLManager::popTag(){}
+//void XMLManager::addToTag(shared_ptr<StoreObject> _strobj, string _tag){}
+////read
+//string XMLManager::readTag(string _tag1, string _tag2){}
+//void XMLManager::writeObject(shared_ptr<StoreObject> _strobj) {
+//}
+//void XMLManager::deleteObject(shared_ptr<StoreObject> _strobj) {
+//    eraseRelationships(_strobj);
+//}
+//vector< shared_ptr<StoreObject> > XMLManager::loadObjects(){
+//    //navigate xml
+//    //check type
+//    //factory->make obj func
+//}
+//
 
 //}
 

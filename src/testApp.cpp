@@ -2,7 +2,6 @@
 
 
 
-
 shared_ptr<Clip> clip1,clip2,clip3,clip4;
 shared_ptr<Clip> currentClip;
 shared_ptr<Sample> sample1,sample2;
@@ -12,23 +11,25 @@ int counter = 0;
 
 
 shared_ptr<kClipShow> clip ;
-shared_ptr<kCircleButton> btn;
+//shared_ptr<kCircleButton> btn;
 
 
 shared_ptr<kRectView> testview;
 
 
 
-shared_ptr<TestDB> db;
-shared_ptr<TestObj1> obj1;
-shared_ptr<TestObj2> obj2;
+//shared_ptr<TestDB> db;
+//shared_ptr<TestObj1> obj1;
+//shared_ptr<TestObj2> obj2;
+
+
 //
 //map<std::string, shared_ptr<kView> >::iterator viewIter;
 //map< string, shared_ptr<kView> > view;
 
 shared_ptr<Library> lib;
 shared_ptr<Archive> arc;
-shared_ptr<SceneBuilder> builder;
+//shared_ptr<SceneBuilder> builder;
 
 //shared_ptr<Archive> arc;
 
@@ -37,7 +38,7 @@ shared_ptr<kField2D> vw;
 
 shared_ptr<TSTVW> tstvw;
 
-shared_ptr<ClockWidget> clock1,clock2,clock3;
+//shared_ptr<ClockWidget> clock1,clock2,clock3;
 
 ofTrueTypeFont kinhoFont;
 
@@ -57,9 +58,108 @@ ofTrueTypeFont kinhoFont;
 
 //--------------------------------------------------------------
 
+//		ofPoint dragPts[NUM_PTS];
+
 
 
 void testApp::setup(){
+
+
+	if( XML.loadFile("xml/ABISMOTEST.xml") ){
+		message = "mySettings.xml loaded!";
+	}else{
+		message = "unable to load mySettings.xml check data/ folder";
+	}
+
+	int numEntries = XML.getNumTags("entry");
+
+	//if there is at least one <STROKE> tag we can read the list of points
+	//and then try and draw it as a line on the screen
+	if(numEntries > 0){
+cout << "noentrys "<< numEntries << endl;
+		//we push into the last STROKE tag
+		//this temporarirly treats the tag as
+		//the document root.
+		for (int h=0; h<numEntries; h++)
+		{
+			XML.pushTag("entry", h );
+
+			cout << "entry"<<h << endl;
+
+			//we see how many points we have stored in <PT> tags
+			int numParams = XML.getNumTags("param");
+			if(numParams > 0){
+
+				//We then read those x y values into our
+				//array - so that we can then draw the points as
+				//a line on the screen
+
+				//we have only allocated a certan amount of space for our array
+				//so we don't want to read more than that amount of points
+//				int totalToRead = MIN(numPtTags, NUM_PTS);
+        string fileType = ofToString( XML.getValue("param:key", "", 2) );
+cout << fileType<<" "<<"video" << endl;
+        if( fileType.compare("video")==0) {}
+				for(int i = 0; i < numParams; i++){
+					//the last argument of getValue can be used to specify
+					//which tag out of multiple tags you are refering to.
+					string key = XML.getValue("param:key", "", i);
+					string val = XML.getValue("param:value", "", i);
+
+/*
+					std::vector<string> vect;
+
+                    std::stringstream ss(val);
+
+                    int i;
+
+                    while (ss >> i)
+                    {
+                        vect.push_back(i);
+
+                        if (ss.peek() == ',')
+                            ss.ignore();
+                    }
+
+                    for (int i=0; i<vect.size(); i++)
+                    {
+                    	cout<<vect[i]<<endl;
+                    }
+*/
+
+//categorías
+if(i==5){
+    std::vector<std::string> words;
+    std::string s;
+    boost::split(words, val, boost::is_any_of(","), boost::token_compress_on);
+    //else cout << key << endl;
+    cout << key << endl;
+
+    for (int i=0; i<words.size(); i++)
+    {
+        cout<<words[i]<<endl;
+    }
+}
+//typedef vector< string > split_vector_type;
+//
+//    split_vector_type SplitVec; // #2: Search for tokens
+//    split( SplitVec, str1, is_any_of("-*"), token_compress_on );
+
+
+
+					// y = XML.getValue("key", 0, i);
+//					cout << key<<" "<<val<< endl;
+//					dragPts[i].set(x, y);
+//					pointCount++;
+				}
+			}
+
+		//this pops us out of the STROKE tag
+		//sets the root back to the xml document
+		XML.popTag();
+		}
+
+	}
 
     cout << "listening for osc messages on port " << PORT << "\n";
 	receiver.setup( PORT );
@@ -218,6 +318,7 @@ ofSetWindowPosition(1280,0);
     ofSetLineWidth(2);
 
     kinhoFont.loadFont("fonts/constructivist-solid.ttf",20);
+    font.loadFont("fonts/DroidSans-Bold.ttf",20,true,true);
 
 
 
@@ -228,9 +329,8 @@ ofSetWindowPosition(1280,0);
 
     ctl = make_shared<MainController>( );
 
-//    ctl->makeLogins();
-//
-//
+    ctl->makeLogins();
+
 
 
 
@@ -629,8 +729,8 @@ for (int i=0; i<10; i++)
 }
 
 void testApp::tst(widgetEvent & _event){
-shared_ptr<Clock> c = dynamic_pointer_cast<Clock>(_event.sender);
-cout << ofGetElapsedTimeMillis() << "  : "<<c->getEvent() << endl;
+//shared_ptr<Clock> c = dynamic_pointer_cast<Clock>(_event.sender);
+//cout << ofGetElapsedTimeMillis() << "  : "<<c->getEvent() << endl;
 
 //cout << v->getCommand() << endl;
 
@@ -640,7 +740,7 @@ cout << ofGetElapsedTimeMillis() << "  : "<<c->getEvent() << endl;
 
 //--------------------------------------------------------------
 void testApp::update(){
-
+ctl->update();
 
 // hide old messages
 	for ( int i=0; i<NUM_MSG_STRINGS; i++ )
@@ -735,7 +835,7 @@ ofBackground(red,green,blue);
 
 ofSetColor(255);
 kinhoFont.drawString("KINHO", ofGetWidth()/2-100, 30 );
-//kinhoFont.drawString(ofToString(ofGetFrameRate(),2), 30, 30 );
+//font.drawString("a veráéíóúü!¡", 830, 30 );
 
 ofSetColor(142,32,222);
 ofDrawBitmapString(ofToString(ofGetFrameRate(),2),50,100);
@@ -886,14 +986,16 @@ void testApp::testGraphSetup(){
 	int numGraphNodes = 100;
 	int numEdges = 800;
 	for(int i=0; i<numGraphNodes; ++i){
-		GraphNode *n = new GraphNode("v"+ofToString(i));
+		GraphNode *n = new GraphNode();
+		n->set("v"+ofToString(i));
 		someGraphNodes.push_back(n);
 	}
 
 	for(int i=0; i<numEdges; ++i){
 		int edgeCost = (int)(ofRandom(2)+1);
 		string edgeType = (edgeCost<2)?"cat":"tag";
-		Edge *e = new Edge(edgeType+ofToString(i), edgeCost);
+		Edge *e = new Edge();
+		e->set(edgeType+ofToString(i), edgeCost);
 		int npe = (int)ofRandom(numEdges/numGraphNodes);
 		for(int j=0; j<npe; ++j){
 			// pick random node

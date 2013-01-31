@@ -1,41 +1,39 @@
-#pragma once
+#ifndef ONTOLOGIES_H
+#define ONTOLOGIES_H
 
 #include "storage.h"
 
 #include "general.h"
-#include "videoStorage.h"
+#include "mediaStorage.h"
 
-//
+
 
 class Ontology: public StoreObject {
     public:
-        Ontology(){
-            setType("ontology");
-            addAttribute("value","...");
-        }
+        Ontology();
 };
 
 
 class Tag: public Ontology {
     public:
-        Tag(){ setType("tag"); }
+        Tag();
 };
 
 class Category: public Ontology {
     public:
-        Category(){ setType("category"); }
+        Category();
 };
 
     //children allowed only one parent
 class OntologyObject: public Ontology {
     public:
-        OntologyObject(){ setType("ontologyObject"); }
+        OntologyObject();
 };
 
 class Place: public Ontology {
     public:
-        Place(){ setType("place"); setCoordinates(0,0); }
-        void setCoordinates(float _x, float _y) { coordX = _x; coordY = _y; }
+        Place();
+        void setCoordinates(float _x, float _y);
 
         float coordX;
         float coordY;
@@ -44,16 +42,18 @@ class Place: public Ontology {
 
 class Action: public Ontology {
     public:
-        Action(){ setType("action"); setLengthM(0); setLengthS(0); }
-        void setLengthS(float _s) { lengthS = _s; }
-        void setLengthM(float _min) { lengthMin = _min; }
+        Action();
+        void setLengthS(float _s);
+        void setLengthM(float _min);
         float lengthS;
         float lengthMin;
 };
 
 class Web: public Ontology {
     public:
-        Web(){ setType("web"); }
+        Web();
 };
 
 
+
+#endif

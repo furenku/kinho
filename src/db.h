@@ -1,29 +1,28 @@
+/*//#ifndef DB_H
+//#define DB_H
+
 //#include "testApp.h"
 
 //ALMACENAMIENTO
 class AbstractStoreObject {
     public:
-    AbstractStoreObject(){
-        init();
-    }
-    virtual ~AbstractStoreObject(){}
+    AbstractStoreObject();
 
-    virtual void init() {
-        setInfo("","",0);
-    }
+    virtual ~AbstractStoreObject();
+
+    virtual void init();
 
 //funcs
     //set
-        void setName(string _name) { name = _name; }
-        void setType(string _type ) { type = _type; }
-        void setID(int _id) { id = _id; }
-        void setInfo(string _name, string _type, int _id) {
-            setName(_name); setType(_type); setID(_id);
-        }
+        void setName(string _name);
+        void setType(string _type );
+        void setID(int _id;
+        void setInfo(string _name, string _type, int _id);
+
     //get
-        string getName() { return name; }
-        string getType() { return type; }
-        int getID() { return id; }
+        string getName();
+        string getType();
+        int getID();
 
     protected:
         //atts
@@ -38,23 +37,9 @@ class Attribute: public AbstractStoreObject {
 
     public:
 
-    Attribute(){
-        init();
-    }
+    Attribute();
 
-    void init(){
-
-        boolValue=false;
-        charValue=0;
-        intValue=0;
-        floatValue=0.0f;
-        stringValue="";
-    //range&interpolation
-        intRangeMin=intRangeMax=intInterpMin=intInterpMax = 0;
-        floatRangeMin=floatInterpMin=0.0f;
-        floatRangeMax=floatInterpMax=1.0f;
-
-    }
+    void init();
 
     //value
     //value
@@ -131,9 +116,7 @@ class AttributeGroup: public Attribute {
 
 class StoreObject: virtual public AttributeGroup{
     public:
-        StoreObject(){
-            attgrps.push_back(make_shared<AttributeGroup>());
-        }
+        StoreObject();
 
 
     //funcs
@@ -401,76 +384,4 @@ class TestDB: public DBManager {
 
 
 
-
-class Ontology: public StoreObject {};
-class Tag: public StoreObject {};
-class Category: public StoreObject {};
-    //children allowed only one parent
-class Object: public StoreObject {};
-class Place: public StoreObject {};
-class Action: public StoreObject {};
-class Web: public StoreObject {};
-
-
-
-
-
-/*
-
-        Hierarchy
-        Clip
-        DBManager
-            SessionManager
-                string
-                    XMLpath
-                    libraryFile
-                    kinhoFile
-                        scenes
-                        outputs
-                    archivoFile
-                ()
-                    type="sessionManager"
-            LibraryManager
-                protected:
-                    //atts
-                        Bimap?
-                        vector< shared_ptr< Clip > >
-                        vector< shared_ptr< Relationship > >
-                        vector< shared_ptr< Ontologies > >
-                    //funcs
-                        //API
-                            add
-                                clip
-                                    addClip(shared_ptr<Clip>)
-                                    removeClip(shared_ptr<Clip>
-                                ont
-                                    addOntology(shared_ptr<Ontology>)
-                                    removeOntology(shared_ptr<Ontology>)
-                                        actualizar relaciones!!
-                                        o ya se hace automaticamente con los metodos detach?
-                            relate
-                                relateClipOntology(shared_ptr<Clip>,shared_ptr<Ontology>)
-                            get
-                                shared_ptr<Clip>
-                                    getClip()
-                                vector< shared_ptr<Cllip> >
-                                    getClips(shared_ptr<Ontology>)
-                                shared_ptr<Ontology>
-                                    getOntology( shared_ptr<Clip> )
-                                    getOntology(string name)
-                                    getOntology(int id)
-                                vector< shared_ptr<Ontology> >
-                                    getOntologies(shared_ptr<Clip>)
-                                    getOntologies(string name)
-                                    getOntologies(int id)
-                ()
-            SessionManager
-            KinhoManager
-            ArchivoManager
-            InputManager
-        Attribute
-    Factory
-        //atts
-        //funcs
 */
-

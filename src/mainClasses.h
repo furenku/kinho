@@ -1,9 +1,33 @@
 #pragma once
 
-//#include "testApp.h"
+
 
 #ifndef mainclasses_h
 #define mainclasses_h
+
+
+#include "ofMain.h"
+
+
+
+#include <map>
+#include <tr1/memory>
+#include <boost/pointer_cast.hpp>
+#include <boost/shared_ptr.hpp>
+#include <boost/enable_shared_from_this.hpp>
+#include <boost/make_shared.hpp>
+#include <boost/foreach.hpp>
+
+
+
+using boost::shared_ptr;
+using boost::enable_shared_from_this;
+using boost::dynamic_pointer_cast;
+using boost::make_shared;
+
+
+
+
 
 struct null_deleter
 {
@@ -23,16 +47,10 @@ class Functor {
 
 class FunctorHolder: public Functor {
     public:
-        virtual void execute() {
-            for (int i=0; i<functors.size(); i++)
-            {
-            	functors[i]->execute();
-            }
-        }
+        virtual void execute();
 
-        void addFunc(shared_ptr<Functor> _func) {
-            functors.push_back(_func);
-        }
+        void addFunc(shared_ptr<Functor> _func);
+
         vector< shared_ptr<Functor> > functors;
 };
 
@@ -109,6 +127,8 @@ class Dictionary {
 };
 */
 
+
+
 template < typename ID, typename Type >
 class Dictionary {
     public:
@@ -171,6 +191,9 @@ class Dictionary {
         }
 };
 
+
+
+
 class Observable;
 
 class widgetEvent: public ofEventArgs {
@@ -186,113 +209,37 @@ class widgetEvent: public ofEventArgs {
 class Observable: public Object, public enable_shared_from_this<Observable> {
 
     public:
-        Observable(){ activeIndex = -1; value = 0; }
+        Observable();
 
-        virtual ~Observable(){
+        virtual ~Observable();
 
-//            for (int i=0; i<listeners.size(); i++)
-//                listeners[i]->logout(this);
-        }
+        virtual void addListener(shared_ptr<Observable>  _obs);
 
-        virtual void addListener(shared_ptr<Observable>  _obs) {
-            listeners.push_back(_obs);
-        }
+        virtual void removeListener(shared_ptr<Observable>  _obs);
 
-        virtual void removeListener(shared_ptr<Observable>  _obs) {
+        virtual void addObserved(shared_ptr<Observable>  _obs);
 
-            vector<shared_ptr<Observable> >::iterator it;
-            it = find(listeners.begin(),listeners.end(), _obs);
-            if(it!=listeners.end())
-                listeners.erase(it);
-        }
-
-        virtual void addObserved(shared_ptr<Observable>  _obs) {
-            observed.push_back(_obs);
-        }
-
-        virtual void removeObserved(shared_ptr<Observable>  _obs) {
-            vector<shared_ptr<Observable> >::iterator it;
-            it = find(observed.begin(),observed.end(), _obs);
-            if(it!=observed.end())
-                observed.erase(it);
-        }
+        virtual void removeObserved(shared_ptr<Observable>  _obs);
 
         template <class Obs>
-        void login( shared_ptr<Obs> _obs ) {
-            vector< shared_ptr<ofEvent<widgetEvent> > > obsEvents = _obs->events.getValues();
-            for (int j=0; j<obsEvents.size(); j++)
-            {
-                ofAddListener(*obsEvents[j],this,&Observable::execute);
-            }
-            _obs->addListener(shared_from_this());
-            addObserved(_obs);
-        }
+        void login( shared_ptr<Obs> _obs );
 
         template <class Obs>
-        void logout( shared_ptr<Obs> _obs ) {
-            vector< shared_ptr<ofEvent<widgetEvent> > > obsEvents = _obs->events.getValues();
-            for (int j=0; j<obsEvents.size(); j++)
-            {
-                ofRemoveListener( *obsEvents[j],this,&Observable::execute);
-            }
-
-            _obs->removeListener(shared_from_this());
-            removeObserved(_obs);
-        }
+        void logout( shared_ptr<Obs> _obs );
 
         template <class Obs>
-        void login( vector<shared_ptr<Obs> > _obsvec ) {
-            for (int i=0; i<_obsvec.size(); i++)
-            {
-                vector< shared_ptr<ofEvent<widgetEvent> > > obsEvents = _obsvec[i]->events.getValues();
-                for (int j=0; j<obsEvents.size(); j++)
-                {
-                	ofAddListener( *obsEvents[j],this,&Observable::execute);
-                }
-
-                _obsvec[i]->addListener(shared_from_this());
-                addObserved(_obsvec[i]);
-            }
-        }
+        void login( vector<shared_ptr<Obs> > _obsvec );
 
         template <class Obs>
-        void logout(vector<shared_ptr<Obs> > _obsvec) {
-            for (int i=0; i<_obsvec.size(); i++)
-            {
-                vector< shared_ptr<ofEvent<widgetEvent> > > obsEvents = _obsvec[i]->events.getValues();
-                for (int j=0; j<obsEvents.size(); j++)
-                {
-                	ofRemoveListener( *obsEvents[j],this,&Observable::execute);
-                }
+        void logout(vector<shared_ptr<Obs> > _obsvec);
 
-                _obsvec[i]->removeListener(shared_from_this());
-                removeObserved(_obsvec[i]);
-            }
-        }
+        virtual void execute( widgetEvent & event );
 
-        virtual void execute( widgetEvent & event ){}
+        virtual void addEvent( string _cmd, shared_ptr<ofEvent<widgetEvent> > _event );
 
-        virtual void addEvent( string _cmd, shared_ptr<ofEvent<widgetEvent> > _event ) {
-            events.insert(_cmd, _event);
-        }
+        virtual void saveEvent(string _cmd);
 
-        virtual void saveEvent(string _cmd){
-            shared_ptr<ofEvent<widgetEvent> > event = make_shared< ofEvent<widgetEvent> >();
-            events.insert(_cmd, event );
-        }
-
-        virtual void notify(string _cmd) {
-            shared_ptr<ofEvent<widgetEvent> > event = events.lookup(_cmd);
-            if(!event) {
-                saveEvent (_cmd);
-                event = events.lookup(_cmd);
-            }
-
-            widgetEvent eventArgs;
-            eventArgs.command = _cmd;
-            eventArgs.sender = shared_from_this();
-            ofNotifyEvent(*event,eventArgs,this);
-        }
+        virtual void notify(string _cmd) ;
 
 
         int activeIndex;
@@ -314,60 +261,24 @@ class Observable: public Object, public enable_shared_from_this<Observable> {
 
 class MouseObject : public Object, public Observable  {
     public:
-        MouseObject() {
-            enable();
+        MouseObject();
 
-            isPressable = true; isSelectable = true; isDraggable = true;
-            isDroppable                                     = false;
-            isBeingDragged                                  = false;
-            isMouseOn = false; hasBeenPressed = false; hasBeenDragged = false;
+        virtual ~MouseObject();
 
-        }
+        virtual void enable();
 
-        virtual ~MouseObject(){
-            try {
-            disable();
-            } catch (Poco::SystemException) {
-            return; // we're leaving anyways so no need to delete
-            }
+        virtual void disable();
 
-        }
-
-        virtual void enable()  {
-            ofRegisterMouseEvents(this);
-            enabled = true;
-        }
-        virtual void disable()  {
-            enabled = false;
-            try {
-	         ofUnregisterMouseEvents(this);
-            } catch (Poco::SystemException) {
-                return; // we're leaving anyways so no need to delete
-            }
-//
-        }
-        virtual void initialize()  {
-            isMouseOn=hasBeenPressed=hasBeenDragged=false;
-            enabled=true;
-        }
+        virtual void initialize();
 
 
-        virtual void mouseMoved( ofMouseEventArgs & mouse ){}
-        virtual void mousePressed( ofMouseEventArgs & mouse ){
-            mouseClick.set(mouse.x,mouse.y);
+        virtual void mouseMoved( ofMouseEventArgs & mouse );
 
-            if(isMouseOn)   hasBeenPressed=true;
-            else            hasBeenPressed=false;
-        }
+        virtual void mousePressed( ofMouseEventArgs & mouse );
 
-        virtual void mouseReleased( ofMouseEventArgs & mouse ){
-            hasBeenPressed=false;
-            hasBeenDragged=false;
-            isBeingDragged=false;
-        }
-        virtual void mouseDragged( ofMouseEventArgs & mouse ){
-            hasBeenDragged = true;
-        }
+        virtual void mouseReleased( ofMouseEventArgs & mouse );
+
+        virtual void mouseDragged( ofMouseEventArgs & mouse );
 
         bool isPressable, isSelectable, isDraggable, isDroppable;
         bool isBeingDragged;
@@ -376,9 +287,7 @@ class MouseObject : public Object, public Observable  {
         ofPoint mouseClick;
 
 
-        virtual bool isEnabled() {
-            return enabled;
-        }
+        virtual bool isEnabled();
 
 
         bool enabled;
@@ -392,102 +301,51 @@ class MouseObject : public Object, public Observable  {
 
 class DrawObject: public Object, public ofPoint {
     public:
-        DrawObject(){ show();  }
+        DrawObject();
 
-        virtual ~DrawObject(){
-            try {
-                hide();
-            } catch (Poco::SystemException) {
-                return; // we're leaving anyways so no need to delete
-            }
-
-        }
+        virtual ~DrawObject();
 
 
-        virtual void show()  {
-            ofAddListener(ofEvents.draw, this, &DrawObject::draw);
-            visible = true;
-        }
+        virtual void show();
 
-        virtual void hide(){
-            ofRemoveListener(ofEvents.draw, this, &DrawObject::draw);
-            visible = false;
-        }
+        virtual void hide();
 
-        virtual void draw(ofEventArgs & args){
-
-        }
+        virtual void draw(ofEventArgs & args);
 
 
-        virtual void set (float px, float py, float pz=0){
-        	pt.x    =   x		= px;
-            pt.y    =   y		= py;
-            z       = pz;
-        }
-        virtual void set (float px, float py, float w, float h){
-        	pt.x    =   x		= px;
-            pt.y    =   y		= py;
-            wh.x    =   width	= w;
-            wh.y    =   height	= h;
+        virtual void set (float px, float py, float pz);
 
-        }
-		virtual void set (ofPoint pos, float w, float h){
-			pt.x    =   x		= pos.x;
-            pt.y    =   y		= pos.y;
-            wh.x    =   width	= w;
-            wh.y    =   height	= h;
-		}
+        virtual void set (float px, float py, float w, float h);
 
-        virtual void setFromCenter (float px, float py){
-            pt.x    =   x		= px - (width*0.5f);
-            pt.y    =   y		= py - (height*0.5f);
-        }
-		virtual void setFromCenter (float px, float py, float w, float h){
-            pt.x    =   x		= px - (w*0.5f);
-            pt.y    =   y		= py - (h*0.5f);
-            wh.x    =   width	= w;
-            wh.y    =   height	= h;
-        }
-        virtual void setFromCenter (ofPoint pos, float w, float h){
-            pt.x    =   x		= pos.x - w*0.5f;
-            pt.y    =   y		= pos.y - h*0.5f;
-            wh.x    =   width	= w;
-            wh.y    =   height	= h;
-        }
-        virtual void setSize (float _size){
-            wh.x    =   width = height = _size;
-        }
+        virtual void set (ofPoint pos, float w, float h);
 
-        virtual void setSize (float _w, float _h){
-            wh.x    =   width = _w;
-            wh.y    =   height = _h;
-        }
+        virtual void setFromCenter (float px, float py);
 
-        virtual ofPoint getCenter (){
-            return ofPoint(x + width * 0.5f, y + height * 0.5f, 0);
-        }
+        virtual void setFromCenter (float px, float py, float w, float h);
 
-        ofRectangle getRect() {
-            ofRectangle rect;
-            rect.x=x; rect.y=y; rect.width=width; rect.height=height;
-            return rect;
-        }
+        virtual void setFromCenter (ofPoint pos, float w, float h);
 
-        float getX(){ return x; }
-        float getY(){ return y; }
-        float getWidth(){ return width; }
-        float getHeight(){ return height; }
+        virtual void setSize (float _size);
 
-        void setX( float _x ){                set( _x,y,width,height ); }
-        void setWidth( float _width ){        set( x,y,_width,height ); }
-        void setY( float _y ){                set( x,_y,width,height ); }
-        void setHeight( float _height ){      set( x,y,width,_height ); }
+        virtual void setSize (float _w, float _h);
 
-        virtual bool inside (float px, float py){}
+        virtual ofPoint getCenter ();
 
-        bool isVisible() {
-            return visible;
-        }
+        ofRectangle getRect();
+
+        float getX();
+        float getY();
+        float getWidth();
+        float getHeight();
+
+        void setX( float _x );
+        void setWidth( float _width );
+        void setY( float _y );
+        void setHeight( float _height );
+
+        virtual bool inside (float px, float py);
+
+        bool isVisible();
 
 
         bool visible;
@@ -512,34 +370,20 @@ class DrawObject: public Object, public ofPoint {
 class Controller: public Observable {
 
     public:
-        Controller() {
-            setup();
-        }
+        Controller();
 
-        void setup() {
-
-        }
+        void setup();
 
         template <class Obs>
         void login( vector<Obs> _obsvec,
                     string _cmd,
                     shared_ptr<Functor> _func
-        )
-        {
-            Observable::login( _obsvec );
-
-            for (int i=0; i<_obsvec.size(); i++)
-            	actionList.insert( make_pair(_obsvec[i],_cmd), _func );
-
-        }
+        );
 
 //        template <class Obs>
         void login( shared_ptr<Observable> _obs,
                     string _cmd,
-                    shared_ptr<Functor> _func ) {
-            Observable::login( _obs );
-            actionList.insert( make_pair( _obs,_cmd), _func );
-        }
+                    shared_ptr<Functor> _func );
 
 /*  INTENTO FALLIDO DE MODULARIZAR _:/
         void loginCtls(
@@ -567,36 +411,14 @@ class Controller: public Observable {
 */
 
         template <class Obs>
-        void logout(    shared_ptr<Obs> _obs, string _cmd ) {
-            Observable::logout( _obs);
-            actionList.erase( make_pair(_obs,_cmd) );
-        }
+        void logout(    shared_ptr<Obs> _obs, string _cmd );
 
         template <class Obs>
         void logout(    vector< ofEvent<widgetEvent> > _events,
-                        vector<shared_ptr<Obs> > _obsvec, vector<string> _cmds )
-        {
-            Observable::logout( _obsvec );
-            for (int i=0; i<_obsvec.size(); i++)
-            {
-//                actionList.erase( make_pair(_obsvec[i],_cmds[i] ) );
-            }
-        }
+                        vector<shared_ptr<Obs> > _obsvec, vector<string> _cmds );
 
-        void execute(widgetEvent & event) {
-            cout << "controller->execute( "<< event.command <<" )" << endl;
-            shared_ptr<Functor> func = actionList.lookup(
-                        make_pair(
-                            shared_ptr<Observable>(event.sender),
-                            event.command
-                        )
-                    );
-            if( func ){
-                func->execute();
-            }
-            else
-                cout<< "invalid cmd: " << event.command << endl;
-        };
+
+        void execute(widgetEvent & event);
 
 //    shared_ptr<Functor> func;
     Dictionary < pair <shared_ptr<Observable>,string>, Functor > actionList;
@@ -608,10 +430,9 @@ class Controller: public Observable {
 
 class Range{
     public:
-        Range() {
-            start=0; end=1; color=ofColor(0);
-        }
-        ~Range(){};
+        Range();
+
+        ~Range();
 
         float start;
         float end;
@@ -625,9 +446,9 @@ class Range{
 class Say: public Functor {
 
     public:
-        Say( string _str ) { str = _str; }
+        Say( string _str );
 
-        void execute() {   cout << str << endl;}
+        void execute();
 
         string str;
 
@@ -713,17 +534,16 @@ class SetPointer: public Functor {
 class Notify: public Functor {
 
     public:
-        Notify( shared_ptr<Observable> _src, string _str ) {
-            src = _src;
-            str = _str;
-        }
+        Notify( shared_ptr<Observable> _src, string _str );
 
-        void execute() {   src->notify(str); }
+        void execute();
 
         shared_ptr<Observable> src;
         string str;
 
 };
+
+
 
 
 #endif

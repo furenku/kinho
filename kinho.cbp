@@ -6,7 +6,7 @@
 		<Option makefile_is_custom="1" />
 		<Option pch_mode="2" />
 		<Option compiler="gcc" />
-		<Option virtualFolders="src/;src/scheduling/;src/gui/;src/browse/;src/main/;src/app/;src/video/;src/control/;src/scenes/;src/outputs/;src/ctl/;src/graph/;addons/ofxXmlSettings/src/;build config/;src/txt/;" />
+		<Option virtualFolders="src/;src/control/;src/scheduling/;src/gui/;src/browse/;src/main/;src/app/;src/video/;src/scenes/;src/outputs/;src/ctl/;src/graph/;addons/ofxXmlSettings/src/;build config/;src/txt/;src/gui/cpp/;src/gui/h/;src/main/cpp/;" />
 		<Build>
 			<Target title="Debug">
 				<Option output="bin/$(PROJECT_NAME)_debug" prefix_auto="1" extension_auto="1" />
@@ -48,44 +48,56 @@
 		<Unit filename="src/archive.h">
 			<Option virtualFolder="src/browse/" />
 		</Unit>
+		<Unit filename="src/baseGUIObjects.cpp">
+			<Option virtualFolder="src/gui/cpp/" />
+		</Unit>
 		<Unit filename="src/baseGUIObjects.h">
-			<Option virtualFolder="src/gui/" />
+			<Option virtualFolder="src/gui/h/" />
+		</Unit>
+		<Unit filename="src/control.cpp">
+			<Option virtualFolder="src/control/" />
 		</Unit>
 		<Unit filename="src/control.h">
 			<Option virtualFolder="src/control/" />
 		</Unit>
-		<Unit filename="src/controllers.h">
+		<Unit filename="src/controllers.cpp">
 			<Option virtualFolder="src/ctl/" />
 		</Unit>
-		<Unit filename="src/db.h">
-			<Option virtualFolder="src/main/" />
+		<Unit filename="src/controllers.h">
+			<Option virtualFolder="src/ctl/" />
 		</Unit>
 		<Unit filename="src/editor.h">
 			<Option virtualFolder="src/browse/" />
 		</Unit>
+		<Unit filename="src/functors.cpp">
+			<Option virtualFolder="src/ctl/" />
+		</Unit>
 		<Unit filename="src/functors.h">
 			<Option virtualFolder="src/ctl/" />
 		</Unit>
-		<Unit filename="src/general.cpp">
-			<Option virtualFolder="src/main/" />
-		</Unit>
-		<Unit filename="src/general.h">
-			<Option virtualFolder="src/main/" />
+		<Unit filename="src/geometryWidgets.cpp">
+			<Option virtualFolder="src/gui/cpp/" />
 		</Unit>
 		<Unit filename="src/geometryWidgets.h">
-			<Option virtualFolder="src/gui/" />
+			<Option virtualFolder="src/gui/h/" />
 		</Unit>
 		<Unit filename="src/guiCtl.h">
-			<Option virtualFolder="src/gui/" />
+			<Option virtualFolder="src/gui/h/" />
 		</Unit>
 		<Unit filename="src/guiFuncs.h">
-			<Option virtualFolder="src/gui/" />
+			<Option virtualFolder="src/gui/h/" />
+		</Unit>
+		<Unit filename="src/guiObjects.cpp">
+			<Option virtualFolder="src/gui/cpp/" />
 		</Unit>
 		<Unit filename="src/guiObjects.h">
-			<Option virtualFolder="src/gui/" />
+			<Option virtualFolder="src/gui/h/" />
+		</Unit>
+		<Unit filename="src/guiVideoObjects.cpp">
+			<Option virtualFolder="src/gui/cpp/" />
 		</Unit>
 		<Unit filename="src/guiVideoObjects.h">
-			<Option virtualFolder="src/gui/" />
+			<Option virtualFolder="src/gui/h/" />
 		</Unit>
 		<Unit filename="src/kVideoPlayer.cpp">
 			<Option virtualFolder="src/video/" />
@@ -102,17 +114,23 @@
 		<Unit filename="src/main.cpp">
 			<Option virtualFolder="src/" />
 		</Unit>
+		<Unit filename="src/mainClasses.cpp">
+			<Option virtualFolder="src/main/cpp/" />
+		</Unit>
 		<Unit filename="src/mainClasses.h">
 			<Option virtualFolder="src/main/" />
 		</Unit>
 		<Unit filename="src/model.h">
-			<Option virtualFolder="src/gui/" />
+			<Option virtualFolder="src/gui/h/" />
 		</Unit>
 		<Unit filename="src/ontologies.cpp">
 			<Option virtualFolder="src/browse/" />
 		</Unit>
 		<Unit filename="src/ontologies.h">
 			<Option virtualFolder="src/browse/" />
+		</Unit>
+		<Unit filename="src/outputs.cpp">
+			<Option virtualFolder="src/outputs/" />
 		</Unit>
 		<Unit filename="src/outputs.h">
 			<Option virtualFolder="src/outputs/" />
@@ -130,7 +148,7 @@
 			<Option virtualFolder="src/app/" />
 		</Unit>
 		<Unit filename="src/storage.cpp">
-			<Option virtualFolder="src/main/" />
+			<Option virtualFolder="src/main/cpp/" />
 		</Unit>
 		<Unit filename="src/storage.h">
 			<Option virtualFolder="src/main/" />
@@ -140,6 +158,9 @@
 		</Unit>
 		<Unit filename="src/testApp.h">
 			<Option virtualFolder="src/" />
+		</Unit>
+		<Unit filename="src/text.cpp">
+			<Option virtualFolder="src/txt/" />
 		</Unit>
 		<Unit filename="src/text.h">
 			<Option virtualFolder="src/txt/" />
@@ -160,7 +181,7 @@
 			<Option virtualFolder="src/video/" />
 		</Unit>
 		<Unit filename="src/videoObjects.h">
-			<Option virtualFolder="src/gui/" />
+			<Option virtualFolder="src/gui/h/" />
 		</Unit>
 		<Unit filename="src/videoStorage.cpp">
 			<Option virtualFolder="src/video/" />
@@ -168,8 +189,11 @@
 		<Unit filename="src/videoStorage.h">
 			<Option virtualFolder="src/video/" />
 		</Unit>
+		<Unit filename="src/views.cpp">
+			<Option virtualFolder="src/gui/cpp/" />
+		</Unit>
 		<Unit filename="src/views.h">
-			<Option virtualFolder="src/gui/" />
+			<Option virtualFolder="src/gui/h/" />
 		</Unit>
 		<Extensions>
 			<code_completion />

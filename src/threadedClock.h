@@ -7,7 +7,7 @@ THANKS TO: LetsGoOutside (http://forum.openframeworks.cc/index.php?topic=3404.0)
     #ifndef _THREADED_CLOCK
     #define _THREADED_CLOCK
 
-    #include "general.h"
+//    #include "general.h"
 
 
     #define OF_ADDON_USING_OFXTHREAD

@@ -1,9 +1,10 @@
 
-#include "ofMain.h"
-#include "ofMain.h"
 
 #ifndef video_h
 #define video_h
+
+#include "ofMain.h"
+
 
 class VideoLoader {
     public:
@@ -15,11 +16,27 @@ class VideoLoader {
         }
 
         void loadData() {
+//            video.play();
+
+            cout << "1" << endl;
             video.loadMovie(filename);
+            cout << "2" << endl;
             duration = video.getDuration();
+
+            video.setPaused(true);
+//            video.idleMovie();
+
+                        cout << "duration"<<duration << endl;
+            cout << "3" << endl;
             width = video.getWidth();
+            cout << "4" << endl;
             height = video.getHeight();
+            cout << "5" << endl;
             video.close();
+        }
+
+        void update(){
+
         }
 
         float getDuration(){

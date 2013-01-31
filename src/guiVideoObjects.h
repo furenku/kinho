@@ -4,6 +4,16 @@
 
 #ifndef gui_video_objects_h
 #define gui_video_objects_h
+
+#include "guiObjects.h"
+#include "storage.h"
+#include "mediaStorage.h"
+//#pragma once
+
+//#ifndef GUIVIDEOOBJECTS_H
+//#define GUIVIDEOOBJECTS_H
+
+
 //----- VIDEO OBJECTS:
 
 
@@ -15,22 +25,12 @@ class kVideoThumb: virtual public DrawObject, virtual public Observable {
 
 class MediaWidget: virtual public kCircleButton, public StoreObject { //, virtual public kVideoThumb {
     public:
-        MediaWidget(){
-            name        = "";
-            filename    = "";
-            description = "";
-            type = "mediawidget";
+        MediaWidget();
 
-        }
-        ~MediaWidget(){
-            media.reset();
-        }
-        void setMedia( shared_ptr<MediaHolder> _media){
-//            media       = _media;
-////            name        = _media -> getName();
-////            filename    = _media -> getFilename();
-//            description = _media -> getDescription();
-        }
+        ~MediaWidget();
+
+        void setMedia( shared_ptr<MediaHolder> _media);
+
 
 
 //    protected:
@@ -45,58 +45,24 @@ class MediaWidget: virtual public kCircleButton, public StoreObject { //, virtua
 class kClip: virtual public MediaWidget { //, virtual public kVideoThumb {
 
     public:
-        kClip(){
+        kClip(){}
+
+        ~kClip();
 
 
-//            settings = _settings;
-        }
-        ~kClip(){
-            clip.reset();
-        }
+
 
 //        void createEvents(){
 //            kDragObject::createEvents();
 //        }
 
 
-        void setClip ( shared_ptr<Clip> _clip ) {
+        void setClip ( shared_ptr<Clip> _clip );
 
-            clip = _clip;
+        shared_ptr<Clip> getClip();
 
-            aspectRatio = _clip -> getAspectRatio();
-            string imgPath = _clip -> getFilename();
-            string thumbPath = imgPath.substr(0, imgPath.find(".") )+".png";
+        void draw(ofEventArgs & args);
 
-            cout << thumbPath << endl;
-            img.loadImage(thumbPath);
-
-            setMedia(_clip);
-
-        }
-
-        shared_ptr<Clip> getClip() { return clip; }
-
-        void draw(ofEventArgs & args){
-
-//            ofCircle(x,y,r);
-//            ofSetColor(65);
-
-            ofSetColor(255);
-            float w;
-            if(isMouseOn)
-                w = width*1.5f;
-            else
-                w = width;
-
-                img.draw(
-                    x-w/2,
-                    y-(w/aspectRatio)/2,
-                    w,
-                    w/aspectRatio
-                );
-
-
-        }
 
 //    protected:
 
@@ -110,23 +76,13 @@ class kClip: virtual public MediaWidget { //, virtual public kVideoThumb {
 
 class kClipShow: virtual public kClip, virtual public kDragObject {
     public:
-        kClipShow(): kClip() { isDroppable = true; createEvents(); }
+        kClipShow(): kClip(){}
 
-        void createEvents() {
-            saveEvent("dragged");
-        }
+        void createEvents();
 
+        void mouseReleased( ofMouseEventArgs & mouse);
 
-
-        void mouseReleased( ofMouseEventArgs & mouse){
-            kClip::mouseReleased(mouse);
-            kDragObject::mouseReleased(mouse);
-        }
-
-        void mouseDragged( ofMouseEventArgs & mouse){
-            kDragObject::mouseDragged(mouse);
-            notify("dragged");
-        }
+        void mouseDragged( ofMouseEventArgs & mouse);
 
 };
 
@@ -135,217 +91,49 @@ class kClipHolder: virtual public kClip, virtual public kCircleView, virtual pub
     public:
 int output;
 
-        kClipHolder( shared_ptr<Settings> _settings ) {
-            createEvents();
-            autoArrange = false;
-            isDraggable = true;
-            isDroppable = false;
+        kClipHolder( shared_ptr<Settings> _settings );
 
-            applySettings(_settings);
-            setWidgetSettings (_settings);
-output=-1;
 
-        }
 
 
+        void createEvents();
 
-        void createEvents(){
-            saveEvent("killSubView");
-            saveEvent("press");
-            saveEvent("connect");
-            saveEvent("select");
-            saveEvent("viewClip");
-        }
+        void addBtnView();
 
-        void addBtnView(){
-            btnView = make_shared<kCircleButtonView>();
-            btnView->set(0,0,1.0f,1.0f);
-            btnView -> applySettings ( settings  );
-            btnView -> setWidgetSettings ( settings );
+        virtual void pressed();
 
-            addWidget(btnView);
+        virtual void pressedOut();
 
-            vector<string> labels;
-            labels.push_back("select");
-            labels.push_back("connect");
-            labels.push_back("related");
-            labels.push_back("scenes");
-            labels.push_back("tags");
-//
-            btnView -> addButtons(labels);
-////            for (int i=0; i<labels.size(); i++)
-////                ofAddListener( *btnView->events.lookup("btnClicked"),this,&kClipHolder::btnClicked);
 
-            arrangeWidgets();
 
+        void removeBtnView();
 
-        }
+        void removeSubView();
 
-        virtual void pressed() {
 
-//            bool hasCreated=false;
-            if(!btnView) {
-                addBtnView();
-//                hasCreated=true;
-                notify("viewClip");
-            }
 
+        void btnClicked(widgetEvent & _event );
 
-//            if(hasCreated==false&&btnView)
-//                removeBtnView();
 
 
-        }
 
-        virtual void pressedOut() {
+        void draw(ofEventArgs & args);
 
-            if(btnView)
-                if(!subView) {
-                    if(!mouseOnWidgets())
-                        removeBtnView();
-                }
+        void mouseDragged(ofMouseEventArgs & mouse);
 
-        }
 
+        void mouseReleased(ofMouseEventArgs & mouse);
 
 
+        void deleteView();
 
-        void removeBtnView(){
-            if(btnView) {
-                for (int i=0; i<btnView->widgets.size(); i++)
-                    ofRemoveListener( *btnView->events.lookup("btnClicked"),this,&kClipHolder::btnClicked);
+        void addView();
 
-                view->addDelete(btnView);
 
-                removeWidget(btnView);
-                btnView.reset();
-                removeSubView();
-                arrangeWidgets();
+        void showView(float _x, float _y);
 
-            }
+        shared_ptr<kClipHolder> shared_from_this();
 
-        }
-
-        void removeSubView(){
-            if(subView) {
-                view->addDelete(subView);
-                removeWidget(subView);
-                subView.reset();
-            }
-        }
-
-
-        void btnClicked(widgetEvent & _event ){
-            int index = btnView->value;
-
-            string command = btnView->labels[index];
-
-            if( command == "select" )
-               notify("select");
-
-            if( command == "connect" )
-                notify("connect");
-
-            if( command == "related" ) {
-                addView();
-                showView(btnView->widgets[ index ]->x,btnView->widgets[ index ]->y);
-            }
-
-            if( command == "scenes" ) {
-                addView();
-                showView(btnView->widgets[ index ]->x,btnView->widgets[ index ]->y);
-            }
-
-            if( command == "tags" ) {
-                addView();
-                showView(btnView->widgets[ index ]->x,btnView->widgets[ index ]->y);
-            }
-
-        }
-
-
-
-
-
-        void draw(ofEventArgs & args) {
-            kClip::draw(args);
-        }
-
-        void mouseDragged(ofMouseEventArgs & mouse) {
-            if(isBeingDragged && !view->inside(mouse.x,mouse.y))
-                makeDroppable(mouse.x, mouse.y);
-
-            else
-            if(hasBeenMadeDroppable)
-                makeDraggable(x,y);
-
-
-            kDragObject::mouseDragged(mouse);
-        }
-
-
-        void mouseReleased(ofMouseEventArgs & mouse) {
-
-
-            if(subView) {
-                removeSubView();
-            }
-
-//            makeDraggable(x,y);
-
-            kDragObject::mouseReleased(mouse);
-
-        }
-
-        void deleteView(){
-            removeWidget(subView);
-            subView->clearWidgets();
-            subView.reset();
-        }
-
-        void addView() {
-
-            subView = make_shared<kRectButtonView>();
-
-            subView  -> applySettings ( settings  );
-            subView  -> setWidgetSettings ( settings );
-            subView  -> set(0,0,2.1f,2.1f);
-
-            addWidget( subView );
-//            freezeButtons();
-
-
-        }
-
-
-        void showView(float _x, float _y)   {
-            if(subView) {
-                subView -> set( _x, _y);
-                subView -> label = "options";
-//
-                /// ask for ctl to populate it, through notify
-
-                vector<string> labels;
-                for (int i=0; i<2; i++)
-                {
-                    labels.push_back( ofToString(rand()%10) );
-                }
-
-                subView -> addButtons(labels);
-
-                subView -> show();
-
-                arrangeWidgets();
-            }
-
-
-        }
-
-        shared_ptr<kClipHolder> shared_from_this()
-        {
-            return dynamic_pointer_cast<kClipHolder>(kWidget::shared_from_this());
-        }
-//
 //        vector<kView*> storeViews;
         shared_ptr<kCircleButtonView> btnView;
         shared_ptr<kRectButtonView> subView;
@@ -361,9 +149,8 @@ class kCategory: virtual public kCircleButtonView, virtual public kDragObject {
     public:
         kCategory() { }
 
-        void mouseDragged(ofMouseEventArgs & mouse) {
-            kDragObject::mouseDragged(mouse);
-        }
+        void mouseDragged(ofMouseEventArgs & mouse);
+
 };
 
 
@@ -372,76 +159,29 @@ class kCategory: virtual public kCircleButtonView, virtual public kDragObject {
 class kClipView: virtual public kRectView, virtual public kDragSink{
 
     public:
-    kClipView() { createEvents(); }
+    kClipView() ;
 
-    void createEvents() {
-        saveEvent("clipClicked");
-        saveEvent("clipDragged");
-    }
+    void createEvents();
 
-    virtual void addClip(shared_ptr<Clip> _clip){
-        shared_ptr<kClipShow> clip = make_shared<kClipShow>();
-        clip -> setClip(_clip);
-        clip->set( 0, 0, CLIPVIEW_SIZE, CLIPVIEW_SIZE );
+    virtual void addClip(shared_ptr<Clip> _clip);
 
-        addWidget( clip );
-
-        clips.push_back(clip);
-
-        ofAddListener( *clip->events.lookup("press"),this,&kClipView::clipClicked );
-        ofAddListener( *clip->events.lookup("drag"),this,&kClipView::clipDragged );
-
-//        if(!visible) clip->hide();
-        arrangeWidgets();
-    }
-
-        void clipClicked(widgetEvent & _event){
-
-            shared_ptr<kWidget>sender=dynamic_pointer_cast<kWidget>(_event.sender);
-
-            int index = getWidgetIndex( sender );
-
-            value = index;
-
-            if(clips.size()>index)
-            draggingClip = clips[index]->getClip();
-
-            notify("clipClicked");
-
-        }
+        void clipClicked(widgetEvent & _event);
 
 
-        void clipDragged(widgetEvent & _event){
-            shared_ptr<kWidget>sender=dynamic_pointer_cast<kWidget>(_event.sender);
-            int index = getWidgetIndex( sender );
-            value = index;
-            cout << "index"<<index << endl;
-            if(clips.size()>index)
-            draggingClip = clips[index]->getClip();
-            notify("clipDragged");
-        }
+        void clipDragged(widgetEvent & _event);
 
-    void removeClip( shared_ptr<kClipShow> _clip ){
-        removeWidget( _clip );
-    }
+    void removeClip( shared_ptr<kClipShow> _clip );
 
-    vector< shared_ptr < kClipShow > > & getClips() {
-        return clips;
-    }
+    vector< shared_ptr < kClipShow > > & getClips();
 
     shared_ptr<Clip> currentClip;
     vector< shared_ptr < kClipShow > > clips;
 
-    void clearClips(){
-        for (int j=0; j<clips.size(); j++) {
+    void clearClips();
 
-            removeWidget( clips[j] );
-            clips[j].reset();
-        }
-        clips.clear();
-    }
+    shared_ptr<Clip> getDraggingClip();
 
-    shared_ptr<Clip> draggingClip;
+    shared_ptr<Clip> draggingClip,clickedClip;
 
 };
 
@@ -453,65 +193,14 @@ class kClipView: virtual public kRectView, virtual public kDragSink{
 class kClipScrollView: virtual public kScrollView, virtual public kClipView {
     public:
 
-    kClipScrollView(){ orientation="vertical"; cols = 2; spacingX=40;spacingY=40; }
-/*
-    void addButtons(vector<string> _labels){
+    kClipScrollView();
 
+    void initialize();
 
-            clearWidgets();
+    void addClips(vector< shared_ptr<Clip> > _clips);
 
-            labels=_labels;
-            for (int i=0; i<labels.size(); i++)
-            {
-                btn = make_shared<kCircleButton>();
-                btn->setSize(widgetSize);
-                btn->setLabel( labels[i] );
-                btn->setMode(TOGGLE_ON);
-                if(i==0)    btn->toggle=true;
-                else        btn->toggle=false;
-                btn->value = i ;
+    vector< shared_ptr < kClipShow > > & getClips();
 
-                ofAddListener( *btn->events.lookup("press"),this,&kScrollView::btnClicked);
-
-                addWidget( btn );
-
-                btn.reset();
-
-            }
-
-        }
-
-*/
-
-    void initialize() {
-
-        kScrollView::initialize();
-
-    }
-
-    void addClips(vector< shared_ptr<Clip> > _clips){
-        for (int i=0; i<_clips.size(); i++)
-            addClip(_clips[i]);
-        /*shared_ptr<kClipShow> clip;
-        for (int i=0; i<_clips.size(); i++)
-        {
-        	clip = make_shared<kClipShow>();
-            clip -> setClip( _clips[i] );
-            clip->set( 0, 0, CLIPVIEW_SIZE, CLIPVIEW_SIZE );
-
-            kScrollView::addWidget( clip );
-
-
-        }
-        kScrollView::arrangeWidgets();*/
-    }
-
-
-    vector< shared_ptr < kClipShow > > & getClips() {
-        return clips;
-    }
-
-    shared_ptr<Clip> currentClip;
     vector< shared_ptr < kClipShow > > clips;
 
 
@@ -521,134 +210,26 @@ class kClipScrollView: virtual public kScrollView, virtual public kClipView {
 
 class kMediaScrollView: virtual public kCircleScrollView {
     public:
-        kMediaScrollView(){
-            createEvents();
-        }
+        kMediaScrollView();
 
 
 
 
-        void createEvents() {
-            saveEvent("btnClicked");
-            saveEvent("btnDragged");
-        }
+        void createEvents();
 
 
 
 
 
 
-        void addMedia( vector<shared_ptr<MediaHolder> > _media ){
+        void addMedia( vector<shared_ptr<MediaHolder> > _media );
 
-            clearWidgets();
-            string type;
 
-            for (int i=0; i<_media.size(); i++)
-            {
-
-                type = _media[i]->getType();
-
-                if(type == "clip") {
-                    shared_ptr<kClipShow> btn = make_shared<kClipShow>();
-                    btn->setSize(widgetSize);
-
-                    shared_ptr< Clip > clip = dynamic_pointer_cast< Clip >( _media[i] );
-
-                    btn->setClip( clip );
-
-                    btn->value = i;
-                    addWidget( btn );
-
-                    ofAddListener( *btn->events.lookup("press"),this,&kMediaScrollView::btnClicked);
-                    ofAddListener( *btn->events.lookup("drag"),this,&kMediaScrollView::btnDragged);
-
-                }
-                else if(type == "sample") {
-
-//                    shared<kSampleShow> btn = make_shared<kSampleShow>();
-//                    btn->setSize(widgetSize);
-//                    btn->setSample( _samples[i] );
-//
-//                    btn->value = i;
-//                    addWidget( btn );
-//
-//                    ofAddListener( *btn->events.lookup("press"),this,&kButtonView::btnClicked);
-//                    ofAddListener( *btn->events.lookup("drag"),this,&kButtonView::btnDragged);
-
-                }
-                else if(type == "text") {
-
-//                    shared<kTextShow> btn = make_shared<kTextShow>();
-//                    btn->setSize(widgetSize);
-//                    btn->setText( _texts[i] );
-//
-//                    btn->value = i;
-//                    addWidget( btn );
-//
-//                    ofAddListener( *btn->events.lookup("press"),this,&kButtonView::btnClicked);
-//                    ofAddListener( *btn->events.lookup("drag"),this,&kButtonView::btnDragged);
-
-                }
+        void btnClicked(widgetEvent & _event);
 
 
 
-            }
-
-
-
-            arrangeWidgets();
-
-
-        }
-
-
-        void btnClicked(widgetEvent & _event){
-            shared_ptr<kWidget>sender=dynamic_pointer_cast<kWidget>(_event.sender);
-
-            int index = getWidgetIndex( sender );
-
-            for (int i=0; i<widgets.size(); i++) {
-                widgets[i]->toggle=false;
-            }
-
-            if(index>=0) {
-                widgets[index]->toggle = true;
-                value = index;
-                command = labels[index];
-            }
-
-//            cout << value << endl;
-
-
-            if(value>0) boolValue = true;
-            else        boolValue = false;
-            notify("btnClicked");
-
-        }
-
-
-
-        void btnDragged(widgetEvent & _event){
-            shared_ptr<kWidget>sender=dynamic_pointer_cast<kWidget>(_event.sender);
-            for (int i=0; i<widgets.size(); i++) {
-                if(sender!=widgets[i])
-                {
-//                    widgets[i]->toggle=false;
-                }
-            	else {
-//            	    widgets[i]->toggle = true;
-                    value = i;
-                    break;
-            	}
-            }
-//            cout << value << endl;
-            command = labels[value];
-//
-//            if(value>0) boolValue = true;
-//            else        boolValue = false;
-            notify("btnDragged");
-
-        }
+        void btnDragged(widgetEvent & _event);
 
 };
 
@@ -657,11 +238,7 @@ class kMediaScrollView: virtual public kCircleScrollView {
 
 class kSample: virtual public MediaWidget { //, virtual public kVideoThumb {
     public:
-        kSample(){
-
-            sampleRate = 44100;
-//            settings = _settings;
-        }
+        kSample();
 
 //        void createEvents(){
 //            kDragObject::createEvents();
@@ -669,33 +246,9 @@ class kSample: virtual public MediaWidget { //, virtual public kVideoThumb {
 
 //        shared_ptr<Sample> sample;
 
-        void setSample ( shared_ptr<Sample> _sample ) {
-            sample = _sample;
-            sampleRate = _sample -> getSampleRate();
-            setMedia(_sample);
-        }
+        void setSample ( shared_ptr<Sample> _sample ) ;
 
-        void draw(ofEventArgs & args){
-
-//            ofCircle(x,y,r);
-//            ofSetColor(65);
-            if(isMouseOn)
-                ofSetColor(255,200,0);
-            else
-                ofSetColor(255,125,0);
-            float w;
-            if(isMouseOn)
-                w = width*1.5f;
-            else
-                w = width;
-
-            ofRect(x,y,w,w);
-
-            ofSetColor(155);
-            ofDrawBitmapString(filename,x,y);
-
-
-        }
+        void draw(ofEventArgs & args);
 
     protected:
         shared_ptr<Sample> sample;
@@ -707,12 +260,10 @@ class kSample: virtual public MediaWidget { //, virtual public kVideoThumb {
 
 class kSampleShow: virtual public kSample, virtual public kDragObject {
     public:
-        kSampleShow(): kSample() { isDroppable = true; }
+        kSampleShow(): kSample(){}
 
-        void mouseReleased( ofMouseEventArgs & mouse){
-            kSample::mouseReleased(mouse);
-            kDragObject::mouseReleased(mouse);
-        }
+        void mouseReleased( ofMouseEventArgs & mouse);
+
 };
 
 
@@ -722,35 +273,17 @@ class kSampleView: virtual public kRectView, virtual public kDragSink{
     public:
     kSampleView() {}
 
-    virtual void addSample(shared_ptr<Sample> _sample){
+    virtual void addSample(shared_ptr<Sample> _sample);
 
-        shared_ptr<kSampleShow> sample = make_shared<kSampleShow>();
-        sample -> setSample(_sample);
-        sample->set( 0, 0, CLIPVIEW_SIZE, CLIPVIEW_SIZE );
+    void removeSample(shared_ptr<kSampleShow> _sample);
 
-        addWidget( sample );
-//        samples.push_back( sample );
+    vector< shared_ptr < kSampleShow > > & getSamples();
 
-    }
+    void clearSamples();
 
-    void removeSample(shared_ptr<kSampleShow> _sample){
-        removeWidget( _sample );
-    }
-
-    vector< shared_ptr < kSampleShow > > & getSamples() {
-        return samples;
-    }
 
     shared_ptr<Sample> currentSample;
     vector< shared_ptr < kSampleShow > > samples;
-
-    void clearSamples(){
-        for (int j=0; j<samples.size(); j++) {
-            removeWidget( samples[j] );
-            samples[j].reset();
-        }
-        samples.clear();
-    }
 
 
 };
@@ -760,7 +293,10 @@ class kSampleView: virtual public kRectView, virtual public kDragSink{
 class kSampleScrollView: virtual public kScrollView,virtual public kSampleView {
     public:
 
-    kSampleScrollView(){ orientation="vertical"; cols = 1; spacingX=40;spacingY=40; }
+    kSampleScrollView();
+    void clearSamples();
+
+
 /*
     void addButtons(vector<string> _labels){
 
@@ -791,14 +327,7 @@ class kSampleScrollView: virtual public kScrollView,virtual public kSampleView {
 */
 
 
-    void addSamples(vector< shared_ptr<Sample> > _samples){
-        for (int i=0; i<_samples.size(); i++)
-        {
-        	addSample(_samples[i]);
-        }
-
-    }
-
+    void addSamples(vector< shared_ptr<Sample> > _samples);
 
 };
 
@@ -1064,14 +593,13 @@ class kTrack: virtual public kWidget {
         kTrack() {
         }
 
-        void draw(widgetEvent & event){
-
-
-        }
+        void draw(widgetEvent & event);
 
 };
 
 
 
-#endif gui_video_objects_h
+//#endif gui_video_objects_h
+
+#endif
 

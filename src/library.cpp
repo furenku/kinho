@@ -34,6 +34,8 @@ void LibraryManager::addOntology(shared_ptr<Ontology> _ont){
         int index=getIndexByName(v,_ont->getName());
         if(index==-1)
             tags.push_back(dynamic_pointer_cast<Tag>(_ont));
+        else
+            cout << "tag "<<_ont->getName()<<" is already there" << endl;
     }
     if(type=="category"){
         vector< shared_ptr<StoreObject> > v;
@@ -42,6 +44,8 @@ void LibraryManager::addOntology(shared_ptr<Ontology> _ont){
         int index=getIndexByName(v,_ont->getName());
         if(index==-1)
             categories.push_back(dynamic_pointer_cast<Category>(_ont));
+        else
+            cout << "cat "<<_ont->getName()<<" is already there" << endl;
     }
 }
 void LibraryManager::removeOntology(shared_ptr<Ontology> _ont){
@@ -313,6 +317,7 @@ vector< shared_ptr<Ontology> > LibraryManager::getChildOntologies(shared_ptr<Ont
 
 
 
+shared_ptr<kBrowseArchive> Library::getView(){ return view; }
 
 
 void Library::btnClicked(widgetEvent & _event){
@@ -443,6 +448,22 @@ void Library::setClips(){
 
 
 
+shared_ptr<MediaHolder> Library::getDraggingMedia() { if(draggingMedia) return draggingMedia; }
+shared_ptr<Clip> Library::getDraggingClip() { if(draggingClip) return draggingClip; }
+string Library::getDraggingOntology() { if(draggingOntology!="") return draggingOntology; }
+
+
+void Library::mouseReleased(ofMouseEventArgs & mouse) {
+//            kView::mouseReleased(mouse);
+//            draggingOntology="";
+//            draggingClip.reset();
+//            draggingMedia.reset();
+
+    if(view->inside(mouse.x, mouse.y)) {
+        draggingOntology="";
+        cout << "ins" << endl;
+    }
+}
 
 
 
@@ -451,5 +472,51 @@ void Library::setClips(){
 
 
 
+WordSelect::WordSelect(){ orientation="vertical"; autoArrange="true"; spacingX=100; spacingY=30; }
+
+void WordSelect::initialize(){
+    saveEvent("selectedWords");
+    kScrollView::initialize();
+}
+
+void WordSelect::btnClicked(widgetEvent & _event){
+    cout << "click" << endl;
+    for (int i=0; i<widgets.size(); i++)
+    {
+
+        if (dynamic_pointer_cast<kLabelButton>(widgets[i])->getToggle() ) {
+            selectedStrings.push_back( widgets[i]->getLabel() );
+        }
+
+        notify("selectedWords");
+    }
+
+}
+
+void WordSelect::makeButton(string _str){
+    btn = make_shared<kLabelButton>( );
+    btn->setLabel(_str);
+    btn->set(0,0,100,50);
+    btn->setMode(TOGGLE_ON);
+    addWidget(btn);
+    ofAddListener(*btn->events.lookup("press"),this,&WordSelect::btnClicked);
+    arrangeWidgets();
+}
+
+
+vector<string> & WordSelect::getSelected(){
+    return selectedStrings;
+}
+
+
+
+
+
+void GraphBrowser::browse( vector<string> & _selectedStrings ){
+    for (int i=0; i<_selectedStrings.size(); i++)
+    {
+        cout << "browser:" << _selectedStrings[i] << endl;
+    }
+}
 
 

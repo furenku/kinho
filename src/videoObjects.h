@@ -1,4 +1,4 @@
-
+/*
 
 class Clip: public Observable{
     public:
@@ -40,3 +40,4 @@ class Clip: public Observable{
 
 };
 
+*/

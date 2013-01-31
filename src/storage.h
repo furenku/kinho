@@ -5,6 +5,11 @@
 
 
 
+#include "ofMain.h"
+
+
+//#include "ofMain.h"
+
 #include <map>
 #include <tr1/memory>
 #include <boost/pointer_cast.hpp>
@@ -18,23 +23,24 @@ using boost::shared_ptr;
 using boost::enable_shared_from_this;
 using boost::dynamic_pointer_cast;
 using boost::make_shared;
+//
+//
+//
+//#include "ofMain.h"
+
+#include <string>
+//#include "ofxXmlSettings.h"
+
+//#pragma once
 
 
 
-#include "ofMain.h"
-#include "ofxXmlSettings.h"
-
-//ALMACENAMIENTO
 class AbstractStoreObject {
     public:
-    AbstractStoreObject(){
-        init();
-    }
-    virtual ~AbstractStoreObject(){}
+    AbstractStoreObject();
+    virtual ~AbstractStoreObject();
 
-    virtual void init() {
-        setInfo("","",0);
-    }
+    virtual void init();
 
 //funcs
     //set
@@ -62,23 +68,9 @@ class Attribute: public AbstractStoreObject {
 
     public:
 
-    Attribute(){
-        init();
-    }
+    Attribute();
 
-    void init(){
-
-        boolValue=false;
-        charValue=0;
-        intValue=0;
-        floatValue=0.0f;
-        stringValue="";
-    //range&interpolation
-        intRangeMin=intRangeMax=intInterpMin=intInterpMax = 0;
-        floatRangeMin=floatInterpMin=0.0f;
-        floatRangeMax=floatInterpMax=1.0f;
-
-    }
+    void init();
 
     //value
     //value
@@ -155,9 +147,7 @@ class AttributeGroup: public Attribute {
 
 class StoreObject: virtual public AttributeGroup{
     public:
-        StoreObject(){
-            attgrps.push_back(make_shared<AttributeGroup>());
-        }
+        StoreObject();
 
 
     //funcs
@@ -214,179 +204,83 @@ class StoreObject: virtual public AttributeGroup{
 
 };
 
-class XMLManager: public ofxXmlSettings {
-    public:
-        XMLManager(){}
-
-        //funciones
-            //file
-                void openFile(string _filename);
-                void createFile(string _filename);
-            //write
-            //object
-                void writeObject(shared_ptr<StoreObject> _strobj);
-                void deleteObject(shared_ptr<StoreObject> _strobj);
-            //association
-                void setRelated( shared_ptr<StoreObject>,shared_ptr<StoreObject>);
-                void setHierarchy( shared_ptr<StoreObject>,shared_ptr<StoreObject>);
-                void eraseRelationships(shared_ptr<StoreObject> _strobj);
-                void eraseRelationships(shared_ptr<StoreObject> _strobj1, shared_ptr<StoreObject> _strobj2);
-            //xml
-                void addAndPushTag(string _tag);
-                void popTag();
-                void addToTag(shared_ptr<StoreObject> _strobj, string _tag);
-            //read
-                string readTag(string _tag1, string _tag2);
-                vector< shared_ptr<StoreObject> > loadObjects();
-                    //navigate xml
-                    //check type
-                    //factory->make obj func
-            //navigate
-        protected:
-            string filename;
-
-
-};
-
-
+//class XMLManager: public ofxXmlSettings {
+//    public:
+//        XMLManager(){}
+//
+//        //funciones
+//            //file
+//                void openFile(string _filename);
+//                void createFile(string _filename);
+//            //write
+//            //object
+//                void writeObject(shared_ptr<StoreObject> _strobj);
+//                void deleteObject(shared_ptr<StoreObject> _strobj);
+//            //association
+//                void setRelated( shared_ptr<StoreObject>,shared_ptr<StoreObject>);
+//                void setHierarchy( shared_ptr<StoreObject>,shared_ptr<StoreObject>);
+//                void eraseRelationships(shared_ptr<StoreObject> _strobj);
+//                void eraseRelationships(shared_ptr<StoreObject> _strobj1, shared_ptr<StoreObject> _strobj2);
+//            //xml
+//                void addAndPushTag(string _tag);
+//                void popTag();
+//                void addToTag(shared_ptr<StoreObject> _strobj, string _tag);
+//            //read
+//                string readTag(string _tag1, string _tag2);
+//                vector< shared_ptr<StoreObject> > loadObjects();
+//                    //navigate xml
+//                    //check type
+//                    //factory->make obj func
+//            //navigate
+//        protected:
+//            string filename;
+//
+//
+//};
+//
+//
 
 
 
 class Relationships: public StoreObject{
     public:
     Relationships(){}
-
+    ~Relationships(){}
         //funcs
 
     //set
-        void setRelated(shared_ptr<StoreObject> _obj1, shared_ptr<StoreObject> _obj2) {
-            related[_obj1].push_back(_obj2);
-            related[_obj2].push_back(_obj1);
-        }
+        void setRelated(shared_ptr<StoreObject> _obj1, shared_ptr<StoreObject> _obj2);
 
-        void removeRelated(shared_ptr<StoreObject> _obj1, shared_ptr<StoreObject> _obj2) {
-            vector < shared_ptr<StoreObject> > & v1 = getRelated(_obj1);
-            vector < shared_ptr<StoreObject> > & v2 = getRelated(_obj2);
-            v1.erase(remove(v1.begin(), v1.end(), _obj2), v1.end());
-            v2.erase(remove(v2.begin(), v2.end(), _obj1), v2.end());
-        }
+        void removeRelated(shared_ptr<StoreObject> _obj1, shared_ptr<StoreObject> _obj2);
 
-        void setHierarchy(shared_ptr<StoreObject> _obj1, shared_ptr<StoreObject> _obj2){
-            children[_obj1].push_back(_obj2);
-            parents[_obj2].push_back(_obj1);
-        }
+        void setHierarchy(shared_ptr<StoreObject> _obj1, shared_ptr<StoreObject> _obj2);
 
-        void removeHierarchy(shared_ptr<StoreObject> _obj1, shared_ptr<StoreObject> _obj2){
-            vector < shared_ptr<StoreObject> > & v1 = getChildren(_obj1);
-            vector < shared_ptr<StoreObject> > & v2 = getParents(_obj2);
-            v1.erase(remove(v1.begin(), v1.end(), _obj2), v1.end());
-            v2.erase(remove(v2.begin(), v2.end(), _obj1), v2.end());
+        void removeHierarchy(shared_ptr<StoreObject> _obj1, shared_ptr<StoreObject> _obj2);
 
-        }
+        void removeRelated(shared_ptr<StoreObject> _obj);
 
-        void removeRelated(shared_ptr<StoreObject> _obj) {
-            vector < shared_ptr<StoreObject> > vr = related[_obj];
-
-            for (u_int i=0; i < vr.size(); i++) {
-                vector < shared_ptr<StoreObject> > & vrr=getRelated(vr[i]);
-                vrr.erase(remove(vrr.begin(), vrr.end(), _obj), vrr.end());
-            }
-            vr.clear();
-
-            related.erase(_obj);
-        }
-
-        void removeHierarchy(shared_ptr<StoreObject> _obj){
-            vector < shared_ptr<StoreObject> > vc = children[_obj];
-            vector < shared_ptr<StoreObject> > vp = parents[_obj];
-
-
-
-            for (u_int i=0; i<vc.size(); i++) {
-                vector < shared_ptr<StoreObject> > & vcp = getParents(vc[i]);
-                vcp.erase(remove(vcp.begin(), vcp.end(), _obj), vcp.end());
-            }
-            for (u_int i=0; i<vp.size(); i++) {
-                vector < shared_ptr<StoreObject> > & vpc = getChildren(vp[i]);
-                vpc.erase(remove(vpc.begin(), vpc.end(), _obj), vpc.end());
-            }
-            vp.clear();
-            vc.clear();
-            children.erase(_obj);
-            parents.erase(_obj);
-
-        }
+        void removeHierarchy(shared_ptr<StoreObject> _obj);
 
 
     //get
-        vector< shared_ptr<StoreObject> > & getParents( shared_ptr<StoreObject> _obj ) {
-            return parents[_obj];
-        }
+        vector< shared_ptr<StoreObject> > & getParents( shared_ptr<StoreObject> _obj );
 
-        vector< shared_ptr<StoreObject> > & getChildren( shared_ptr<StoreObject> _obj ){
-            return children[_obj];
-        }
+        vector< shared_ptr<StoreObject> > & getChildren( shared_ptr<StoreObject> _obj );
 
-        vector< shared_ptr<StoreObject> > & getRelated( shared_ptr<StoreObject> _obj ){
-            return related[_obj];
-        }
+        vector< shared_ptr<StoreObject> > & getRelated( shared_ptr<StoreObject> _obj );
 
-        vector< shared_ptr<StoreObject> > getDescendants( shared_ptr<StoreObject> _obj ) {
-            descendants.clear();
-            addAllChildren(_obj);
-            return descendants;
-        }
+        vector< shared_ptr<StoreObject> > getDescendants( shared_ptr<StoreObject> _obj );
 
-        vector< shared_ptr<StoreObject> > getAncestors( shared_ptr<StoreObject> _obj ) {
-            ancestors.clear();
-            addAllAncestors(_obj);
-            return ancestors;
-        }
+        vector< shared_ptr<StoreObject> > getAncestors( shared_ptr<StoreObject> _obj );
 
-        vector< shared_ptr<StoreObject> > getSiblings( shared_ptr<StoreObject> _obj ){
-            vector< shared_ptr<StoreObject> > parentsVec = parents[_obj];
-            for(u_int i = 0; i<parentsVec.size(); i++ ) {
-                vector<shared_ptr<StoreObject> > childrenVec = getChildren(parentsVec[i]);
-                for(u_int j = 0; j<childrenVec.size(); j++ ) {
-                    siblings.push_back(childrenVec[j]);
-                }
-            }
-            return siblings;
-        }
+        vector< shared_ptr<StoreObject> > getSiblings( shared_ptr<StoreObject> _obj );
 
 
 
-        void addAllChildren( shared_ptr<StoreObject> _obj )  {
-            cout << "fkkkp"<<1 << endl;
-            vector< shared_ptr<StoreObject> > & vc = getChildren( _obj );
-
-            cout << "fkkkp"<<3 << endl;
-            for(int i = 0 ; i < vc.size(); i++ ) {
-                descendants.push_back( vc[i] );
-                cout << "fkkkp"<<4 << endl;
-            }
-            for(int i = 0 ; i < vc.size(); i++ ) {
-                cout << vc[i]->getName()<<5 << endl;
-                addAllChildren( vc[i] );
-
-            }
-
-        }
+        void addAllChildren( shared_ptr<StoreObject> _obj ) ;
 
 
-        void addAllAncestors( shared_ptr<StoreObject> _obj )  {
-
-            vector< shared_ptr<StoreObject> > & vp = getParents( _obj );
-
-            for(int i = 0 ; i < vp.size(); i++ )  {
-                ancestors.push_back( vp[i] );
-            }
-            for(int i = 0 ; i < vp.size(); i++ )  {
-                addAllAncestors( vp[i] );
-            }
-
-
-        }
+        void addAllAncestors( shared_ptr<StoreObject> _obj ) ;
 
 
 
@@ -435,24 +329,24 @@ class DBManager: public Storage {
         DBManager(){}
     //f
         //write
-        void writeObject(shared_ptr<StoreObject> _obj) {
-            xml->writeObject(_obj);
-        }
-        void deleteObject(shared_ptr<StoreObject> _obj) {
-            xml->writeObject(_obj);
-        }
-        void createTag(string _name) {
-            xml->addAndPushTag(_name);
-        }
-        void closeTag() {
-            xml->popTag();
-        }
+//        void writeObject(shared_ptr<StoreObject> _obj) {
+//            xml->writeObject(_obj);
+//        }
+//        void deleteObject(shared_ptr<StoreObject> _obj) {
+//            xml->writeObject(_obj);
+//        }
+//        void createTag(string _name) {
+//            xml->addAndPushTag(_name);
+//        }
+//        void closeTag() {
+//            xml->popTag();
+//        }
 
         void loadObjects(){}
 
     protected:
         //atts
-        shared_ptr<XMLManager> xml;
+//        shared_ptr<XMLManager> xml;
         string xmlFile;
 
 };
@@ -491,7 +385,7 @@ class DBManager: public Storage {
 
 
 
-
+/*
 
 
 class TestObj1: public StoreObject{
@@ -556,7 +450,7 @@ class TestDB: public DBManager {
 };
 
 
-
+*/
 
 
 

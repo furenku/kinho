@@ -16,7 +16,7 @@
 #include "ofxOsc.h"
 #include "video.h"
 #include "storage.h"
-#include "videoStorage.h"
+#include "mediaStorage.h"
 
 
 
@@ -46,7 +46,9 @@
 
 
 
+
 #include "GraphUtils.h"
+
 
 #include "editor.h"
 #include "outputs.h"
@@ -64,9 +66,6 @@
 
 
 
-
-
-
 #include <map>
 #include <tr1/memory>
 #include <boost/pointer_cast.hpp>
@@ -76,12 +75,14 @@
 #include <boost/foreach.hpp>
 
 
+
 using boost::shared_ptr;
 using boost::enable_shared_from_this;
 using boost::dynamic_pointer_cast;
 using boost::make_shared;
 
 
+//#pragma once
 
 
 class TSTVW: public kRectView{
@@ -242,7 +243,6 @@ void twitterPush(int _x, int _y, string _fontName, int _fontSize, string _text )
 
 		int				mouseX, mouseY;
 		string			mouseButtonState;
-
 
 
 
