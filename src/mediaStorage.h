@@ -21,6 +21,7 @@ class RawMedia: public StoreObject{
             setName("rawmedia");
             setType("raw_media");
             setFilename("");
+            setDuration(5);
         }
         //funcs
         //set

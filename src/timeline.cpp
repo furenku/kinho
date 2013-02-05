@@ -1,6 +1,7 @@
 
 #include "timeline.h"
 
+//{ event classes
 
 
         EventSource::EventSource(){
@@ -180,7 +181,7 @@
         void Event::setTarget( shared_ptr<EventTarget> _target ) { target = _target;   }
 
 
-
+    //}
 
 
         TimelineEvent::TimelineEvent(){
@@ -260,7 +261,10 @@
     }
 
 
+//}
 
+
+//{ timeline:
 
         Timeline::Timeline(){
             init();
@@ -345,8 +349,12 @@
                 eventDuration = long( event->getDuration() * 1000 );
                 eventTotalDuration = long( event->getTotalDuration() * 1000 );
                 eventTriggered = event->getTriggered();
-
+                if( scopeStart <= eventTime ) {
+                    cout << "before and scopestart : " <<  scopeStart << " time: " << eventTime << endl;
+                }
                 if( scopeStart > eventTime ) {
+
+
                     eventTriggerLogic( event );
                 }
 
@@ -361,7 +369,7 @@
 
             // if playHead greater than event time but shorter than time + duration
             if( scopeStart > eventTime && scopeStart < eventTime + eventTotalDuration ) {
-
+cout << "IN RANGE" << endl;
                 // check if has been triggered
                 if( !eventTriggered ){
                     // if not trigger it, which locks it from retriggering until it ends
@@ -434,7 +442,10 @@
 
 
 
+//}
 
+
+//{ event classes 2
 
         ClipEvent::ClipEvent() { init(); saveEvent("playClip"); }
 
@@ -489,6 +500,11 @@
 //        shared_ptr<testApp> app;
 
 
+
+//}
+
+
+//{ TIMELINE TRACK
 
 
         TimelineTrack::TimelineTrack(){ init(); }
@@ -555,6 +571,7 @@
                         w->setX(newX+x);
                         w->arrangeWidgets();
                     }
+
                     if( time - scopeStart <= 0 ) {
 
                         // delete widget:
@@ -922,7 +939,10 @@
 
 
 
+//}
 
+
+//{ TIMELINE VIEW
 
 
         TimelineView::TimelineView(){
@@ -957,7 +977,9 @@
         }
 
 
+//}
 
+//{ CLOCK MANAGER:
 
         ClockManager::ClockManager(){
             lastMs = 0;
@@ -997,7 +1019,7 @@
 
 
 
-
+//}
 
 
 

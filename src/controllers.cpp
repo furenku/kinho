@@ -385,7 +385,7 @@ void MainController::createModules() {
 
 
 
-    makeScene();
+//    makeScene();
 
 
 
@@ -505,11 +505,11 @@ void MainController::makeLogins(){
     login(timeline2,"release",make_shared<SetTimelineClip>( clipView,timeline2 ));
 
 
-login(clipView,"clipClicked",make_shared<SetTimelineClip>( clipView,timeline));
-login(clipView,"clipClicked",make_shared<SetTimelineClip>( clipView,timeline2));
+    login(clipView,"clipClicked",make_shared<SetTimelineClip>( clipView,timeline));
+    login(clipView,"clipClicked",make_shared<SetTimelineClip>( clipView,timeline2));
 
-login(timeline,"playClip",make_shared<PlayTimelineClip>( timeline,output ));
-login(timeline,"playClip",make_shared<PlayTimelineClip>( timeline2,output ));
+    login(timeline,"playClip",make_shared<PlayTimelineClip>( timeline,output ));
+    login(timeline,"playClip",make_shared<PlayTimelineClip>( timeline2,output ));
 
 //
 //            // archive
@@ -540,6 +540,7 @@ login(timeline,"playClip",make_shared<PlayTimelineClip>( timeline2,output ));
 
 
 //}
+
 
 //{ MEDIA LOGIC
 
@@ -574,8 +575,10 @@ void MainController::loadData( shared_ptr<Clip>  clip){
 
 //}
 
+
 //{ ONTOLOGIES
 //}
+
 
 //{ individual modules
 
