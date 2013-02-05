@@ -323,7 +323,7 @@ class Dictionary {
 
 
 
-        DrawObject::DrawObject(){ show();  }
+        DrawObject::DrawObject(){ show(); setActiveRange(1.0f); }
 
         DrawObject::~DrawObject(){
             try {
@@ -408,16 +408,33 @@ class Dictionary {
         float DrawObject::getY(){ return y; }
         float DrawObject::getWidth(){ return width; }
         float DrawObject::getHeight(){ return height; }
+        float DrawObject::getActiveRange(){ return activeRange; }
 
         void DrawObject::setX( float _x ){                set( _x,y,width,height ); }
         void DrawObject::setWidth( float _width ){        set( x,y,_width,height ); }
         void DrawObject::setY( float _y ){                set( x,_y,width,height ); }
         void DrawObject::setHeight( float _height ){      set( x,y,width,_height ); }
+        void DrawObject::setActiveRange( float _range ) { activeRange = _range; }
 
-        bool DrawObject::inside (float px, float py){}
 
         bool DrawObject::isVisible() {
             return visible;
+        }
+
+//        bool DrawObject::inside (float px, float py){}
+
+        bool DrawObject::inside (float px, float py){
+if(activeRange<1.0f){ cout << "less than 1 <"<<activeRange << endl;}
+            if( px > x+(width*(1-activeRange))/2 &&
+                py > y+(height*(1-activeRange))/2 &&
+                px < x+width-(width*(1-activeRange))/2 &&
+                py < y + height-(height*(1-activeRange))/2  )
+            {
+//                cout << "INSIDDEEEE:::  "<<x << "AR" << activeRange << "  " << x+(width*(1-activeRange))/2 << endl;
+                return true;
+            } else {
+                return false;
+            }
         }
 
 

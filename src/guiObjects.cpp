@@ -258,7 +258,7 @@ void kDigit::draw( ofEventArgs & args ){
 
         }
 
-
+//}
 
 
 
@@ -925,9 +925,9 @@ clearWidgets();
             if(autoArrange) {
                 ofPoint pt = getGridXY(i);
                 if(orientation=="horizontal")
-                    widgets[i] -> set( pt.x,pt.y,widgets[i]->width,spacingX*0.5f);
+                    widgets[i] -> set( pt.x,pt.y,widgets[i]->width,spacingX*0.95f);
                 else if(orientation=="vertical")
-                    widgets[i] -> set( pt.x,pt.y,widgets[i]->width,spacingY*0.5f);
+                    widgets[i] -> set( pt.x,pt.y,widgets[i]->width,spacingY*0.95f);
             }
             else {
 

@@ -27,6 +27,8 @@
         }
 
 
+
+        kClip::kClip(){ setActiveRange(0.5f); createEvents(); }
         kClip::~kClip(){
             clip.reset();
         }
@@ -39,6 +41,8 @@
         void kClip::setClip ( shared_ptr<Clip> _clip ) {
 
             clip = _clip;
+
+            name = _clip->getName();
 
             aspectRatio = _clip -> getAspectRatio();
             string imgPath = _clip -> getFilename();
@@ -59,20 +63,44 @@
 //            ofSetColor(65);
 
             ofSetColor(255);
-            float w;
+            float drawX,drawY,drawW,drawH;
             if(isMouseOn){
-                w = width*1.5f;
+                drawW = width*1.5f;
+                drawH = drawW/aspectRatio;
+                drawX = x - drawW/4;
+                drawY = y - (drawH)/4;
+
+
+
+            }
+            else {
+                drawW = width;
+                drawH = drawW/aspectRatio;
+                drawX = x;
+                drawY = y;
+            }
+
+            if(img.bAllocated()) {
+                img.draw(
+                    drawX,
+                    drawY,
+                    drawW,
+                    drawH
+                );
+
+            }
+            else {
+                ofRect(
+                    drawX,
+                    drawY,
+                    drawW,
+                    drawH
+                );
                 ofDrawBitmapString(name,x,y);
             }
-            else
-                w = width;
 
-                img.draw(
-                    x-w/2,
-                    y-(w/aspectRatio)/2,
-                    w,
-                    w/aspectRatio
-                );
+            if(isMouseOn)
+            ofDrawBitmapString(getName(),x,y-20);
 
 
         }
@@ -80,6 +108,27 @@
 
 
 
+            bool kClip::inside (float px, float py){
+
+
+                float offsetX = float(width*(1-activeRange))/2;
+                float offsetY = float(height*(1-activeRange))/2;
+
+//            if( px > x+offsetX &&
+//                py > y+offsetY &&
+//                px < x+width-offsetX &&
+//                py < y+height-offsetY  )
+            if( px > x && //+offsetX &&
+                py > y && //+offsetY &&
+                px < x+width && //-offsetX &&
+                py < y+width/aspectRatio) //-offsetY  )
+            {
+//                cout << "INSIDDEEEE:::  "<<x << "AR" << activeRange << "  " << x+(width*(1-activeRange))/2 << endl;
+                return true;
+            } else {
+                return false;
+            }
+        }
 
 
 
@@ -87,6 +136,12 @@
             saveEvent("dragged");
         }
 
+
+        void kClip::mouseMoved( ofMouseEventArgs & mouse){
+            if(inside(mouse.x,mouse.y)) isMouseOn = true;
+            else isMouseOn=false;
+//            kDragObject::mouseReleased(mouse);
+        }
 
 
         void kClipShow::mouseReleased( ofMouseEventArgs & mouse){
@@ -335,14 +390,17 @@ output=-1;
     void kClipView::addClip(shared_ptr<Clip> _clip){
         shared_ptr<kClipShow> clip = make_shared<kClipShow>();
         clip -> setClip(_clip);
+//        clip -> setName(_clip->getName());
         clip->set( 0, 0, CLIPVIEW_SIZE, CLIPVIEW_SIZE );
-
+        clip->setActiveRange(0.5f);
         addWidget( clip );
+        cout << "added "<< clip->getName() << endl;
+//        clips.push_back(clip);
+//
 
-        clips.push_back(clip);
 
-        ofAddListener( *clip->events.lookup("press"),this,&kClipView::clipClicked );
-        ofAddListener( *clip->events.lookup("drag"),this,&kClipView::clipDragged );
+//        ofAddListener( *clip->events.lookup("press"),this,&kClipView::clipClicked );
+//        ofAddListener( *clip->events.lookup("drag"),this,&kClipView::clipDragged );
 
 //        if(!visible) clip->hide();
         arrangeWidgets();

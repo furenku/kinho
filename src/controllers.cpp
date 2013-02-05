@@ -4,6 +4,13 @@ MainController::MainController(){
 
     videoLoader = make_shared<VideoLoader>( );
 
+    loadSession("nosession.xml");
+
+
+
+    presentClips = loadAllClips();
+
+
     createSettings();
 
     createModules();
@@ -12,11 +19,34 @@ MainController::MainController(){
 
 }
 
+
+
+void MainController::update() {
+
+    if(!clipInfoLoaded){
+//
+//        map< string, shared_ptr<Clip> >::iterator iter;
+//
+//        for( iter = videos.begin(); iter != videos.end(); ++iter) {
+////            loadData(iter->second);
+////            cout << "duration: "<<iter->second->getDuration() << endl;
+//        }
+//
+//        clipInfoLoaded = true;
+
+    }
+
+}
+
+
+
+//{ SETUP:
+
 void MainController::createSettings(){
 
-    font.loadFont("fonts/verdana.ttf",8);
-    font2.loadFont("fonts/verdana.ttf",12);
-    font3.loadFont("fonts/verdana.ttf",15);
+    font.loadFont("fonts/verdana.ttf",12);
+    font2.loadFont("fonts/verdana.ttf",14);
+    font3.loadFont("fonts/verdana.ttf",18);
 
 
     settings = make_shared<Settings>();
@@ -32,13 +62,6 @@ void MainController::createSettings(){
 
 }
 
-
-void MainController::loadXml(){
-    // set load flag to true; xml gets loaded on update
-    // will change this: 1. load all xml 2. on update load videos' info using videoloader
-    xmlLoaded = false;
-
-}
 
 
 vector<string> MainController::loadAllClips() {
@@ -63,46 +86,303 @@ vector<string> MainController::loadAllClips() {
 
 }
 
+
+
+
+void MainController::loadXml(string _file){
+    std::vector<std::string> words;
+    std::string s;
+    if( XML.loadFile(_file) ){
+        cout << _file<<" loaded" << endl;
+//		message = "mySettings.xml loaded!";
+    }else{
+        cout << _file<<" not loaded" << endl;
+//		message = "unable to load mySettings.xml check data/ folder";
+    }
+
+    int numEntries = XML.getNumTags("entry");
+
+    //if there is at least one <STROKE> tag we can read the list of points
+    //and then try and draw it as a line on the screen
+    if(numEntries > 0){
+cout << "noentrys "<< numEntries << endl;
+        //we push into the last STROKE tag
+        //this temporarirly treats the tag as
+        //the document root.
+        for (int h=0; h<numEntries; h++)
+        {
+            XML.pushTag("entry", h );
+
+            cout << "entry"<<h << endl;
+
+            //we see how many points we have stored in <PT> tags
+            int numParams = XML.getNumTags("param");
+            if(numParams > 0){
+
+                //We then read those x y values into our
+                //array - so that we can then draw the points as
+                //a line on the screen
+
+                //we have only allocated a certan amount of space for our array
+                //so we don't want to read more than that amount of points
+//				int totalToRead = MIN(numPtTags, NUM_PTS);
+            string fileType = ofToString( XML.getValue("param:value", "", 2) );
+            string fileName,description;
+
+            if( fileType.compare("video")==0) {
+                for(int i = 0; i < numParams; i++){
+                    //the last argument of getValue can be used to specify
+                    //which tag out of multiple tags you are refering to.
+                    string key = XML.getValue("param:key", "", i);
+                    string val = XML.getValue("param:value", "", i);
+
+                //categorías
+
+
+                switch(i){
+                    case 1:
+                        fileName = XML.getValue("param:value", "", 1 );
+
+                        if( find( loadMedia.begin(), loadMedia.end(), fileName ) == loadMedia.end() )
+                            loadMedia.push_back(fileName);
+
+                        break;
+                    case 3:
+//                      videos[fileName]->setStartTime( ofToFloat(val) );
+                        //startTime
+                        break;
+                    case 4:
+                        //endTime
+
+//                                videos[fileName]->setEndTime( ofToFloat(val) );
+
+                        break;
+                    case 5:
+                    // categories
+                        boost::split(words, val, boost::is_any_of(","), boost::token_compress_on);
+                        //else cout << key << endl;
+                        cout << "key:"<< key << endl;
+
+                        for (int i=0; i<words.size(); i++)
+                        {
+                            if(fileName!=""){
+                                if( catMedia.find(words[i]) != catMedia.end() ) {
+                                    catMedia[ words[i] ].push_back( fileName );
+                                }
+                                else{
+                                    catMedia[ words[i] ] = vector<string>();
+                                }
+                            }
+                        }
+                        break;
+                    case 6:
+                        //tags
+                        boost::split(words, val, boost::is_any_of(","), boost::token_compress_on);
+
+                        for (int i=0; i<words.size(); i++)
+                        {
+                            if(fileName!=""){
+                                if( tagMedia.find(words[i]) != tagMedia.end() ) {
+                                    tagMedia[ words[i] ].push_back( fileName );
+                                }
+                                else{
+                                    tagMedia[ words[i] ] = vector<string>();
+                                }
+                            }
+                        }
+                        break;
+                        break;
+                    case 7:
+                        //descripcion
+                        description = XML.getValue("param:value", "", i );
+                        break;
+                    case 8:
+                        // quien
+                        break;
+                    case 9:
+                        //donde
+                        break;
+                    case 10:
+                        // que pasa
+                        break;
+                    case 11:
+                        //objetos
+                        break;
+                    case 12:
+                        //fecha
+                        break;
+
+                }
+//cout << "FN  "<<fileName<<"  "<<description << endl;
+
+
+            }
+        }
+
+
+    }
+
+    //this pops us out of the STROKE tag
+    //sets the root back to the xml document
+    XML.popTag();
+    }
+
+
+    makeOntologies();
+    }
+
+
+}
+
+
+
+
+
+void MainController::createMedia() {
+
+    vector<string> clips;
+    vector<string> thumbs;
+cout << "createMeida" << endl;
+    for (int i=0; i<loadMedia.size(); i++)
+    {
+    	cout << "loadMedia" << loadMedia[i] << endl;
+
+
+        cout << "checkClip! .. " << endl;
+
+        string searchString = mediaDirectory + loadMedia[i];
+
+        if( find (presentClips.begin(), presentClips.end(), searchString) != presentClips.end() ) {
+
+
+            videos[ loadMedia[i] ] = makeClip( loadMedia[i], "..."  );
+cout << "created video: "<< loadMedia[i] << endl;
+
+//            int index = fileName.find(".");
+//
+//            if ( fileName.substr(index+1, 3) == "png" )
+//                thumbs.push_back(fileName);
+//            else
+//                clips.push_back(fileName);
+        }
+
+
+
+
+//        cout << "makeclip!  "<<makeClip( fileName, description ) -> getName() << endl;
+//        cout << "videoName" << videos[fileName]->getName() << endl;
+
+    }
+
+}
+
+
+void MainController::setOntologies(){
+
+    map <string,vector<string> >::iterator it;
+
+    for( it = catMedia.begin(); it!=catMedia.end(); ++it ){
+
+        tmpCat = make_shared<Category>();
+        tmpCat->setName( it->first );
+
+        vector < string > vecstr = it->second;
+
+        miniLibrary->addOntology( tmpCat );
+
+        for (int i=0; i<vecstr.size(); i++)
+        {
+            if( videos.find( vecstr[i] ) != videos.end() ) {
+                miniLibrary->setOntology( tmpCat, videos [ vecstr[i] ] );
+                cout<<"added media "<< videos[vecstr[i]]->getName() << " in cat - " << it->first <<endl;
+            }
+        }
+    }
+
+
+
+    for( it = tagMedia.begin(); it!=tagMedia.end(); ++it ){
+
+        tmpTag = make_shared<Tag>();
+        tmpTag->setName( it->first );
+
+        vector < string > vecstr = it->second;
+
+        miniLibrary->addOntology( tmpTag );
+
+        for (int i=0; i<vecstr.size(); i++)
+        {
+            if( videos.find( vecstr[i] ) != videos.end() ) {
+                miniLibrary->setOntology( tmpTag, videos [ vecstr[i] ] );
+                cout<<"added media "<< videos[vecstr[i]]->getName() << " in tag - " << it->first <<endl;
+            }
+        }
+    }
+}
+
+
 void MainController::createModules() {
-
-
-    makeTimelines();
+//
+//
+//
+    makeClipView();
+//
+    makeVideoOutput();
 
     makeLibrary();
 
-    makeClipView();
+    loadXml("xml/ABISMOTEST02.xml");
 
-    makeVideoOutput();
 
-    vector<string>c = loadAllClips();
-    vector<string> clips;
-    vector<string> thumbs;
-    for (int i=0; i<c.size(); i++)
-    {
-        int index = c[i].find(".");
 
-        if ( c[i].substr(index+1, 3) == "png" )
-            thumbs.push_back(c[i]);
-        else
-            clips.push_back(c[i]);
-    }
-vector< shared_ptr < Clip > > loadClips;
-    for (int i=0; i<clips.size(); i++)
-    {
+    createMedia();
 
-        shared_ptr<Clip> clip= make_shared<Clip>();
-        string clipName = clips[i].substr(clips[i].find_last_of("/")+1,clips[i].find(".")-1);
-//                cout << clipName << endl;
-        clip->setName( clipName );
-        clip->setDescription("...");
-    //    clip->tags.push_back("tag1");
-        clip -> setFilename(clips[i]);
-        loadClips.push_back(clip);
-//                media.push_back(clip);
+    setOntologies();
 
+
+    makeOntologies();
+
+    makeTimelines();
+
+
+
+    clipInfoLoaded=false;
+
+    map<string,shared_ptr<Clip> >::iterator iter;
+
+    vector<string>c;
+
+    for(iter = videos.begin(); iter != videos.end(); ++iter ){
+        c.push_back( iter->first );
     }
 
 
+
+//
+//
+//
+//    for (int i=0; i<c.size(); i++)
+//    {
+//
+//
+//    }
+//
+//    vector< shared_ptr < Clip > > loadClips;
+//
+//    for (int i=0; i<clips.size(); i++)
+//    {
+//
+//        shared_ptr<Clip> clip= make_shared<Clip>();
+//        string clipName = c[i].substr(clips[i].find_last_of("/")+1,clips[i].find(".")-1);
+//
+//        clip->setName( clipName );
+//        clip->setDescription("...");
+//
+//        clip -> setFilename( mediaDirectory + clips[i] );
+//        loadClips.push_back(clip);
+//
+//    }
+//
 //    clipView->addClips(loadClips);
 
 /*
@@ -180,10 +460,12 @@ vector< shared_ptr < Clip > > loadClips;
 */
 }
 
+
+
 void MainController::makeLogins(){
 
 //            login(catSelect,"selectedWords",make_shared<SelectOntology>( catSelect, graphBrowser ));
-    login(catSelect,"selectedWords",make_shared<ClearOntology>( tagSelect ));
+//    login(catSelect,"selectedWords",make_shared<ClearOntology>( tagSelect ));
 
     ofAddListener( *catSelect->events.lookup("selectedWords"),this,&MainController::catSelected );
     ofAddListener( *tagSelect->events.lookup("selectedWords"),this,&MainController::tagSelected );
@@ -223,210 +505,12 @@ login(timeline,"playClip",make_shared<PlayTimelineClip>( timeline2,output ));
 
 }
 
-void MainController::update() {
-
-    if(!xmlLoaded){
-        loadXml("xml/ABISMOTEST02.xml");
-        xmlLoaded = true;
-    }
-
-}
-
-void MainController::makeClip( string _name ){
-    cout << "movies/"+_name << endl;
-    videoLoader->setFilename( "movies/"+_name );
-    videoLoader->loadData();
-
-    // make video store
-
-    shared_ptr<Clip> clip= make_shared<Clip>();
-
-//            string clipName = clips[i].substr(clips[i].find_last_of("/")+1,clips[i].find(".")-1);
-//                cout << clipName << endl;
-    clip->setName( _name );
-    clip->setDescription("...");
-//    clip->tags.push_back("tag1");
-
-    clip->setFilename( "movies/"+_name );
-    clip->setDuration( videoLoader->getDuration() );
-    videos[_name] = clip;
-
-    clipView->addClip(clip);
-}
-
-void MainController::loadXml(string _file){
-    std::vector<std::string> words;
-    std::string s;
-    if( XML.loadFile(_file) ){
-        cout << _file<<" loaded" << endl;
-//		message = "mySettings.xml loaded!";
-    }else{
-        cout << _file<<" not loaded" << endl;
-//		message = "unable to load mySettings.xml check data/ folder";
-    }
-
-    int numEntries = XML.getNumTags("entry");
-
-    //if there is at least one <STROKE> tag we can read the list of points
-    //and then try and draw it as a line on the screen
-    if(numEntries > 0){
-cout << "noentrys "<< numEntries << endl;
-        //we push into the last STROKE tag
-        //this temporarirly treats the tag as
-        //the document root.
-        for (int h=0; h<numEntries; h++)
-        {
-            XML.pushTag("entry", h );
-
-            cout << "entry"<<h << endl;
-
-            //we see how many points we have stored in <PT> tags
-            int numParams = XML.getNumTags("param");
-            if(numParams > 0){
-
-                //We then read those x y values into our
-                //array - so that we can then draw the points as
-                //a line on the screen
-
-                //we have only allocated a certan amount of space for our array
-                //so we don't want to read more than that amount of points
-//				int totalToRead = MIN(numPtTags, NUM_PTS);
-            string fileType = ofToString( XML.getValue("param:value", "", 2) );
-
-            if( fileType.compare("video")==0) {
-                for(int i = 0; i < numParams; i++){
-                    //the last argument of getValue can be used to specify
-                    //which tag out of multiple tags you are refering to.
-                    string key = XML.getValue("param:key", "", i);
-                    string val = XML.getValue("param:value", "", i);
-
-/*
-                    std::vector<string> vect;
-
-                    std::stringstream ss(val);
-
-                    int i;
-
-                    while (ss >> i)
-                    {
-                        vect.push_back(i);
-
-                        if (ss.peek() == ',')
-                            ss.ignore();
-                    }
-
-                    for (int i=0; i<vect.size(); i++)
-                    {
-                        cout<<vect[i]<<endl;
-                    }
-*/
-
-
-                string fileName = XML.getValue("param:value", "", 1 );
-                //categorías
-
-
-                switch(i){
-                    case 1:
-
-                    makeClip( fileName );
-                    //    path & filename
-                        break;
-                    case 3:
-//                                videos[fileName]->setStartTime( ofToFloat(val) );
-                        //startTime
-                        break;
-                    case 4:
-                        //endTime
-
-//                                videos[fileName]->setEndTime( ofToFloat(val) );
-
-                        break;
-                    case 5:
-                    // categories
-                        boost::split(words, val, boost::is_any_of(","), boost::token_compress_on);
-                        //else cout << key << endl;
-                        cout << key << endl;
-
-                        for (int i=0; i<words.size(); i++)
-                        {
-                            tmpCat = make_shared<Category>();
-                            tmpCat -> setName( words[i] );
-                            miniLibrary->addOntology( tmpCat );
-
-                            miniLibrary->setOntology(miniLibrary->getOntology( words[i] ), videos[fileName] );
-
-                            cout<<"added ont"<< fileName << " in cat - " << words[i]<<endl;
-                        }
-                        break;
-                    case 6:
-                        //tags
-                        boost::split(words, val, boost::is_any_of(","), boost::token_compress_on);
-                        //else cout << key << endl;
-                        cout << key << endl;
-
-                        for (int i=0; i<words.size(); i++)
-                        {
-                            tmpTag = make_shared<Tag>();
-                            tmpTag -> setName( words[i] );
-                            miniLibrary->addOntology( tmpTag );
-
-                            miniLibrary->setOntology(miniLibrary->getOntology( words[i] ), videos[fileName] );
-
-                            cout<<"added ont"<< fileName << " in cat - " << words[i]<<endl;
-                        }
-                        break;
-                    case 7:
-                        //descripcion
-                        break;
-                    case 8:
-                        // quien
-                        break;
-                    case 9:
-                        //donde
-                        break;
-                    case 10:
-                        // que pasa
-                        break;
-                    case 11:
-                        //objetos
-                        break;
-                    case 12:
-                        //fecha
-                        break;
-
-                }
-        //typedef vector< string > split_vector_type;
-        //
-        //    split_vector_type SplitVec; // #2: Search for tokens
-        //    split( SplitVec, str1, is_any_of("-*"), token_compress_on );
 
 
 
-                            // y = XML.getValue("key", 0, i);
-        //					cout << key<<" "<<val<< endl;
-        //					dragPts[i].set(x, y);
-        //					pointCount++;
-            }
-        }
+void MainController::loadSession(string _filename) {
 
-
-    }
-
-//this pops us out of the STROKE tag
-//sets the root back to the xml document
-XML.popTag();
-}
-
-
-makeOntologies();
-}
-
-
-
-}
-
-void MainController::loadSession() {
+    mediaDirectory="movies/";
     //library
         // load all video clips
         // with the video loader
@@ -442,6 +526,49 @@ void MainController::loadSession() {
         // create their relationships
 
 }
+
+
+//}
+
+//{ MEDIA LOGIC
+
+
+shared_ptr<Clip> MainController::makeClip( string _name, string _description ){
+    cout << "movies/"+_name << endl;
+
+    // make video store
+
+    tmpClip = make_shared<Clip>();
+
+
+//            string clipName = clips[i].substr(clips[i].find_last_of("/")+1,clips[i].find(".")-1);
+//                cout << clipName << endl;
+    tmpClip->setName( _name );
+    tmpClip->setDescription( _description );
+//    clip->tags.push_back("tag1");
+
+    tmpClip->setFilename( "movies/"+_name );
+
+    return tmpClip ;
+
+}
+
+
+void MainController::loadData( shared_ptr<Clip>  clip){
+//    videoLoader->setFilename( "movies/" + clip->getName() );
+//    videoLoader->loadData();
+//    cout << "duration : " << videoLoader->getDuration() << endl;
+//    clip->setDuration( videoLoader->getDuration() );
+}
+
+
+//}
+
+//{ ONTOLOGIES
+//}
+
+//{ individual modules
+
 
 void MainController::makeEditor(){
 //            editor = make_shared<Editor>();
@@ -536,6 +663,7 @@ shared_ptr<kLabelButton> btn;
 
     catSelect = make_shared<WordSelect>( );
     catSelect->set(700,0,250,250);
+    catSelect->setSpacingY(65);
     catSelect->applySettings(settings);
     catSelect->setWidgetSettings(settings2);
     catSelect->initialize();
@@ -544,7 +672,7 @@ shared_ptr<kLabelButton> btn;
     cout << cats.size() << endl;
     for (int i=0; i<cats.size(); i++){
         catSelect->makeButton(cats[i]->getName());
-        cout << cats[i] << endl;
+        cout << "cats:" << cats[i]->getName() << endl;
     }
 
 
@@ -559,7 +687,7 @@ shared_ptr<kLabelButton> btn;
 
     for (int i=0; i<tags.size(); i++) {
         tagSelect->makeButton(tags[i]->getName());
-        cout << tags[i] << endl;
+        cout << "tags:" << tags[i]->getName() << endl;
     }
 
 }
@@ -569,7 +697,6 @@ void MainController::makeLibrary(){
     miniLibrary = make_shared<LibraryManager>( );
 //            miniLibrary->applySettings(settings);
 //            miniLibrary->setWidgetSettings(settings2);
-    makeOntologies();
 //
 //            placeSelect = make_shared<WordSelect>( );
 //            placeSelect->set(700,320,250,120 );
@@ -655,13 +782,14 @@ void MainController::makeClipView() {
 
     clipView = make_shared<kClipScrollView>();
 
-    clipView -> set(900,0,180,800);
+    clipView -> set(1000,0,280,800);
     clipView -> applySettings ( settings  );
     clipView -> setWidgetSettings ( settings );
-    clipView -> cols=1;
+    clipView -> cols=2;
+    clipView -> setSpacingX( 105 );
     clipView -> setSpacingY( 65 );
 
-    clipScrollViews.push_back( clipView );
+//    clipScrollViews.push_back( clipView );
 
     ofAddListener( *clipView->events.lookup("clipClicked"),this,&MainController::clipClicked);
     ofAddListener( *clipView->events.lookup("clipDragged"),this,&MainController::clipDragged);
@@ -676,57 +804,6 @@ void MainController::makeClipView() {
 
 
 
-}
-
-void MainController::catSelected(widgetEvent & _event){
-//            vector< shared_ptr < kWidget > > widgets = clipView->getWidgets();
-//            for (int j=0; j<widgets.size(); j++)
-//            {
-//                widgets[j]->disable();
-//            }
-
-cout << "catSelected" << endl;
-    clipView->clearClips();
-
-    vector<string> vecstr = dynamic_pointer_cast<WordSelect>(_event.sender)->getSelected();
-    for (int i=0; i<vecstr.size(); i++)
-    {
-        clipView->addClips(miniLibrary->getClips(miniLibrary->getOntology(vecstr[i])));
-    }
-}
-
-void MainController::tagSelected(widgetEvent & _event){
-cout << "tagSelected" << endl;
-
-//            vector< shared_ptr < kWidget > > widgets = clipView->getWidgets();
-//            for (int j=0; j<widgets.size(); j++)
-//            {
-//                widgets[j]->disable();
-//            }
-//            clipView->clearWidgets();
-
-    clipView->clearClips();
-
-
-    vector<string> vecstr = dynamic_pointer_cast<WordSelect>(_event.sender)->getSelected();
-    for (int i=0; i<vecstr.size(); i++)
-    {
-        clipView->addClips(miniLibrary->getClips(miniLibrary->getOntology(vecstr[i])));
-    }
-}
-
-void MainController::clipClicked(widgetEvent & _event){
-    shared_ptr<kClipScrollView> view = dynamic_pointer_cast<kClipScrollView>(_event.sender);
-    clickedClip = dynamic_pointer_cast<kClipShow>(view->getWidgets()[view->getValue()])->getClip();
-    cout << clickedClip->getName() << endl;
-    notify("clipClicked");
-}
-
-void MainController::clipDragged(widgetEvent & _event){
-    shared_ptr<kClipScrollView> view = dynamic_pointer_cast<kClipScrollView>(_event.sender);
-    cout << view->getValue() << endl;
-    draggingClip = dynamic_pointer_cast<kClipShow>(view->getWidgets()[view->getValue()])->getClip();
-    notify("clipDragged");
 }
 
 void MainController::makePlayLists(){
@@ -791,6 +868,91 @@ void MainController::makeChooser(){
     ofAddListener(*chooser->events.lookup("btnClicked"), this, &MainController::chooseView);
 }
 
+
+//}
+
+
+//{ ACTIONS
+
+
+void MainController::catSelected(widgetEvent & _event){
+//            vector< shared_ptr < kWidget > > widgets = clipView->getWidgets();
+//            for (int j=0; j<widgets.size(); j++)
+//            {
+//                widgets[j]->disable();
+//            }
+
+//cout << "catSelected" << endl;
+
+    vector<string> vecstr = dynamic_pointer_cast<WordSelect>(_event.sender)->getSelected();
+    vector<shared_ptr<Clip> > loadClips;
+    for (int i=0; i<vecstr.size(); i++)
+    {
+        string cleanStr = vecstr[i];
+
+        while ( cleanStr.find ("\n") != string::npos )
+        {
+            cleanStr.erase ( cleanStr.find ("\n"), 2 );
+        }
+
+        shared_ptr<Ontology> catOnt = miniLibrary->getOntology( cleanStr );
+
+        vector< shared_ptr<Clip> > catClips = miniLibrary->getClips( catOnt );
+
+        for (int j=0; j<catClips.size(); j++)
+        {
+        	cout << "ont"<<catOnt->getName()<<" has "<< catClips[j]->getName() << endl;
+
+            if ( find( loadClips.begin(), loadClips.end(), catClips[j] ) != loadClips.end() ) {
+                cout << "found in vector" << endl;
+            }{
+                loadClips.push_back(catClips[j]);
+            }
+
+        }
+
+    clipView->clearClips();
+
+        clipView->addClips(loadClips);
+
+    }
+}
+
+void MainController::tagSelected(widgetEvent & _event){
+cout << "tagSelected" << endl;
+
+//            vector< shared_ptr < kWidget > > widgets = clipView->getWidgets();
+//            for (int j=0; j<widgets.size(); j++)
+//            {
+//                widgets[j]->disable();
+//            }
+//            clipView->clearWidgets();
+
+    clipView->clearClips();
+//
+//
+//    vector<string> vecstr = dynamic_pointer_cast<WordSelect>(_event.sender)->getSelected();
+//    for (int i=0; i<vecstr.size(); i++)
+//    {
+//        clipView->addClips(miniLibrary->getClips(miniLibrary->getOntology(vecstr[i])));
+//    }
+}
+
+void MainController::clipClicked(widgetEvent & _event){
+    shared_ptr<kClipScrollView> view = dynamic_pointer_cast<kClipScrollView>(_event.sender);
+    clickedClip = dynamic_pointer_cast<kClipShow>(view->getWidgets()[view->getValue()])->getClip();
+    cout << clickedClip->getName() << endl;
+    notify("clipClicked");
+}
+
+void MainController::clipDragged(widgetEvent & _event){
+    shared_ptr<kClipScrollView> view = dynamic_pointer_cast<kClipScrollView>(_event.sender);
+    cout << view->getValue() << endl;
+    draggingClip = dynamic_pointer_cast<kClipShow>(view->getWidgets()[view->getValue()])->getClip();
+    notify("clipDragged");
+}
+
+
 void MainController::chooseView(widgetEvent & _event) {
     string command = dynamic_pointer_cast<kButtonView>(_event.sender)->getCommand();
 
@@ -812,3 +974,6 @@ void MainController::chooseView(widgetEvent & _event) {
 
 
 }
+
+
+//}

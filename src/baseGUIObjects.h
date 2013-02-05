@@ -253,7 +253,7 @@ class kRect: virtual public kWidget {
 
         void draw(ofEventArgs & draw);
 
-        bool inside (float px, float py);
+//        virtual bool inside (float px, float py);
 
 };
 
@@ -382,6 +382,9 @@ class kLabelButton: virtual public kButton, virtual public kRect{
         kLabelButton(){ }
 
         void draw( ofEventArgs & args );
+
+        void setLabel (string _label);
+
 
 };
 

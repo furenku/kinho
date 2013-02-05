@@ -337,13 +337,16 @@ class DrawObject: public Object, public ofPoint {
         float getY();
         float getWidth();
         float getHeight();
+        float getActiveRange();
 
         void setX( float _x );
         void setWidth( float _width );
         void setY( float _y );
         void setHeight( float _height );
+        void setActiveRange( float _range );
 
         virtual bool inside (float px, float py);
+//        virtual bool inside (float px, float py, float pct);
 
         bool isVisible();
 
@@ -353,6 +356,8 @@ class DrawObject: public Object, public ofPoint {
         float width, height, r;
 
         ofVec2f pt, wh;
+
+        float activeRange;
 
 
 };

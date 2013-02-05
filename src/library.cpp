@@ -174,10 +174,16 @@ shared_ptr<Clip> LibraryManager::getClip(string _name){
 vector< shared_ptr<Clip> > LibraryManager::getClips(shared_ptr<Ontology> _ont){
     vector< shared_ptr<StoreObject> > & vc = getChildren(_ont);
     vector< shared_ptr<Clip> > c;
+
+//    cout << vc.size() << endl;
     for (int i=0; i<vc.size(); i++)
     {
-        if( vc[i]->getType()=="clip" )
-            c.push_back(dynamic_pointer_cast<Clip>(vc[i]));
+        shared_ptr<Clip> clip = dynamic_pointer_cast<Clip>(vc[i]);
+        cout << "ok" << endl;
+        if( clip->getType()=="clip" ){
+            cout << "clip."<< clip->getName() << endl;
+            c.push_back( clip );
+        }
     }
     return c;
 }
@@ -477,6 +483,9 @@ WordSelect::WordSelect(){ orientation="vertical"; autoArrange="true"; spacingX=1
 void WordSelect::initialize(){
     saveEvent("selectedWords");
     kScrollView::initialize();
+    setSpacingY(50);
+    setPaddingX(10);
+    setPaddingY(0);
 }
 
 void WordSelect::btnClicked(widgetEvent & _event){
@@ -496,7 +505,7 @@ void WordSelect::btnClicked(widgetEvent & _event){
 void WordSelect::makeButton(string _str){
     btn = make_shared<kLabelButton>( );
     btn->setLabel(_str);
-    btn->set(0,0,100,50);
+    btn->set(0,0,100,80);
     btn->setMode(TOGGLE_ON);
     addWidget(btn);
     ofAddListener(*btn->events.lookup("press"),this,&WordSelect::btnClicked);

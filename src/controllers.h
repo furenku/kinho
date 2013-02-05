@@ -36,15 +36,25 @@ class MainController: public Controller {
 
         void loadXml();
 
+        void createMedia();
+
+        void setOntologies();
+
         void makeLogins();
 
         void update();
 
-        void makeClip( string _name );
+        void loadData( shared_ptr<Clip>  clip);
+
+        shared_ptr<Clip> makeClip( string _name, string _description );
 
         void loadXml(string _file);
 
-        void loadSession();
+        map <string, vector<string> > catMedia, tagMedia;
+
+        vector<string> loadMedia;
+
+        void loadSession(string _filename);
 
         void makeEditor();
 
@@ -79,7 +89,7 @@ class MainController: public Controller {
         void chooseView(widgetEvent & _event);
 
 
-bool xmlLoaded;
+bool clipInfoLoaded;
 
 
 map< string,  shared_ptr < Clip > > videos;
@@ -96,9 +106,9 @@ shared_ptr<GraphBrowser> graphBrowser;
 
 vector<string> words;
 
+vector<string> presentClips;
+
 shared_ptr<VideoLoader> videoLoader;
-
-
 
         vector<shared_ptr<MediaHolder> > media;
 //        shared_ptr<Editor>  editor;
@@ -129,11 +139,16 @@ shared_ptr<VideoLoader> videoLoader;
         vector< shared_ptr<kSampleScrollView> > sampleScrollViews;
         vector< shared_ptr<kRectView> > mediaViews;
 
+//        vector< shared_ptr < Clip > > loadClips;
+
         vector< shared_ptr < Clip > > lastClips;
         vector< shared_ptr < Sample > > lastSamples;
 //        vector< shared_ptr < Text > > lastTexts;
 
         shared_ptr<Clip> clickedClip, draggingClip;
+        shared_ptr<Clip> tmpClip;
+
+        string mediaDirectory;
 
 };
 

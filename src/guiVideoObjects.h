@@ -45,7 +45,7 @@ class MediaWidget: virtual public kCircleButton, public StoreObject { //, virtua
 class kClip: virtual public MediaWidget { //, virtual public kVideoThumb {
 
     public:
-        kClip(){}
+        kClip();
 
         ~kClip();
 
@@ -63,6 +63,9 @@ class kClip: virtual public MediaWidget { //, virtual public kVideoThumb {
 
         void draw(ofEventArgs & args);
 
+        bool inside (float px, float py);
+
+        void mouseMoved( ofMouseEventArgs & mouse);
 
 //    protected:
 

@@ -1,5 +1,5 @@
 #include "baseGUIObjects.h"
-
+#include <algorithm>
 
 //------------------------------------------------------
 //{ SETTINGS
@@ -410,15 +410,6 @@ shared_ptr<ofColor> Settings::getColor(int _index){
             ofRect(x,y,width,height);
         }
 
-        bool kRect::inside (float px, float py){
-            if( px > x && py > y && px < x + width && py < y + height ){
-                return true;
-            }
-            return false;
-        }
-
-
-
 
 
         void kCircle::set (float _x, float _y, float _w, float _h){
@@ -635,6 +626,23 @@ shared_ptr<ofColor> Settings::getColor(int _index){
 
 
 
+        void kLabelButton::setLabel( string _label ){
+
+            int charCount=  0;
+            int maxChars = 7;
+            int len = _label.size();
+            for (int i = 0; i < len; i++){
+                charCount++;
+                if( charCount>=maxChars && _label[i] == ' ' ){
+                    _label.insert(i," \n");
+                    charCount=0;
+                }
+
+            }
+//            replace(_label.begin(), _label.end(), ' ', '\n');
+            kWidget::setLabel(_label);
+        }
+
 
         void kLabelButton::draw( ofEventArgs & args ){
             color(0);
@@ -651,7 +659,7 @@ shared_ptr<ofColor> Settings::getColor(int _index){
             ofRect(x,y,width,height);
             ofNoFill();
 
-            drawString(label,getCenter().x-rect.width/2,getCenter().y );
+            drawString(label,getCenter().x-rect.width/3,getCenter().y );
 
         }
 
@@ -1109,7 +1117,7 @@ shared_ptr<ofColor> Settings::getColor(int _index){
 
 //}
 
-
+//}
 
 //------------------------------------------------------
 //{ VIEWS:
