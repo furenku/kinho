@@ -652,47 +652,6 @@ void MainController::makeArchive(){
 
 }
 
-void MainController::makeOntologies(){
-
-vector< shared_ptr<Ontology> > cats = miniLibrary->getOntologies("category");
-vector< shared_ptr<Ontology> > tags = miniLibrary->getOntologies("tag");
-cout << "CATSSSS" << cats.size() << endl;
-//CCscout << "a ver "<< miniLibrary->getOntologies("cat")<<"   "<< miniLibrary->getOntologies("cat").size()<<endl;
-shared_ptr<kLabelButton> btn;
-
-
-
-    catSelect = make_shared<WordSelect>( );
-    catSelect->set(700,0,250,250);
-    catSelect->setSpacingY(65);
-    catSelect->applySettings(settings);
-    catSelect->setWidgetSettings(settings2);
-    catSelect->initialize();
-    catSelect->arrangeWidgets();
-
-    cout << cats.size() << endl;
-    for (int i=0; i<cats.size(); i++){
-        catSelect->makeButton(cats[i]->getName());
-        cout << "cats:" << cats[i]->getName() << endl;
-    }
-
-
-    catSelect->arrangeWidgets();
-
-    tagSelect = make_shared<WordSelect>( );
-    tagSelect->set(700,300,250,250 );
-    tagSelect->applySettings(settings);
-    tagSelect->setWidgetSettings(settings2);
-    tagSelect->initialize();
-    tagSelect->arrangeWidgets();
-
-    for (int i=0; i<tags.size(); i++) {
-        tagSelect->makeButton(tags[i]->getName());
-        cout << "tags:" << tags[i]->getName() << endl;
-    }
-
-}
-
 void MainController::makeLibrary(){
 
     miniLibrary = make_shared<LibraryManager>( );
@@ -778,6 +737,49 @@ library = make_shared<Library>( );
 */
 
 }
+
+
+void MainController::makeOntologies(){
+
+vector< shared_ptr<Ontology> > cats = miniLibrary->getOntologies("category");
+vector< shared_ptr<Ontology> > tags = miniLibrary->getOntologies("tag");
+cout << "CATSSSS" << cats.size() << endl;
+//CCscout << "a ver "<< miniLibrary->getOntologies("cat")<<"   "<< miniLibrary->getOntologies("cat").size()<<endl;
+shared_ptr<kLabelButton> btn;
+
+
+
+    catSelect = make_shared<WordSelect>( );
+    catSelect->set(700,0,250,250);
+    catSelect->setSpacingY(65);
+    catSelect->applySettings(settings);
+    catSelect->setWidgetSettings(settings2);
+    catSelect->initialize();
+    catSelect->arrangeWidgets();
+
+    cout << cats.size() << endl;
+    for (int i=0; i<cats.size(); i++){
+        catSelect->makeButton(cats[i]->getName());
+        cout << "cats:" << cats[i]->getName() << endl;
+    }
+
+
+    catSelect->arrangeWidgets();
+
+    tagSelect = make_shared<WordSelect>( );
+    tagSelect->set(700,300,250,250 );
+    tagSelect->applySettings(settings);
+    tagSelect->setWidgetSettings(settings2);
+    tagSelect->initialize();
+    tagSelect->arrangeWidgets();
+
+    for (int i=0; i<tags.size(); i++) {
+        tagSelect->makeButton(tags[i]->getName());
+        cout << "tags:" << tags[i]->getName() << endl;
+    }
+
+}
+
 
 void MainController::makeClipView() {
 
@@ -884,7 +886,8 @@ void MainController::catSelected(widgetEvent & _event){
 //            }
 
 //cout << "catSelected" << endl;
-cout << "CLEAR" << endl;    clipView->clearClips();
+
+    clipView->clearClips();
 //    clipView->clearWidgets();
     vector<string> vecstr = dynamic_pointer_cast<WordSelect>(_event.sender)->getSelected();
     vector<shared_ptr<Clip> > loadClips;
@@ -906,7 +909,7 @@ cout << "CLEAR" << endl;    clipView->clearClips();
         if(catOnt) {
 
             vector< shared_ptr<Clip> > catClips = miniLibrary->getClips( catOnt );
-
+            vector<string> loadedTagNames;
 
             for (int j=0; j<catClips.size(); j++)
             {
@@ -917,6 +920,23 @@ cout << "CLEAR" << endl;    clipView->clearClips();
                 }
                 else {
                     loadClips.push_back(catClips[j]);
+                    vector< shared_ptr < Ontology > > onts = miniLibrary->getOntologies(catClips[j]);
+
+
+                    for (int k=0; k<onts.size(); k++)
+                    {
+                    	if( onts[k]->getType() == "tag" ){
+                            loadedTagNames.push_back( onts[k]->getName() );
+                    	}
+
+                    }
+
+                    tagSelect->clear();
+
+                    for (int k=0; k<loadedTagNames.size(); k++)
+                    {
+                    	tagSelect->makeButton( loadedTagNames[k] );
+                    }
                 }
 
             }
@@ -927,6 +947,8 @@ cout << "CLEAR" << endl;    clipView->clearClips();
         clipView->addClips(loadClips);
 
     }
+
+
 }
 
 void MainController::tagSelected(widgetEvent & _event){

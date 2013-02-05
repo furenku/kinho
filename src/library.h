@@ -161,12 +161,15 @@ class Library: public LibraryManager, virtual public kView{
 class WordSelect:public kScrollView{
     public:
         WordSelect();
+        ~WordSelect();
 
         void initialize();
 
         void btnClicked(widgetEvent & _event);
 
         void makeButton(string _str);
+
+        void clear();
 
         vector<string> & getSelected();
 

@@ -479,13 +479,20 @@ void Library::mouseReleased(ofMouseEventArgs & mouse) {
 
 
 WordSelect::WordSelect(){ orientation="vertical"; autoArrange="true"; spacingX=100; spacingY=30; }
+WordSelect::~WordSelect(){
+    for (int i=0; i<widgets.size(); i++)
+    {
+        ofRemoveListener(*widgets[i]->events.lookup("press"),this,&WordSelect::btnClicked);
+    }
+
+}
 
 void WordSelect::initialize(){
     saveEvent("selectedWords");
     kScrollView::initialize();
     setSpacingY(50);
     setPaddingX(10);
-    setPaddingY(0);
+    setPaddingY(50);
 }
 
 void WordSelect::btnClicked(widgetEvent & _event){
@@ -503,6 +510,14 @@ void WordSelect::btnClicked(widgetEvent & _event){
     notify("selectedWords");
 
 }
+
+void WordSelect::clear(){
+    for (int i=0; i<widgets.size(); i++)
+    {
+        addDelete( widgets[i] ); //->events.lookup("press"),this,&WordSelect::btnClicked);
+    }
+}
+
 
 void WordSelect::makeButton(string _str){
     btn = make_shared<kLabelButton>( );
