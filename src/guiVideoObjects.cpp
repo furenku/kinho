@@ -413,7 +413,7 @@ output=-1;
         clip->set( 0, 0, CLIPVIEW_SIZE, CLIPVIEW_SIZE );
         clip->setActiveRange(0.5f);
         addWidget( clip );
-        cout << "added "<< clip->getName() << endl;
+        cout << "ADDDDD "<< clip->getName() << endl;
         clips.push_back(clip);
 //
 
@@ -539,10 +539,12 @@ vector<int>deleteClips;
     {
 //        cout << "acd clip: "<< i  << endl;
     	addClip(loadClips[i]);
-        shouldSetClips = true;
 
 //    	deleteClips.push_back(i);
 //    	loadClips.erase(loadClips.begin()+i);
+    }
+    if(loadClips.size()>0){
+        shouldSetClips=true;
     }
 
 //    for (int i=0; i<deleteClips.size(); i++)
@@ -647,8 +649,11 @@ bool kThreadClipView::addClips(vector< shared_ptr<Clip> > _clips){
 
             loadClips.clear();
 
-            for (int i=0; i<_clips.size(); i++)
+            for (int i=0; i<_clips.size(); i++) {
                 loadClips.push_back( _clips[i] );
+            }
+
+cout << "LOADES: : " << loadClips.size() << endl;
 
 			startThread(false, false);							// start the thread
 
@@ -715,7 +720,7 @@ void kThreadClipView::clipDragged(widgetEvent & _event){
     value = index;
     cout << "index"<<index << endl;
     if(clips.size()>index) {
-    draggingClip = clips[index]->getClip();
+        draggingClip = clips[index]->getClip();
         cout << "dragggggggggggg" << endl;
     }
     notify("clipDragged");
@@ -789,8 +794,9 @@ vector< shared_ptr < kClipShow > > & kThreadClipView::getClips() {
     }
 
     void kClipScrollView::addClips(vector< shared_ptr<Clip> > _clips){
-        for (int i=0; i<_clips.size(); i++)
+        for (int i=0; i<_clips.size(); i++) {
             addClip(_clips[i]);
+        }
         /*shared_ptr<kClipShow> clip;
         for (int i=0; i<_clips.size(); i++)
         {

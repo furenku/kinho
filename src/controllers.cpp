@@ -67,17 +67,17 @@ void MainController::loadSession(string _filename) {
 
 void MainController::createSettings(){
 
-    font.loadFont("fonts/verdana.ttf",12);
-    font2.loadFont("fonts/verdana.ttf",14);
-    font3.loadFont("fonts/verdana.ttf",18);
+    font.loadFont("fonts/verdana.ttf",10);
+    font2.loadFont("fonts/verdana.ttf",12);
+    font3.loadFont("fonts/verdana.ttf",14);
 
 
     settings = make_shared<Settings>();
     settings2 = make_shared<Settings>();
-    settings -> addColor(make_shared<ofColor>(80,80,30));
-    settings -> addColor(make_shared<ofColor>(155,155,30));
-    settings2 -> addColor(make_shared<ofColor>(150,90,40));
-    settings2 -> addColor(make_shared<ofColor>(250,120,0));
+    settings -> addColor(make_shared<ofColor>(180));
+    settings -> addColor(make_shared<ofColor>(255));
+    settings2 -> addColor(make_shared<ofColor>(80));
+    settings2 -> addColor(make_shared<ofColor>(210));
 
     settings -> addFont( shared_ptr<ofTrueTypeFont>(&font2), make_shared<ofColor>(150 ) );
     settings2 -> addFont( shared_ptr<ofTrueTypeFont>(&font), make_shared<ofColor>( 250 ) );
@@ -384,6 +384,11 @@ void MainController::createModules() {
 
 
 
+
+    makeScene();
+
+
+
 //
 //
 //
@@ -496,12 +501,12 @@ void MainController::makeLogins(){
     ofAddListener( *catSelect->events.lookup("selectedWords"),this,&MainController::catSelected );
     ofAddListener( *tagSelect->events.lookup("selectedWords"),this,&MainController::tagSelected );
 
-//    login(timeline,"release",make_shared<SetTimelineClip>( clipView,timeline));
-//    login(timeline2,"release",make_shared<SetTimelineClip>( clipView,timeline2 ));
+    login(timeline,"release",make_shared<SetTimelineClip>( clipView,timeline));
+    login(timeline2,"release",make_shared<SetTimelineClip>( clipView,timeline2 ));
 
 
-//login(clipView,"clipClicked",make_shared<SetTimelineClip>( clipView,timeline));
-//login(clipView,"clipClicked",make_shared<SetTimelineClip>( clipView,timeline2));
+login(clipView,"clipClicked",make_shared<SetTimelineClip>( clipView,timeline));
+login(clipView,"clipClicked",make_shared<SetTimelineClip>( clipView,timeline2));
 
 login(timeline,"playClip",make_shared<PlayTimelineClip>( timeline,output ));
 login(timeline,"playClip",make_shared<PlayTimelineClip>( timeline2,output ));
@@ -587,7 +592,7 @@ void MainController::makeTimelines(){
     clockmngr = make_shared<ClockManager>( );
 
     timeline = make_shared<TimelineTrack>( );
-    timeline->set(100,100,600,100);
+    timeline->set(50,600,1180,75 );
     timeline->applySettings(settings);
     timeline->setWidgetSettings(settings2);
     timeline->initialize();
@@ -596,7 +601,7 @@ void MainController::makeTimelines(){
     clockmngr->addTimeline( timeline );
 
     timeline2 = make_shared<TimelineTrack>( );
-    timeline2->set(100,200,600,100);
+    timeline2->set(50,700,1180,75 );
     timeline2->applySettings(settings);
     timeline2->setWidgetSettings(settings2);
     timeline2->initialize();
@@ -754,7 +759,7 @@ shared_ptr<kLabelButton> btn;
 
 
     catSelect = make_shared<WordSelect>( );
-    catSelect->set(700,0,250,250);
+    catSelect->set(50,50,250,250);
     catSelect->setSpacingY(65);
     catSelect->applySettings(settings);
     catSelect->setWidgetSettings(settings2);
@@ -771,7 +776,7 @@ shared_ptr<kLabelButton> btn;
     catSelect->arrangeWidgets();
 
     tagSelect = make_shared<WordSelect>( );
-    tagSelect->set(700,300,250,250 );
+    tagSelect->set(50,325,250,250 );
     tagSelect->applySettings(settings);
     tagSelect->setWidgetSettings(settings2);
     tagSelect->initialize();
@@ -789,7 +794,7 @@ void MainController::makeClipView() {
 
     clipView = make_shared<kThreadClipView>();
 
-    clipView -> set(1000,0,280,800);
+    clipView -> set(300,50,300,525 );
     clipView -> applySettings ( settings  );
     clipView -> setWidgetSettings ( settings );
     clipView -> cols=2;
@@ -844,16 +849,16 @@ void MainController::makeSelected(){
 }
 
 void MainController::makeScene(){
-//            scene = make_shared<SceneBuilder>( );
-//
-//            scene->set(50,50,1050,700);
-//
-//            scene->applySettings(settings);
-//            scene->setWidgetSettings(settings2);
-//
-//            scene->initialize();
-//
-//            scene->iiinit();
+            scene = make_shared<SceneBuilder>( );
+
+            scene->set(600,50,630, 525 );
+
+            scene->applySettings(settings);
+            scene->setWidgetSettings(settings2);
+
+            scene->initialize();
+
+            scene->iiinit();
 
 }
 
@@ -904,7 +909,6 @@ void MainController::catSelected(widgetEvent & _event){
 
 
         string cleanStr = vecstr[i];
-
         while ( cleanStr.find ("\n") != string::npos )
         {
             cleanStr.erase ( cleanStr.find ("\n"), 2 );
@@ -948,6 +952,7 @@ void MainController::catSelected(widgetEvent & _event){
 
             }
 
+
         }
 
 
@@ -959,16 +964,10 @@ void MainController::catSelected(widgetEvent & _event){
 }
 
 void MainController::tagSelected(widgetEvent & _event){
-//cout << "tagSelected" << endl;
 
-//            vector< shared_ptr < kWidget > > widgets = clipView->getWidgets();
-//            for (int j=0; j<widgets.size(); j++)
-//            {
-//                widgets[j]->disable();
-//            }
-//            clipView->clearWidgets();
+
     clipView->clearClips();
-//    clipView->clearWidgets();
+
     vector<string> vecstr = dynamic_pointer_cast<WordSelect>(_event.sender)->getSelected();
     vector<shared_ptr<Clip> > loadClips;
 
@@ -976,13 +975,14 @@ void MainController::tagSelected(widgetEvent & _event){
     for (int i=0; i<vecstr.size(); i++)
     {
 
-
         string cleanStr = vecstr[i];
 
         while ( cleanStr.find ("\n") != string::npos )
         {
             cleanStr.erase ( cleanStr.find ("\n"), 2 );
         }
+
+        cout << "CHECKINGGGGGGGGGGGGGGGGG : " << cleanStr << endl;
 
         shared_ptr<Ontology> tagOnt = miniLibrary->getOntology( cleanStr );
 
@@ -993,31 +993,26 @@ void MainController::tagSelected(widgetEvent & _event){
             for (int j=0; j<tagClips.size(); j++)
             {
 //                cout << "ont"<<tagOnt->getName()<<" has "<< tagClips[j]->getName() << endl;
-
                 if ( find( loadClips.begin(), loadClips.end(), tagClips[j] ) != loadClips.end() ) {
                     cout << "found in vector" << endl;
                 }
                 else {
                     loadClips.push_back(tagClips[j]);
                 }
-
             }
 
         }
 
 
-        clipView->addClips(loadClips);
 
     }
 
+   for (int i=0; i<loadClips.size(); i++)
+            {
+            	cout << "CLIPNAME:  : " << loadClips[i]->getName() << endl;
+            }
+    clipView->addClips(loadClips);
 
-//
-//
-//    vector<string> vecstr = dynamic_pointer_cast<WordSelect>(_event.sender)->getSelected();
-//    for (int i=0; i<vecstr.size(); i++)
-//    {
-//        clipView->addClips(miniLibrary->getClips(miniLibrary->getOntology(vecstr[i])));
-//    }
 }
 
 void MainController::clipClicked(widgetEvent & _event){

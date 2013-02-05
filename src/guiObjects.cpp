@@ -927,7 +927,7 @@ clearWidgets();
                 if(orientation=="horizontal")
                     widgets[i] -> set( pt.x,pt.y,widgets[i]->width,spacingX*0.95f);
                 else if(orientation=="vertical")
-                    widgets[i] -> set( pt.x,pt.y,widgets[i]->width,spacingY*0.95f);
+                    widgets[i] -> set( pt.x,pt.y-spacingY,widgets[i]->width,spacingY*0.95f);
             }
             else {
 
@@ -940,18 +940,27 @@ clearWidgets();
             }
 
             widgets[i]->hide();
+            widgets[i]->disable();
 
 
             if(orientation=="vertical") {
                 if( inside( widgets[i]->x,
-                            widgets[i]->y + widgets[i]->height/3)
-                    &&
-                    inside( widgets[i]->x,
-                            widgets[i]->y - widgets[i]->height/3)
-                )
+                            widgets[i]->y +  widgets[i]->getHeight()/3 )
+//                    &&
+//                    inside( widgets[i]->x,
+//                            widgets[i]->y +  widgets[i]->height  )
+                ){
 
-                if(visible) widgets[i]->show();
-                else        widgets[i]->hide();
+                    if(visible) {
+                        widgets[i]->show();
+                        widgets[i]->enable();
+                    }
+                    else{
+                        widgets[i]->hide();
+                        widgets[i]->disable();
+                    }
+
+                }
 
             }
             else if(orientation=="horizontal"){
@@ -962,9 +971,14 @@ clearWidgets();
                             widgets[i]->y)
                 )
 
-                if(visible) widgets[i]->show();
-                else        widgets[i]->hide();
-
+                if(visible) {
+                    widgets[i]->show();
+                    widgets[i]->enable();
+                }
+                else{
+                    widgets[i]->hide();
+                    widgets[i]->disable();
+                }
             }
             else if(orientation=="xy"){
 

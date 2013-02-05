@@ -91,7 +91,7 @@ class DragLibraryItem: public Functor {
 class SetTimelineClip: public Functor {
 
     public:
-        SetTimelineClip( shared_ptr<kClipScrollView> _clipView, shared_ptr<TimelineTrack> _timeline) {
+        SetTimelineClip( shared_ptr<kThreadClipView> _clipView, shared_ptr<TimelineTrack> _timeline) {
             clipView = _clipView; timeline = _timeline;
         }
 
@@ -135,7 +135,7 @@ class SetTimelineClip: public Functor {
         }
 
 
-        shared_ptr<kClipScrollView> clipView; shared_ptr<TimelineTrack> timeline;
+        shared_ptr<kThreadClipView> clipView; shared_ptr<TimelineTrack> timeline;
 };
 
 
@@ -145,7 +145,7 @@ class SetTimelineClip: public Functor {
 class AddMedia: public Functor {
 
     public:
-        AddMedia( shared_ptr<Archive> _archive, shared_ptr<kClipScrollView> _selected) {
+        AddMedia( shared_ptr<Archive> _archive, shared_ptr<kThreadClipView> _selected) {
             selected = _selected; archive = _archive;
         }
 
@@ -156,7 +156,7 @@ class AddMedia: public Functor {
         }
 
 
-        shared_ptr<kClipScrollView> selected; shared_ptr<Archive> archive;
+        shared_ptr<kThreadClipView> selected; shared_ptr<Archive> archive;
 };
 
 
@@ -190,7 +190,7 @@ cout << "connnnn" << endl;
 //class SetDraggingClip: public Functor {
 //
 //    public:
-//        SetDraggingClip( shared_ptr<SceneBuilder> _scene, shared_ptr<kClipScrollView> _selected) {
+//        SetDraggingClip( shared_ptr<SceneBuilder> _scene, shared_ptr<kThreadClipView> _selected) {
 //            selected = _selected; scene = _scene;
 //        }
 //
@@ -200,7 +200,7 @@ cout << "connnnn" << endl;
 //            }
 //        }
 //
-//        shared_ptr<kClipScrollView> selected; shared_ptr<SceneBuilder> scene;
+//        shared_ptr<kThreadClipView> selected; shared_ptr<SceneBuilder> scene;
 //
 //};
 //

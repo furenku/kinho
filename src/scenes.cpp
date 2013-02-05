@@ -3,6 +3,7 @@
 
 
 
+//{ SCENEWIDGETS
 
         SceneWidget::SceneWidget(){
             setType("scenewidget");
@@ -272,6 +273,10 @@
 
 
 
+//}
+
+
+//{ SCENECLIP
 
         SceneClip::SceneClip(){
             setupVars();
@@ -336,10 +341,10 @@
         }
 
 
+//}
 
 
-
-
+//{ SCENEBUILDER
 
         SceneBuilder::SceneBuilder(){
             autoArrange = false;
@@ -521,9 +526,6 @@ vector< shared_ptr < StoreObject > > c;
 
 
 
-
-
-
         shared_ptr< SceneClip > SceneBuilder::playNextClip() {
             vector < shared_ptr<StoreObject> > c;
             vector < shared_ptr<SceneClip> > possibleNext;
@@ -692,6 +694,8 @@ vector< shared_ptr < StoreObject > > c;
 //        }
 
 
+
+//}
 
 
 

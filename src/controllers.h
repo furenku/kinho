@@ -20,6 +20,7 @@
 #include "library.h"
 #include "video.h"
 #include "archive.h"
+#include "scenes.h"
 #include "functors.h"
 #include "ofxXmlSettings.h"
 
@@ -115,7 +116,9 @@ shared_ptr<VideoLoader> videoLoader;
         shared_ptr<Library> library;
         shared_ptr<LibraryManager> miniLibrary;
         shared_ptr<Archive> archive;
-//        shared_ptr<SceneBuilder> scene;
+
+        shared_ptr<SceneBuilder> scene;
+
 //        vector< shared_ptr<PlayList> > playlists;
 
 
