@@ -148,7 +148,7 @@ shared_ptr<VideoLoader> videoLoader;
         shared_ptr<Clip> clickedClip, draggingClip;
         shared_ptr<Clip> tmpClip;
 
-        string mediaDirectory;
+        string mediaDirectory, xmlFile;
 
 };
 

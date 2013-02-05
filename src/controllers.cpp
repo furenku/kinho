@@ -40,11 +40,12 @@ void MainController::update() {
 
 
 
-//{ SETUP:
+//{ PREPARE:
 
 
 void MainController::loadSession(string _filename) {
 
+    xmlFile = "xml/ABISMOTEST02.xml";
     mediaDirectory="movies/";
     //library
         // load all video clips
@@ -127,7 +128,7 @@ void MainController::loadXml(string _file){
     //if there is at least one <STROKE> tag we can read the list of points
     //and then try and draw it as a line on the screen
     if(numEntries > 0){
-cout << "noentrys "<< numEntries << endl;
+//cout << "noentrys "<< numEntries << endl;
         //we push into the last STROKE tag
         //this temporarirly treats the tag as
         //the document root.
@@ -135,7 +136,7 @@ cout << "noentrys "<< numEntries << endl;
         {
             XML.pushTag("entry", h );
 
-            cout << "entry"<<h << endl;
+//            cout << "entry"<<h << endl;
 
             //we see how many points we have stored in <PT> tags
             int numParams = XML.getNumTags("param");
@@ -200,6 +201,7 @@ cout << "noentrys "<< numEntries << endl;
                     case 6:
                         //tags
                         boost::split(words, val, boost::is_any_of(","), boost::token_compress_on);
+                        cout << "key:"<< key << endl;
 
                         for (int i=0; i<words.size(); i++)
                         {
@@ -212,7 +214,6 @@ cout << "noentrys "<< numEntries << endl;
                                 }
                             }
                         }
-                        break;
                         break;
                     case 7:
                         //descripcion
@@ -258,7 +259,10 @@ cout << "noentrys "<< numEntries << endl;
 
 
 
+//}
 
+
+//{ SETUP
 
 void MainController::createMedia() {
 
@@ -353,7 +357,7 @@ void MainController::createModules() {
 
     makeLibrary();
 
-    loadXml("xml/ABISMOTEST02.xml");
+    loadXml(xmlFile);
 
 
 
@@ -892,6 +896,8 @@ void MainController::catSelected(widgetEvent & _event){
     vector<string> vecstr = dynamic_pointer_cast<WordSelect>(_event.sender)->getSelected();
     vector<shared_ptr<Clip> > loadClips;
 
+    tagSelect->clear();
+
 
     for (int i=0; i<vecstr.size(); i++)
     {
@@ -920,12 +926,13 @@ void MainController::catSelected(widgetEvent & _event){
                 }
                 else {
                     loadClips.push_back(catClips[j]);
-                    vector< shared_ptr < Ontology > > onts = miniLibrary->getOntologies(catClips[j]);
 
+                    vector< shared_ptr < Ontology > > onts = miniLibrary->getOntologies(catClips[j]);
 
                     for (int k=0; k<onts.size(); k++)
                     {
                     	if( onts[k]->getType() == "tag" ){
+                    	    cout << "add tag : " << onts[k]->getName() << endl;
                             loadedTagNames.push_back( onts[k]->getName() );
                     	}
 
@@ -952,7 +959,7 @@ void MainController::catSelected(widgetEvent & _event){
 }
 
 void MainController::tagSelected(widgetEvent & _event){
-cout << "tagSelected" << endl;
+//cout << "tagSelected" << endl;
 
 //            vector< shared_ptr < kWidget > > widgets = clipView->getWidgets();
 //            for (int j=0; j<widgets.size(); j++)
@@ -960,8 +967,50 @@ cout << "tagSelected" << endl;
 //                widgets[j]->disable();
 //            }
 //            clipView->clearWidgets();
-
     clipView->clearClips();
+//    clipView->clearWidgets();
+    vector<string> vecstr = dynamic_pointer_cast<WordSelect>(_event.sender)->getSelected();
+    vector<shared_ptr<Clip> > loadClips;
+
+
+    for (int i=0; i<vecstr.size(); i++)
+    {
+
+
+        string cleanStr = vecstr[i];
+
+        while ( cleanStr.find ("\n") != string::npos )
+        {
+            cleanStr.erase ( cleanStr.find ("\n"), 2 );
+        }
+
+        shared_ptr<Ontology> tagOnt = miniLibrary->getOntology( cleanStr );
+
+        if(tagOnt) {
+
+            vector< shared_ptr<Clip> > tagClips = miniLibrary->getClips( tagOnt );
+
+            for (int j=0; j<tagClips.size(); j++)
+            {
+//                cout << "ont"<<tagOnt->getName()<<" has "<< tagClips[j]->getName() << endl;
+
+                if ( find( loadClips.begin(), loadClips.end(), tagClips[j] ) != loadClips.end() ) {
+                    cout << "found in vector" << endl;
+                }
+                else {
+                    loadClips.push_back(tagClips[j]);
+                }
+
+            }
+
+        }
+
+
+        clipView->addClips(loadClips);
+
+    }
+
+
 //
 //
 //    vector<string> vecstr = dynamic_pointer_cast<WordSelect>(_event.sender)->getSelected();
