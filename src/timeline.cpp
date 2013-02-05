@@ -457,16 +457,22 @@ cout << "IN RANGE" << endl;
         }
 
         void ClipEvent::stop(){
+
+
             Event::stop();
         }
         void ClipEvent::draw( ofEventArgs & args){
             TimelineEventWidget::draw(args);
+            img.draw(x,y+(height-(height/1.77))/2,height,height/1.77);
         }
         void ClipEvent::setClip( shared_ptr<Clip> _clip ){
             clip = _clip;
-            string imgPath = _clip -> getFilename();
-            string thumbPath = imgPath.substr(0, imgPath.find(".") )+".png";
+            string filePath = _clip -> getFilename();
+
+            string thumbPath = filePath.substr(0, filePath.find(".") )+".png";
             img.loadImage(thumbPath);
+//            cout << "IMGPATH : " << thumbPath << endl;
+
 
         }
         shared_ptr<Clip> ClipEvent::getClip(){ return clip; }
