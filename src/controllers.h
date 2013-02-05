@@ -133,9 +133,9 @@ shared_ptr<VideoLoader> videoLoader;
 
 
         vector< shared_ptr<kScrollView> > scrollViews;
-        shared_ptr<kClipScrollView> clipView ;
+        shared_ptr<kThreadClipView> clipView ;
         shared_ptr<kSampleScrollView> sampleView;
-        vector< shared_ptr<kClipScrollView> > clipScrollViews;
+        vector< shared_ptr<kThreadClipView> > clipScrollViews;
         vector< shared_ptr<kSampleScrollView> > sampleScrollViews;
         vector< shared_ptr<kRectView> > mediaViews;
 

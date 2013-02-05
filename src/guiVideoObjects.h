@@ -166,7 +166,7 @@ class kClipView: virtual public kRectView, virtual public kDragSink{
 
     void createEvents();
 
-    virtual void addClip(shared_ptr<Clip> _clip);
+    virtual bool addClip(shared_ptr<Clip> _clip);
 
         void clipClicked(widgetEvent & _event);
 
@@ -190,8 +190,46 @@ class kClipView: virtual public kRectView, virtual public kDragSink{
 
 
 
+#if OF_VERSION < 7
+class kThreadClipView : virtual public kScrollView, virtual public kClipView, public ofxThread {
+#else
+class kThreadClipView : virtual public kScrollView, virtual public kClipView, public ofThread {
+
+    public:
+
+    kThreadClipView();
+    ~kThreadClipView(){}
 
 
+    //--------------------------------------------------------------
+    bool addClip(shared_ptr<Clip> _clip);
+
+    void addClips(vector< shared_ptr<Clip> > _clips);
+
+    //--------------------------------------------------------------
+    void threadedFunction();
+
+
+
+
+
+
+    void initialize();
+
+
+    vector< shared_ptr < kClipShow > > & getClips();
+
+    //--------------------------------------------------------------
+    void update();
+
+
+    vector< shared_ptr < Clip > > loadClips;
+
+    bool loading;
+
+};
+
+#endif
 
 class kClipScrollView: virtual public kScrollView, virtual public kClipView {
     public:

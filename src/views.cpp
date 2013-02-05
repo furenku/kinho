@@ -873,7 +873,7 @@ void kArchiveView::btnClicked(widgetEvent & event){
 
 
 //
-    void kArchiveView::addClip(shared_ptr<Clip> _clip){
+    bool kArchiveView::addClip(shared_ptr<Clip> _clip){
 
         shared_ptr<kClipShow> clip = make_shared<kClipShow>();
         clip -> setClip(_clip);

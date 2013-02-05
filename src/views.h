@@ -205,7 +205,7 @@ void btnClicked(widgetEvent & event);
 
 
 //
-    virtual void addClip(shared_ptr<Clip> _clip);
+    virtual bool addClip(shared_ptr<Clip> _clip);
 
         void showClip(widgetEvent & event);
 

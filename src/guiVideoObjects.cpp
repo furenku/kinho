@@ -5,6 +5,7 @@
 //#ifndef GUIVIDEOOBJECTS_H
 //#define GUIVIDEOOBJECTS_H
 
+//{
 
 //----- VIDEO OBJECTS:
 
@@ -387,7 +388,7 @@ output=-1;
         saveEvent("clipDragged");
     }
 
-    void kClipView::addClip(shared_ptr<Clip> _clip){
+    bool kClipView::addClip(shared_ptr<Clip> _clip){
         shared_ptr<kClipShow> clip = make_shared<kClipShow>();
         clip -> setClip(_clip);
 //        clip -> setName(_clip->getName());
@@ -455,6 +456,236 @@ output=-1;
     }
 
     shared_ptr<Clip> kClipView::getDraggingClip(){ return draggingClip; }
+
+
+
+
+
+
+
+
+
+
+
+//}
+
+
+
+
+
+
+
+//{ THREADED CLIP VIEW
+
+kThreadClipView::kThreadClipView(){
+    // loading = false; }
+    orientation="vertical"; cols = 2; spacingX=40;spacingY=40;
+
+}
+
+//--------------------------------------------------------------
+bool kThreadClipView::addClip(shared_ptr<Clip> _clip) {
+
+//    if (!isSetup) setup();
+
+	// make sure that...
+	if(!isThreadRunning()				// ...the thread is not already running...
+//	   && loaded[cueVideo]				// ...that the cueVideo is loaded...
+//	   && loaded[currentVideo]			// ...that the currentVideo is loaded...
+//	   && textured[cueVideo]			// ...and that both
+//	   && textured[currentVideo]		// are textured...
+//	   && !loading                    // ...and that no other instance is also loading (this is optional, but recommended ;-)
+	   ) {
+
+
+//		loading = true;					// flag all instances that we are loading (see above)
+//
+//		videoRequests++;				// use a counter to switch between cue and current video[] player indexs
+
+//		if(videoRequests % MAX_VIDEOS != currentVideo || firstLoad) {	// ie., this toggles which of the video[] players is
+//			// the cue or current index (also handles a "firstload")
+//
+//			cueVideo = videoRequests % MAX_VIDEOS;				// set the cueVideo index
+//
+//			name[cueVideo] = _name;								// set the video to load name
+//
+////			ofLog(OF_LOG_VERBOSE, "Loading: " + _name);
+//
+//			video[cueVideo]->setUseTexture(false);				// make sure the texture is turned off or else the thread crashes: openGL is thread safe!
+//
+//			loaded[cueVideo] = false;							// set flags for loaded (ie., quicktime loaded)
+//			textured[cueVideo] = false;							// and textured (ie., "forced texture" once the thread is stop)
+//
+
+            loadClips.push_back( _clip );
+
+			startThread(false, false);							// start the thread
+
+
+			return true;										// NB: this does not let us know that the video is loaded; just that it has STARTED loading...
+//
+//		} else {												// ELSE: the video has not been textured and/or updated yet (ie., we
+//			// have to wait one cycle between the thread terminating and the texture
+//			// being "forced" back on - otherwise openGL + thread = crash...
+//			ofLog(OF_LOG_VERBOSE, "Load BLOCKED by reload before draw/update");
+//			goVideoError err = GO_TV_UPDATE_BLOCKED;
+//			ofNotifyEvent(error, err);
+//			return false;
+//		}
+
+	} else {													// ELSE: either we're already loading in this instance OR another instance
+		ofLog(OF_LOG_VERBOSE, "Load BLOCKED by already thread loading...attempting to enqueue");
+#ifdef USE_QUEUE
+		pushQueue(_name);
+
+		return true;
+#else
+//		goVideoError err = GO_TV_LOAD_BLOCKED;
+//        ofNotifyEvent(error, err);
+		return false;
+#endif
+	}
+
+}
+
+//--------------------------------------------------------------
+void kThreadClipView::threadedFunction() {
+
+	// this is where we load the video in a thread
+	// whilst the texture is turned off...
+
+	stopThread();
+
+cout << "loaddddd" << endl;
+vector<int>deleteClips;
+
+    for (int i=0; i<loadClips.size(); i++)
+    {
+    	kClipView::addClip(loadClips[i]);
+    	deleteClips.push_back(i);
+//    	loadClips.erase(loadClips.begin()+i);
+    }
+
+    for (int i=0; i<deleteClips.size(); i++)
+    {
+//    	loadClips.erase( loadClips.begin() + deleteClips[deleteClips.size()-i] );
+    }
+
+    deleteClips.clear();
+
+//	bool ok = video[cueVideo]->loadMovie(name[cueVideo]);	// load the movie
+//	if (ok) {
+//								// and start playing it
+////		video[cueVideo]->stop();								// and start playing it
+//        video[cueVideo]->play();								// and start playing it
+//        video[cueVideo]->setPaused(true);
+//
+//        	for (int i=0; i<10; i++)
+//        	{
+//                video[cueVideo]->setSpeed( speed );
+//                video[cueVideo]->setFrame(nextPosition*video[cueVideo]->getTotalNumFrames() );
+//                video[cueVideo]->idleMovie();
+//        	}
+//
+//
+////        video[cueVideo]->idleMovie();								// and start playing it
+//		video[cueVideo]->setLoopState(OF_LOOP_NORMAL);
+//		loaded[cueVideo] = true;							// set flag that the video is loaded
+//	} else {
+//
+//		goVideoError err = GO_TV_MOVIE_ERROR;
+//		ofNotifyEvent(error, err);
+//	}
+
+
+}
+
+
+//--------------------------------------------------------------
+void kThreadClipView::update() {
+
+	// make sure the thread has finished and that we have a loaded 'cue' video that has NOT been textured
+	if( !isThreadRunning()
+//        && loaded[cueVideo] && !textured[cueVideo]
+        ) {
+
+		// setup the videos texture and force the
+		// first frame of the texture to upload
+		// (this required changes to ofVideoPlayer, see goVideoPlayer)
+
+//        ofTexture & tref = video[cueVideo]->getTextureReference();
+//        tref.allocate(video[cueVideo]->getWidth(),video[cueVideo]->getHeight(), GL_RGB);  		video[cueVideo]->setUseTexture(true);
+//        tref.loadData(video[cueVideo]->getPixels(), video[cueVideo]->getWidth(),video[cueVideo]->getHeight(), GL_RGB);
+//		// unless it's the very fist load, lets pause the current video
+//		if(!firstLoad) {
+//			video[currentVideo]->setPaused(true);
+//		} else firstLoad = false;
+//
+//		// force an update of the cue'd videos frame
+//		video[cueVideo]->update();
+//
+//		// update texture flags and set swapVideo flag to do a
+//		// "flickerless" change between cue and current video[] players
+//		textured[cueVideo] = true;
+//		swapVideo = true;
+//		tryTimes=0;
+
+	}
+
+	// if we have a loaded video and the thread is not running then update the current video player
+//	if(loaded[currentVideo] && textured[currentVideo]) {
+//		video[currentVideo]->update();
+//	}
+#ifdef USE_QUE
+//	if(!loading) popQueue();
+#endif
+}
+
+
+void kThreadClipView::addClips(vector< shared_ptr<Clip> > _clips){
+        for (int i=0; i<_clips.size(); i++)
+            addClip(_clips[i]);
+        /*shared_ptr<kClipShow> clip;
+        for (int i=0; i<_clips.size(); i++)
+        {
+        	clip = make_shared<kClipShow>();
+            clip -> setClip( _clips[i] );
+            clip->set( 0, 0, CLIPVIEW_SIZE, CLIPVIEW_SIZE );
+
+            kScrollView::addWidget( clip );
+
+
+        }
+        kScrollView::arrangeWidgets();*/
+    }
+
+
+
+
+
+
+void kThreadClipView::initialize() {
+
+    kScrollView::initialize();
+
+}
+
+    vector< shared_ptr < kClipShow > > & kThreadClipView::getClips() {
+        return clips;
+    }
+
+
+//}
+
+
+
+
+
+
+
+//{
+
+
 
 
 
@@ -1026,8 +1257,6 @@ output=-1;
 //
 //
 //};
-
-
 
 
 

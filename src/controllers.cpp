@@ -470,12 +470,12 @@ void MainController::makeLogins(){
     ofAddListener( *catSelect->events.lookup("selectedWords"),this,&MainController::catSelected );
     ofAddListener( *tagSelect->events.lookup("selectedWords"),this,&MainController::tagSelected );
 
-    login(timeline,"release",make_shared<SetTimelineClip>( clipView,timeline));
-    login(timeline2,"release",make_shared<SetTimelineClip>( clipView,timeline2 ));
+//    login(timeline,"release",make_shared<SetTimelineClip>( clipView,timeline));
+//    login(timeline2,"release",make_shared<SetTimelineClip>( clipView,timeline2 ));
 
 
-login(clipView,"clipClicked",make_shared<SetTimelineClip>( clipView,timeline));
-login(clipView,"clipClicked",make_shared<SetTimelineClip>( clipView,timeline2));
+//login(clipView,"clipClicked",make_shared<SetTimelineClip>( clipView,timeline));
+//login(clipView,"clipClicked",make_shared<SetTimelineClip>( clipView,timeline2));
 
 login(timeline,"playClip",make_shared<PlayTimelineClip>( timeline,output ));
 login(timeline,"playClip",make_shared<PlayTimelineClip>( timeline2,output ));
@@ -780,7 +780,7 @@ library = make_shared<Library>( );
 
 void MainController::makeClipView() {
 
-    clipView = make_shared<kClipScrollView>();
+    clipView = make_shared<kThreadClipView>();
 
     clipView -> set(1000,0,280,800);
     clipView -> applySettings ( settings  );
