@@ -13,6 +13,7 @@
 #include "ofMain.h"
 #include "ofxXmlSettings.h"
 #include "ofxDirList.h"
+#include "ofxThreadedImageLoader.h"
 #include "ofxOsc.h"
 #include "video.h"
 #include "storage.h"

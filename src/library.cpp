@@ -179,9 +179,9 @@ vector< shared_ptr<Clip> > LibraryManager::getClips(shared_ptr<Ontology> _ont){
     for (int i=0; i<vc.size(); i++)
     {
         shared_ptr<Clip> clip = dynamic_pointer_cast<Clip>(vc[i]);
-        cout << "ok" << endl;
+//        cout << "ok" << endl;
         if( clip->getType()=="clip" ){
-            cout << "clip."<< clip->getName() << endl;
+//            cout << "get ontology clip: "<< clip->getName() << endl;
             c.push_back( clip );
         }
     }
@@ -489,7 +489,8 @@ void WordSelect::initialize(){
 }
 
 void WordSelect::btnClicked(widgetEvent & _event){
-    cout << "click" << endl;
+//    cout << "click" << endl;
+    selectedStrings.clear();
     for (int i=0; i<widgets.size(); i++)
     {
 
@@ -497,8 +498,9 @@ void WordSelect::btnClicked(widgetEvent & _event){
             selectedStrings.push_back( widgets[i]->getLabel() );
         }
 
-        notify("selectedWords");
+
     }
+    notify("selectedWords");
 
 }
 

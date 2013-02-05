@@ -5,9 +5,8 @@
 //#ifndef GUIVIDEOOBJECTS_H
 //#define GUIVIDEOOBJECTS_H
 
-//{
 
-//----- VIDEO OBJECTS:
+//{----- MEDIA WIDGETS:
 
 
         MediaWidget::MediaWidget(){
@@ -49,7 +48,8 @@
             string imgPath = _clip -> getFilename();
             string thumbPath = imgPath.substr(0, imgPath.find(".") )+".png";
 
-            cout << thumbPath << endl;
+    cout << "!!!!!!!!!!!!!!!!!!!thumbpath:  "<<  thumbPath << endl;
+            img.setUseTexture(false);
             img.loadImage(thumbPath);
 
             setMedia(_clip);
@@ -82,13 +82,15 @@
             }
 
             if(img.bAllocated()) {
-                img.draw(
+                ofSetColor(255,255,255,255);
+;                img.draw(
                     drawX,
                     drawY,
                     drawW,
                     drawH
                 );
-
+//ofSetColor(255,30,125);
+//ofCircle(drawX,drawY,drawW/2);
             }
             else {
                 ofRect(
@@ -109,11 +111,11 @@
 
 
 
-            bool kClip::inside (float px, float py){
+        bool kClip::inside (float px, float py){
 
 
-                float offsetX = float(width*(1-activeRange))/2;
-                float offsetY = float(height*(1-activeRange))/2;
+            float offsetX = float(width*(1-activeRange))/2;
+            float offsetY = float(height*(1-activeRange))/2;
 
 //            if( px > x+offsetX &&
 //                py > y+offsetY &&
@@ -156,7 +158,9 @@
         }
 
 
+//}
 
+//{ CLIP HOLDER
 
         kClipHolder::kClipHolder( shared_ptr<Settings> _settings ) {
             createEvents();
@@ -374,6 +378,10 @@ output=-1;
 
 
 
+
+//}
+
+
         void kCategory::mouseDragged(ofMouseEventArgs & mouse) {
             kDragObject::mouseDragged(mouse);
         }
@@ -381,6 +389,16 @@ output=-1;
 
 
 
+
+
+
+
+
+
+
+
+
+//{ CLIP VIEW!
     kClipView::kClipView() { createEvents(); }
 
     void kClipView::createEvents() {
@@ -396,12 +414,11 @@ output=-1;
         clip->setActiveRange(0.5f);
         addWidget( clip );
         cout << "added "<< clip->getName() << endl;
-//        clips.push_back(clip);
+        clips.push_back(clip);
 //
 
-
-//        ofAddListener( *clip->events.lookup("press"),this,&kClipView::clipClicked );
-//        ofAddListener( *clip->events.lookup("drag"),this,&kClipView::clipDragged );
+        ofAddListener( *clip->events.lookup("press"),this,&kClipView::clipClicked );
+        ofAddListener( *clip->events.lookup("drag"),this,&kClipView::clipDragged );
 
 //        if(!visible) clip->hide();
         arrangeWidgets();
@@ -458,20 +475,7 @@ output=-1;
     shared_ptr<Clip> kClipView::getDraggingClip(){ return draggingClip; }
 
 
-
-
-
-
-
-
-
-
-
 //}
-
-
-
-
 
 
 
@@ -480,72 +484,44 @@ output=-1;
 kThreadClipView::kThreadClipView(){
     // loading = false; }
     orientation="vertical"; cols = 2; spacingX=40;spacingY=40;
-
+    shouldSetClips = false;
 }
+
+
+
+    void kThreadClipView::clearClips(){
+        for (int j=0; j<clips.size(); j++) {
+
+            removeWidget( clips[j] );
+            clips[j].reset();
+        }
+        clips.clear();
+    }
+
 
 //--------------------------------------------------------------
 bool kThreadClipView::addClip(shared_ptr<Clip> _clip) {
 
-//    if (!isSetup) setup();
-
-	// make sure that...
-	if(!isThreadRunning()				// ...the thread is not already running...
-//	   && loaded[cueVideo]				// ...that the cueVideo is loaded...
-//	   && loaded[currentVideo]			// ...that the currentVideo is loaded...
-//	   && textured[cueVideo]			// ...and that both
-//	   && textured[currentVideo]		// are textured...
-//	   && !loading                    // ...and that no other instance is also loading (this is optional, but recommended ;-)
-	   ) {
-
-
-//		loading = true;					// flag all instances that we are loading (see above)
-//
-//		videoRequests++;				// use a counter to switch between cue and current video[] player indexs
-
-//		if(videoRequests % MAX_VIDEOS != currentVideo || firstLoad) {	// ie., this toggles which of the video[] players is
-//			// the cue or current index (also handles a "firstload")
-//
-//			cueVideo = videoRequests % MAX_VIDEOS;				// set the cueVideo index
-//
-//			name[cueVideo] = _name;								// set the video to load name
-//
-////			ofLog(OF_LOG_VERBOSE, "Loading: " + _name);
-//
-//			video[cueVideo]->setUseTexture(false);				// make sure the texture is turned off or else the thread crashes: openGL is thread safe!
-//
-//			loaded[cueVideo] = false;							// set flags for loaded (ie., quicktime loaded)
-//			textured[cueVideo] = false;							// and textured (ie., "forced texture" once the thread is stop)
+        shared_ptr<kClipShow> clip = make_shared<kClipShow>();
+        clip -> setClip(_clip);
+//        clip -> setName(_clip->getName());
+        clip->set( 0, 0, CLIPVIEW_SIZE, CLIPVIEW_SIZE );
+        clip->setActiveRange(0.5f);
+        addWidget( clip );
+        cout << "added "<< clip->getName() << endl;
+        clips.push_back(clip);
 //
 
-            loadClips.push_back( _clip );
+        clip->hide();
 
-			startThread(false, false);							// start the thread
+        ofAddListener( *clip->events.lookup("press"),this,&kThreadClipView::clipClicked );
+        ofAddListener( *clip->events.lookup("drag"),this,&kThreadClipView::clipDragged );
+
+        tmpClips.push_back(_clip);
 
 
-			return true;										// NB: this does not let us know that the video is loaded; just that it has STARTED loading...
-//
-//		} else {												// ELSE: the video has not been textured and/or updated yet (ie., we
-//			// have to wait one cycle between the thread terminating and the texture
-//			// being "forced" back on - otherwise openGL + thread = crash...
-//			ofLog(OF_LOG_VERBOSE, "Load BLOCKED by reload before draw/update");
-//			goVideoError err = GO_TV_UPDATE_BLOCKED;
-//			ofNotifyEvent(error, err);
-//			return false;
-//		}
-
-	} else {													// ELSE: either we're already loading in this instance OR another instance
-		ofLog(OF_LOG_VERBOSE, "Load BLOCKED by already thread loading...attempting to enqueue");
-#ifdef USE_QUEUE
-		pushQueue(_name);
-
-		return true;
-#else
-//		goVideoError err = GO_TV_LOAD_BLOCKED;
-//        ofNotifyEvent(error, err);
-		return false;
-#endif
-	}
-
+//        if(!visible) clip->hide();
+//        arrangeWidgets();
 }
 
 //--------------------------------------------------------------
@@ -556,22 +532,26 @@ void kThreadClipView::threadedFunction() {
 
 	stopThread();
 
-cout << "loaddddd" << endl;
+//cout << "loaddddd" << loadClips.size() << endl;
 vector<int>deleteClips;
 
     for (int i=0; i<loadClips.size(); i++)
     {
-    	kClipView::addClip(loadClips[i]);
-    	deleteClips.push_back(i);
+//        cout << "acd clip: "<< i  << endl;
+    	addClip(loadClips[i]);
+        shouldSetClips = true;
+
+//    	deleteClips.push_back(i);
 //    	loadClips.erase(loadClips.begin()+i);
     }
 
-    for (int i=0; i<deleteClips.size(); i++)
-    {
+//    for (int i=0; i<deleteClips.size(); i++)
+//    {
 //    	loadClips.erase( loadClips.begin() + deleteClips[deleteClips.size()-i] );
-    }
+//    }
+//
+//    deleteClips.clear();
 
-    deleteClips.clear();
 
 //	bool ok = video[cueVideo]->loadMovie(name[cueVideo]);	// load the movie
 //	if (ok) {
@@ -602,33 +582,41 @@ vector<int>deleteClips;
 
 
 //--------------------------------------------------------------
-void kThreadClipView::update() {
+void kThreadClipView::update(ofEventArgs & args) {
 
+//cout << "UPDATE" << endl;
 	// make sure the thread has finished and that we have a loaded 'cue' video that has NOT been textured
 	if( !isThreadRunning()
 //        && loaded[cueVideo] && !textured[cueVideo]
         ) {
 
-		// setup the videos texture and force the
-		// first frame of the texture to upload
-		// (this required changes to ofVideoPlayer, see goVideoPlayer)
 
-//        ofTexture & tref = video[cueVideo]->getTextureReference();
-//        tref.allocate(video[cueVideo]->getWidth(),video[cueVideo]->getHeight(), GL_RGB);  		video[cueVideo]->setUseTexture(true);
-//        tref.loadData(video[cueVideo]->getPixels(), video[cueVideo]->getWidth(),video[cueVideo]->getHeight(), GL_RGB);
-//		// unless it's the very fist load, lets pause the current video
-//		if(!firstLoad) {
-//			video[currentVideo]->setPaused(true);
-//		} else firstLoad = false;
-//
-//		// force an update of the cue'd videos frame
-//		video[cueVideo]->update();
-//
-//		// update texture flags and set swapVideo flag to do a
-//		// "flickerless" change between cue and current video[] players
-//		textured[cueVideo] = true;
-//		swapVideo = true;
-//		tryTimes=0;
+        if ( shouldSetClips ) {
+            for (int i=0; i<tmpClips.size(); i++)
+            {
+                clips[i] -> img.setUseTexture(true);
+                cout << "TEXTTT"<<clips[i] -> img.isUsingTexture() << endl;
+//                clips[i] -> setClip(tmpClips[i]);
+
+                const ofPixels& pix = clips[i] -> img.getPixelsRef();
+                clips[i] -> img.getTextureReference().allocate(
+                         pix.getWidth()
+                        ,pix.getHeight()
+                        ,ofGetGlInternalFormat(pix)
+                );
+
+                clips[i] -> img.setUseTexture(true);
+                clips[i] -> img.update();
+
+
+            }
+
+            tmpClips.clear();
+            arrangeWidgets();
+
+            shouldSetClips = false;
+        }
+
 
 	}
 
@@ -642,9 +630,52 @@ void kThreadClipView::update() {
 }
 
 
-void kThreadClipView::addClips(vector< shared_ptr<Clip> > _clips){
-        for (int i=0; i<_clips.size(); i++)
-            addClip(_clips[i]);
+bool kThreadClipView::addClips(vector< shared_ptr<Clip> > _clips){
+
+
+
+
+        if(!isThreadRunning()				// ...the thread is not already running...
+//	   && loaded[cueVideo]				// ...that the cueVideo is loaded...
+//	   && loaded[currentVideo]			// ...that the currentVideo is loaded...
+//	   && textured[cueVideo]			// ...and that both
+//	   && textured[currentVideo]		// are textured...
+//	   && !loading                    // ...and that no other instance is also loading (this is optional, but recommended ;-)
+	   ) {
+
+            clearClips();
+
+            loadClips.clear();
+
+            for (int i=0; i<_clips.size(); i++)
+                loadClips.push_back( _clips[i] );
+
+			startThread(false, false);							// start the thread
+
+
+			return true;										// NB: this does not let us know that the video is loaded; just that it has STARTED loading...
+//
+//		} else {												// ELSE: the video has not been textured and/or updated yet (ie., we
+//			// have to wait one cycle between the thread terminating and the texture
+//			// being "forced" back on - otherwise openGL + thread = crash...
+//			ofLog(OF_LOG_VERBOSE, "Load BLOCKED by reload before draw/update");
+//			goVideoError err = GO_TV_UPDATE_BLOCKED;
+//			ofNotifyEvent(error, err);
+//			return false;
+//		}
+
+	} else {													// ELSE: either we're already loading in this instance OR another instance
+		ofLog(OF_LOG_VERBOSE, "Load BLOCKED by already thread loading...attempting to enqueue");
+#ifdef USE_QUEUE
+		pushQueue(_name);
+
+		return true;
+#else
+//		goVideoError err = GO_TV_LOAD_BLOCKED;
+//        ofNotifyEvent(error, err);
+		return false;
+#endif
+	}
         /*shared_ptr<kClipShow> clip;
         for (int i=0; i<_clips.size(); i++)
         {
@@ -661,6 +692,35 @@ void kThreadClipView::addClips(vector< shared_ptr<Clip> > _clips){
 
 
 
+void kThreadClipView::clipClicked(widgetEvent & _event){
+
+    shared_ptr<kWidget>sender=dynamic_pointer_cast<kWidget>(_event.sender);
+
+    int index = getWidgetIndex( sender );
+
+    value = index;
+
+    if(clips.size()>index){
+        draggingClip = clips[index]->getClip();
+        clickedClip =  clips[index]->getClip();
+    }
+    notify("clipClicked");
+
+}
+
+
+void kThreadClipView::clipDragged(widgetEvent & _event){
+    shared_ptr<kWidget>sender=dynamic_pointer_cast<kWidget>(_event.sender);
+    int index = getWidgetIndex( sender );
+    value = index;
+    cout << "index"<<index << endl;
+    if(clips.size()>index) {
+    draggingClip = clips[index]->getClip();
+        cout << "dragggggggggggg" << endl;
+    }
+    notify("clipDragged");
+}
+
 
 
 
@@ -670,9 +730,9 @@ void kThreadClipView::initialize() {
 
 }
 
-    vector< shared_ptr < kClipShow > > & kThreadClipView::getClips() {
-        return clips;
-    }
+vector< shared_ptr < kClipShow > > & kThreadClipView::getClips() {
+    return clips;
+}
 
 
 //}

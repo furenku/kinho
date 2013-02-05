@@ -168,10 +168,10 @@ class kClipView: virtual public kRectView, virtual public kDragSink{
 
     virtual bool addClip(shared_ptr<Clip> _clip);
 
-        void clipClicked(widgetEvent & _event);
+    virtual void clipClicked(widgetEvent & _event);
 
 
-        void clipDragged(widgetEvent & _event);
+    virtual void clipDragged(widgetEvent & _event);
 
     void removeClip( shared_ptr<kClipShow> _clip );
 
@@ -204,29 +204,34 @@ class kThreadClipView : virtual public kScrollView, virtual public kClipView, pu
     //--------------------------------------------------------------
     bool addClip(shared_ptr<Clip> _clip);
 
-    void addClips(vector< shared_ptr<Clip> > _clips);
+    bool addClips(vector< shared_ptr<Clip> > _clips);
 
     //--------------------------------------------------------------
     void threadedFunction();
 
 
 
+    void clipClicked(widgetEvent & _event);
 
+
+    void clipDragged(widgetEvent & _event);
 
 
     void initialize();
 
+    void clearClips();
 
     vector< shared_ptr < kClipShow > > & getClips();
 
     //--------------------------------------------------------------
-    void update();
+    void update(ofEventArgs & args);
 
 
-    vector< shared_ptr < Clip > > loadClips;
+    vector< shared_ptr < Clip > > loadClips, tmpClips;
+    vector< shared_ptr < kClipShow > > clips;
 
     bool loading;
-
+    bool shouldSetClips;
 };
 
 #endif

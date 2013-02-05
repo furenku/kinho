@@ -42,6 +42,28 @@ void MainController::update() {
 
 //{ SETUP:
 
+
+void MainController::loadSession(string _filename) {
+
+    mediaDirectory="movies/";
+    //library
+        // load all video clips
+        // with the video loader
+        //videoLoader->
+        // load all ontologies
+
+        //create ontologies
+
+        // add media to them
+    // archive
+
+        // load all objects
+        // create their relationships
+
+}
+
+
+
 void MainController::createSettings(){
 
     font.loadFont("fonts/verdana.ttf",12);
@@ -250,13 +272,13 @@ cout << "createMeida" << endl;
 
         cout << "checkClip! .. " << endl;
 
-        string searchString = mediaDirectory + loadMedia[i];
+        string filePath = mediaDirectory + loadMedia[i];
 
-        if( find (presentClips.begin(), presentClips.end(), searchString) != presentClips.end() ) {
+        if( find (presentClips.begin(), presentClips.end(), filePath) != presentClips.end() ) {
 
 
             videos[ loadMedia[i] ] = makeClip( loadMedia[i], "..."  );
-cout << "created video: "<< loadMedia[i] << endl;
+//cout << "created video: "<< loadMedia[i] << endl;
 
 //            int index = fileName.find(".");
 //
@@ -508,33 +530,12 @@ login(timeline,"playClip",make_shared<PlayTimelineClip>( timeline2,output ));
 
 
 
-void MainController::loadSession(string _filename) {
-
-    mediaDirectory="movies/";
-    //library
-        // load all video clips
-        // with the video loader
-        //videoLoader->
-        // load all ontologies
-
-        //create ontologies
-
-        // add media to them
-    // archive
-
-        // load all objects
-        // create their relationships
-
-}
-
-
 //}
 
 //{ MEDIA LOGIC
 
 
 shared_ptr<Clip> MainController::makeClip( string _name, string _description ){
-    cout << "movies/"+_name << endl;
 
     // make video store
 
@@ -547,7 +548,7 @@ shared_ptr<Clip> MainController::makeClip( string _name, string _description ){
     tmpClip->setDescription( _description );
 //    clip->tags.push_back("tag1");
 
-    tmpClip->setFilename( "movies/"+_name );
+    tmpClip->setFilename( mediaDirectory+_name );
 
     return tmpClip ;
 
@@ -786,8 +787,8 @@ void MainController::makeClipView() {
     clipView -> applySettings ( settings  );
     clipView -> setWidgetSettings ( settings );
     clipView -> cols=2;
-    clipView -> setSpacingX( 105 );
-    clipView -> setSpacingY( 65 );
+    clipView -> setSpacingX( 110 );
+    clipView -> setSpacingY( 75 );
 
 //    clipScrollViews.push_back( clipView );
 
@@ -883,11 +884,16 @@ void MainController::catSelected(widgetEvent & _event){
 //            }
 
 //cout << "catSelected" << endl;
-
+cout << "CLEAR" << endl;    clipView->clearClips();
+//    clipView->clearWidgets();
     vector<string> vecstr = dynamic_pointer_cast<WordSelect>(_event.sender)->getSelected();
     vector<shared_ptr<Clip> > loadClips;
+
+
     for (int i=0; i<vecstr.size(); i++)
     {
+
+
         string cleanStr = vecstr[i];
 
         while ( cleanStr.find ("\n") != string::npos )
@@ -897,21 +903,26 @@ void MainController::catSelected(widgetEvent & _event){
 
         shared_ptr<Ontology> catOnt = miniLibrary->getOntology( cleanStr );
 
-        vector< shared_ptr<Clip> > catClips = miniLibrary->getClips( catOnt );
+        if(catOnt) {
 
-        for (int j=0; j<catClips.size(); j++)
-        {
-        	cout << "ont"<<catOnt->getName()<<" has "<< catClips[j]->getName() << endl;
+            vector< shared_ptr<Clip> > catClips = miniLibrary->getClips( catOnt );
 
-            if ( find( loadClips.begin(), loadClips.end(), catClips[j] ) != loadClips.end() ) {
-                cout << "found in vector" << endl;
-            }{
-                loadClips.push_back(catClips[j]);
+
+            for (int j=0; j<catClips.size(); j++)
+            {
+//                cout << "ont"<<catOnt->getName()<<" has "<< catClips[j]->getName() << endl;
+
+                if ( find( loadClips.begin(), loadClips.end(), catClips[j] ) != loadClips.end() ) {
+                    cout << "found in vector" << endl;
+                }
+                else {
+                    loadClips.push_back(catClips[j]);
+                }
+
             }
 
         }
 
-    clipView->clearClips();
 
         clipView->addClips(loadClips);
 
