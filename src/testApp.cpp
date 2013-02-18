@@ -307,16 +307,16 @@ ofSetWindowPosition(1280,0);
 
 //{ SETTINGS
 
-    ofSetCircleResolution(200);
+    ofSetCircleResolution(100);
 //    ofSetWindowPosition
 
-    ofEnableSmoothing();
+//    ofEnableSmoothing();
 
     bgcolor = 0;
     ofBackground(bgcolor);
 
-    ofNoFill();
-    ofSetLineWidth(2);
+    ofFill();
+    ofSetLineWidth(2.5f);
 
     kinhoFont.loadFont("fonts/constructivist-solid.ttf",20);
     font.loadFont("fonts/DroidSans-Bold.ttf",10,true,true);
@@ -832,15 +832,6 @@ void testApp::draw(){
 //
 
 
-ofBackground(red,green,blue);
-
-
-ofSetColor(255);
-kinhoFont.drawString("KINHO", ofGetWidth()/2-100, 30 );
-//font.drawString("a veráéíóúü!¡", 830, 30 );
-
-ofSetColor(142,32,222);
-ofDrawBitmapString(ofToString(ofGetFrameRate(),2),50,100);
 ////ofDrawBitmapString(ofToString(ofGetElapsedTimeMillis()%int(0.5f*1000)),10,60);
 
 
@@ -905,6 +896,17 @@ ofDrawBitmapString(ofToString(ofGetFrameRate(),2),50,100);
 //
 //
 
+
+
+ofBackground(red,green,blue);
+
+
+ofSetColor(255);
+kinhoFont.drawString("KINHO", ofGetWidth()/2-100, 30 );
+//font.drawString("a veráéíóúü!¡", 830, 30 );
+
+ofSetColor(142,32,222);
+ofDrawBitmapString(ofToString(ofGetFrameRate(),2),10,100);
 }
 
 int ccounter = 0;

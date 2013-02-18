@@ -621,10 +621,8 @@ vector< shared_ptr<StoreObject> > Storage::getObjects(){
 
 
         void Relationships::addAllChildren( shared_ptr<StoreObject> _obj )  {
-            cout << "fkkkp"<<1 << endl;
             vector< shared_ptr<StoreObject> > & vc = getChildren( _obj );
 
-            cout << "fkkkp"<<3 << endl;
             for(int i = 0 ; i < vc.size(); i++ ) {
                 descendants.push_back( vc[i] );
                 cout << "fkkkp"<<4 << endl;
@@ -641,7 +639,6 @@ vector< shared_ptr<StoreObject> > Storage::getObjects(){
         void Relationships::addAllAncestors( shared_ptr<StoreObject> _obj )  {
 
             vector< shared_ptr<StoreObject> > & vp = getParents( _obj );
-
             for(int i = 0 ; i < vp.size(); i++ )  {
                 ancestors.push_back( vp[i] );
             }

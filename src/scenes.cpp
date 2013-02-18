@@ -9,7 +9,7 @@
             setType("scenewidget");
             setupVars();
             createEvents();
-//            enableUpdate();
+            enableUpdate();
         }
 
     //f
@@ -36,6 +36,8 @@
 //
                 saveEvent("btnClicked");
                 saveEvent("drag");
+                saveEvent("release");
+                saveEvent("press");
                 saveEvent("mainBtnClicked");
 
         }
@@ -53,7 +55,7 @@
                 btnView = make_shared< kCircleButtonView >();
                 btnView->disableUpdate();
             //setup
-                btnView->set(0,0,0.3f,0.3f);
+                btnView->set(0.5,0.5,1,1);
                 addWidget( btnView );
 
             // create labels
@@ -88,11 +90,11 @@
 
                 ofRemoveListener( *btnView->events.lookup("btnClicked"),this,&SceneWidget::btnClicked);
 
-                removeWidget(btnView);
+//                removeWidget(btnView);
 
 
 
-                btnView.reset();
+//                btnView.reset();
 //                removeSubView();
 //                arrangeWidgets();
 
@@ -103,7 +105,7 @@
 
 
         void SceneWidget::removeBtnViewListeners(){
-            ofRemoveListener( *btnView->events.lookup("btnClicked"), this, &SceneWidget::btnClicked );
+//            ofRemoveListener( *btnView->events.lookup("btnClicked"), this, &SceneWidget::btnClicked );
         }
 
         void SceneWidget::addScrollView() {
@@ -205,7 +207,7 @@
 
         void SceneWidget::mediaClicked(widgetEvent & _event) {
 
-            toggleViews();
+//            toggleViews();
 //            draggingOntology  = dynamic_pointer_cast<kWidget>(_event.sender)->getLabel();
             notify("mediaBtnClicked");
         }
@@ -252,19 +254,22 @@
             sourceX = mouse.x;
             sourceY = mouse.y;
 
+            if(inside(mouse.x,mouse.y))
+                notify("press");
+
 
             mouseX = mouse.x;
             mouseY = mouse.y;
 
             kWidget::mouseReleased(mouse);
 
-            notify("release");
+//            notify("release");
 
         }
 
 
 
-    SceneRoot::SceneRoot(){ setType("sceneRoot"); }
+    SceneRoot::SceneRoot(){ setType("sceneRoot"); setName("root"); }
 
     void SceneRoot::draw(ofEventArgs & args){
         ofCircle(x,y,20);
@@ -276,11 +281,13 @@
 //}
 
 
+
 //{ SCENECLIP
 
         SceneClip::SceneClip(){
             setupVars();
             createEvents();
+
         }
 
         void SceneClip::createEvents() {
@@ -290,8 +297,10 @@
 
 
         void SceneClip::draw(ofEventArgs & args){
+//            SceneWidget::draw(args);
+
 //            ofCircle(x,y,width);
-            ofDrawBitmapString(name,x,y);
+//            ofDrawBitmapString(name,x,y);
         }
 
         void SceneClip::initialize() {
@@ -300,12 +309,14 @@
 
             clipView = make_shared<kClip>( );
 
-            clipView->set(0,0,0.3f,0.3f);
+            clipView->set(0,0,1,1);
 
 //            clipView->setClip( clip );
 
             addWidget( clipView );
             ofAddListener( *clipView->events.lookup("press"),this,&SceneClip::mediaClicked);
+
+            arrangeWidgets();
 
 
         }
@@ -330,8 +341,14 @@
 //                ofAddListener..."press"...mediaMainClicked
         }
 
+
+        shared_ptr<Clip> SceneClip::getClip( ) {
+            return clip;
+
+        }
+
         void SceneClip::mediaClicked(widgetEvent & _event) {
-            toggleViews();
+//            toggleViews();
 //            draggingOntology  = dynamic_pointer_cast<kWidget>(_event.sender)->getLabel();
             notify("mainBtnClicked");
         }
@@ -352,50 +369,75 @@
         }
 
         void SceneBuilder::initialize() {
+
             root = make_shared<SceneRoot>( ),
             root -> set(0.5f, 0.5f,0.05f, 0.05f );
+
             addWidget(root);
 
+            ofAddListener( *root->events.lookup("press"),this,&SceneBuilder::rootClicked );
+
+            shared_ptr<kRectButtonView> btns = make_shared<kRectButtonView>( );
+            btns->set(0,0,0.25f,0.085f);
+            btns->setSpacingX(40);
+
+            addWidget(btns);
+
+            vector<string> labels;
+
+            labels.push_back("play");
+            labels.push_back(">>");
+            labels.push_back("<<");
+            labels.push_back("pause");
+
+            btns->addButtons( labels );
+
+            ofAddListener( *btns->events.lookup("btnClicked"),this,&SceneBuilder::btnClicked );
+
             arrangeWidgets();
+
+            saveEvent("playClip");
         }
 
         void SceneBuilder::createEvents(){
             saveEvent("playClip");
+            saveEvent("stop");
             saveEvent("branchEnd");
         }
 
-
         void SceneBuilder::iiinit(){
 
-            for (int i=0; i<7; i++)
-            {
-                shared_ptr<SceneWidget> wdgt = make_shared<SceneWidget>( );
-                w.push_back( wdgt );
+//            for (int i=0; i<7; i++)
+//            {
+//                shared_ptr<SceneWidget> wdgt = make_shared<SceneWidget>( );
+//                w.push_back( wdgt );
+//
+//                wdgt->set( ofRandomuf(), ofRandomuf() , 0.1f, 0.1f );
+//
+//                addWidget( wdgt );
+//
+//                wdgt -> initialize();
+//            }
 
-                wdgt->set( ofRandomuf(), ofRandomuf() , 0.1f, 0.1f );
 
-                addWidget( wdgt );
-
-                wdgt -> initialize();
-            }
-
-
-            setHierarchy(w[0],w[1]);
-            setHierarchy(w[0],w[2]);
-            setHierarchy(w[1],w[3]);
-            setHierarchy(w[1],w[4] );
-            setHierarchy(w[2],w[5] );
-            setHierarchy(w[5],w[6] );
+//            setHierarchy(w[0],w[1]);
+//            setHierarchy(w[0],w[2]);
+//            setHierarchy(w[1],w[3]);
+//            setHierarchy(w[1],w[4] );
+//            setHierarchy(w[2],w[5] );
+//            setHierarchy(w[5],w[6] );
 
 
         }
+
 
 
         void SceneBuilder::addClip( shared_ptr<Clip> _clip, float _x, float _y){
             clips.push_back(make_shared<SceneClip>( ));
-            clips.back()->set( _x / width, _y / height, 0.2f, 0.2f );
+            clips.back()->set( _x / width, _y / height, 0.1f, 0.1f );
 
             clips.back()->setName( _clip->getName() );
+//            clips.back()->setFilename( _clip->getFilename() );
 
             addWidget(clips.back());
 
@@ -403,9 +445,8 @@
             clips.back()->setClip(_clip);
 
             arrangeWidgets();
-//            addListeners(clip);
+            addListeners(clips.back());
         }
-
 
         void SceneBuilder::addListeners( shared_ptr<SceneClip> _w ) {
             ofAddListener( *_w->events.lookup("btnClicked"),this,&SceneBuilder::btnClicked);
@@ -415,12 +456,44 @@
 
         }
 
+        void SceneBuilder::rootClicked(widgetEvent & _event){
+            cout << "root CLICK" << endl;
+            currentClip.reset();
+        }
 
-        void SceneBuilder::btnClicked(widgetEvent & _event){}
+        void SceneBuilder::btnClicked(widgetEvent & _event){
+
+            shared_ptr<kRectButtonView> view = dynamic_pointer_cast<kRectButtonView>(_event.sender);
+
+            switch( view->getValue() ) {
+                // play:
+                case 0:
+                    play();
+                    break;
+                case 1:
+                    next();
+                    break;
+                case 2:
+
+                    previous();
+                    break;
+                case 3:
+                    pause();
+                    break;
+                case 4:
+                    stop();
+                    break;
+            }
+
+        }
 
         void SceneBuilder::widgetDragged(widgetEvent & _event){}
 
-        void SceneBuilder::mainBtnClicked(widgetEvent & _event){}
+        void SceneBuilder::mainBtnClicked(widgetEvent & _event){
+            nextClip = dynamic_pointer_cast<SceneClip>(_event.sender);
+
+            cout << "nextClip:  "<<nextClip->getClip()->getName() << endl;
+        }
 
         void SceneBuilder::draw(ofEventArgs & args){
 
@@ -429,15 +502,16 @@
             ofSetColor(20,134,185);
 
             if(draggingClip) {
-                if(inside(mouseX,mouseY))
+                if(inside(mouseX,mouseY)) {
                     ofCircle( mouseX, mouseY, 10 );
-                for (int i=0; i<nextConnections.size(); i++)
-                {
-                	ofLine(
-                        nextConnections[i]->getX(),
-                        nextConnections[i]->getY(),
-                        mouseX,mouseY
-                    );
+                    for (int i=0; i<nextConnections.size(); i++)
+                    {
+                        ofLine(
+                            nextConnections[i]->getX(),
+                            nextConnections[i]->getY(),
+                            mouseX,mouseY
+                        );
+                    }
                 }
             }
 //
@@ -453,16 +527,32 @@
 //
 ofSetColor(244);
 vector< shared_ptr < StoreObject > > c;
-            for (int i=0; i<clips.size(); i++)
+vector< shared_ptr < kWidget > > w = widgets;
+            for (int i=0; i<w.size(); i++)
             {
-            	c = getChildren(clips[i]);
+            	c = getChildren( dynamic_pointer_cast<SceneWidget>(w[i]));
 
                 for (int j=0; j<c.size(); j++)
                 {
                     shared_ptr<SceneWidget> cj = dynamic_pointer_cast<SceneWidget>(c[j]);
-                    ofLine( clips[i]->getX(), clips[i]->getY(), cj->getX(), cj->getY() );
+                    ofLine( w[i]->getX(), w[i]->getY(), cj->getX(), cj->getY() );
                 }
 
+            }
+
+            if(nextClip){
+                ofSetLineWidth(2.5f);
+
+                ofSetColor(255,120,0);
+//                ofCircle(nextClip->x+nextClip->width/2,nextClip->y+nextClip->height/2,50);
+                ofCircle(nextClip->x+nextClip->width/2,nextClip->y+nextClip->height/4,30);
+            }
+
+            if(currentClip){
+                ofSetLineWidth(1.5f);
+
+                ofSetColor(255,255,255);
+                ofCircle(currentClip->x+currentClip->width/2,currentClip->y+currentClip->height/4,25);
             }
 
 //
@@ -472,36 +562,53 @@ vector< shared_ptr < StoreObject > > c;
 
         }
 
+        void SceneBuilder::setCurrentClip( shared_ptr<SceneClip> _clip ){ currentClip = _clip; }
 
-
-        shared_ptr<Clip> SceneBuilder::getCurrentClip(){}
+        shared_ptr<Clip> SceneBuilder::getCurrentClip(){ return currentClip->getClip(); }
 
         void SceneBuilder::setDraggingClip(shared_ptr<Clip> _clip){
             draggingClip = _clip;
             cout << "SET: "<<draggingClip->getName() << endl;
         }
 
-
         void SceneBuilder::mouseReleased(ofMouseEventArgs & mouse){
-            if(draggingClip)
-                addClip( draggingClip, mouse.x-x, mouse.y-y );
 
-            int ncsize=nextConnections.size();
+            if(draggingClip) {
+                if(inside(mouse.x,mouse.y))
+                {
+                    addClip( draggingClip, mouse.x-x, mouse.y-y );
 
-            cout << "NC "<<ncsize << endl;
-            if(ncsize==1)
-                setHierarchy( nextConnections[0], clips.back() );
-            else if(ncsize==2) {
-                removeHierarchy( nextConnections[0], nextConnections[1] );
-                removeHierarchy( nextConnections[1], nextConnections[0] );
-                setHierarchy( nextConnections[1], clips.back() );
-                setHierarchy( clips.back(), nextConnections[0] );
-//                removeHierarchy( nextConnections[1], nextConnections[0] );
+                    int ncsize=nextConnections.size();
+
+                    cout << "NC "<<ncsize << endl;
+                    if(ncsize==1){
+                        setHierarchy( nextConnections[0], clips.back() );
+
+                        cout << "SET:               -  : " << nextConnections[0]->getName() << endl;
+                        cout << "TO:               -  : " << clips.back()->getName() << endl;
+                    }
+                    else if(ncsize==2) {
+                        removeHierarchy( nextConnections[0], nextConnections[1] );
+                        removeHierarchy( nextConnections[1], nextConnections[0] );
+                        setHierarchy( nextConnections[1], clips.back() );
+                        setHierarchy( clips.back(), nextConnections[0] );
+        //                removeHierarchy( nextConnections[1], nextConnections[0] );
+
+                        cout << "SET:               -  : " << nextConnections[1]->getName() << endl;
+                        cout << "TO:               -  : " << clips.back()->getName() << endl;
+                        cout << "TO 2 :               -  : " << nextConnections[0]->getName() << endl;
+
+                    }
+
+
+                    arrangeWidgets();
+
+                }
+
             }
 
-            draggingClip.reset();
 
-            arrangeWidgets();
+            draggingClip.reset();
 
         }
 
@@ -524,16 +631,19 @@ vector< shared_ptr < StoreObject > > c;
             }
         }
 
-
-
-        shared_ptr< SceneClip > SceneBuilder::playNextClip() {
+        shared_ptr< SceneClip > SceneBuilder::selectNextClip() {
             vector < shared_ptr<StoreObject> > c;
             vector < shared_ptr<SceneClip> > possibleNext;
+            shared_ptr<SceneClip> next;
             shared_ptr<SceneClip> check;
-            nextClip.reset();
+
             bool already = false;
 
-            c = getDescendants ( currentClip );
+
+            if( currentClip )
+                c = getDescendants ( currentClip );
+            else
+                c = getDescendants ( root );
 
             for (int i=0; i<c.size(); i++)
             {
@@ -548,7 +658,7 @@ vector< shared_ptr < StoreObject > > c;
                     }
                 }
                 if(!already) {
-                    nextClip = check;
+                    next = check;
                     possibleNext.push_back( check );
                 }
             }
@@ -556,7 +666,8 @@ vector< shared_ptr < StoreObject > > c;
             //if has children to play
             if(possibleNext.size()>0) {
                 // next one
-                    nextClip = possibleNext[0];
+                int index = rand() % possibleNext.size();
+                next = possibleNext[index];
             }
             else {
 
@@ -578,14 +689,15 @@ vector< shared_ptr < StoreObject > > c;
                     }
 
                     if(!already) {
-                        nextClip = check;
+                        next = check;
                         possibleNext.push_back( check );
                     }
                 }
                 //if has children to play
                 if(possibleNext.size()>0) {
                     // next one
-                        nextClip = possibleNext[0];
+                        int index = rand() % possibleNext.size();
+                        next = possibleNext[index];
                 }
 
             // else if has ancestors to play
@@ -611,8 +723,9 @@ vector< shared_ptr < StoreObject > > c;
                     }
                     //if has children to play
                     if(possibleNext.size()>0) {
-                        // next one
-                            nextClip = possibleNext[0];
+                    // next one
+                        int index = rand() % possibleNext.size();
+                        next = possibleNext[index];
                     }
                     else
 
@@ -622,16 +735,7 @@ vector< shared_ptr < StoreObject > > c;
 
             }
 
-
-
-            if( nextClip ) {
-                lastClip = currentClip;
-                currentClip = nextClip;
-
-                nextClip = dynamic_pointer_cast<SceneClip>(nextClip);
-                notify("playClip");
-
-            }
+            return next;
 
         }
 
@@ -646,6 +750,7 @@ vector< shared_ptr < StoreObject > > c;
             if(_v.size()>0)
                 closestDistance = getDistance( _x, _y, _v[0]->getX(), _v[0]->getY() );
 
+
             for (int i=0; i<_v.size(); i++)
             {
                 float newDistance = getDistance( _x, _y, _v[i]->getX(), _v[i]->getY() );
@@ -655,17 +760,21 @@ vector< shared_ptr < StoreObject > > c;
             for (int i=0; i<_v.size(); i++)
             {
                 float newDistance = getDistance(  _x, _y, _v[i]->getX(), _v[i]->getY() );
-                if( newDistance <  closestDistance + insertThreshold ){ possibleConnections.push_back( _v[i] ); break; }
+                if( newDistance <  closestDistance + insertThreshold ){
+                    nearestIndex = i; break;
+                }
             }
-            if( _v.size() > nearestIndex)
+            if( _v.size() > nearestIndex){
                 possibleConnections.push_back( _v[ nearestIndex ] );
+            }
 
             float rootDistance = getDistance ( _x, _y, root->getX(), root->getY() );
+
             if( rootDistance < closestDistance && rootDistance < closestDistance - insertThreshold){
                 possibleConnections.clear();
                 possibleConnections.push_back( root );
             }
-            else if ( rootDistance >= closestDistance - insertThreshold && possibleConnections.size()==1 )
+            else if ( rootDistance <= closestDistance - insertThreshold && possibleConnections.size()==1 )
                 possibleConnections.push_back( root );
 
             return possibleConnections;
@@ -680,14 +789,35 @@ vector< shared_ptr < StoreObject > > c;
 
 
         void SceneBuilder::mediaEnd() {
-            playNextClip();
+//            cout << "kill---"<<lastClip->getClip()->getName() << endl;
             alreadyPlayed.push_back(lastClip);
+            next();
+
         }
 
         void SceneBuilder::savePosition( float _position ) {
             currentClip->setPosition( _position );
 //            currentMedia->setPosition( _position );
         }
+
+        void SceneBuilder::play(){
+//            nextClip = selectNextClip();
+            if( nextClip ) {
+                lastClip = currentClip;
+                currentClip = nextClip;
+
+//                nextClip = dynamic_pointer_cast<SceneClip>(nextClip);
+                notify("playClip");
+
+            }
+        }
+        void SceneBuilder::next(){
+            nextClip = selectNextClip();
+
+        }
+        void SceneBuilder::previous(){}
+        void SceneBuilder::pause(){}
+        void SceneBuilder::stop(){}
 
 //        shared_ptr< SceneClip > SceneBuilder::getPrevMedia() {
 //            return lastMedia;

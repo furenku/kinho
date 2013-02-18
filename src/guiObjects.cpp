@@ -70,8 +70,8 @@ void kDigit::draw( ofEventArgs & args ){
                 btn->disableUpdate();
                 btn->hide();
                 btn = widgets[i];
-                addDelete(btn);
                 btn->removeFromView();
+//                addDelete(btn);
                 removeWidget( btn );
 
                 ofRemoveListener( *btn->events.lookup("press"),this,&kButtonView::btnClicked);
@@ -208,6 +208,9 @@ void kDigit::draw( ofEventArgs & args ){
         }
 
 ;
+
+
+//}
 
 //--------------------------------------------------------------
 //{ KCIRCLEBUTTONVIEW

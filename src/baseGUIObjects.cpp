@@ -89,6 +89,7 @@ shared_ptr<ofColor> Settings::getColor(int _index){
             dragX = 0;
             dragY = 0;
             r = 0;
+            maxChars = 25;
         }
 
         void kWidget::enableUpdate(){
@@ -119,6 +120,9 @@ shared_ptr<ofColor> Settings::getColor(int _index){
         }
 
         void kWidget::setLabel (string _label) {
+
+//            _label.resize( maxChars );
+//            cout << "MAXCHASRS -------------------: " << maxChars << endl;
             label=_label;
         }
 
@@ -592,7 +596,9 @@ shared_ptr<ofColor> Settings::getColor(int _index){
         void kButton::pressedOut() {}
 
         void kButton::draw( ofEventArgs & args ){
-            color(0);
+            if(isMouseOn)   color(1);
+            else            color(0);
+
             if(mode==TOGGLE_ON)
                 if(toggle)  ofFill();
                 else        ofNoFill();
@@ -600,8 +606,6 @@ shared_ptr<ofColor> Settings::getColor(int _index){
             ofColor(255);
 
             drawString(label,getCenter().x-width/2,getCenter().y-height*0.75f);
-            if(isMouseOn)   color(1);
-            else            color(0);
 
 
         }
@@ -613,7 +617,6 @@ shared_ptr<ofColor> Settings::getColor(int _index){
         void kRectButton::draw( ofEventArgs & args ){
             kButton::draw(args);
             ofRect(x,y,width,height);
-            ofNoFill();
         }
 
 
@@ -629,11 +632,11 @@ shared_ptr<ofColor> Settings::getColor(int _index){
         void kLabelButton::setLabel( string _label ){
 
             int charCount=  0;
-            int maxChars = 7;
+            int maxChars2 = 7;
             int len = _label.size();
             for (int i = 0; i < len; i++){
                 charCount++;
-                if( charCount>=maxChars && _label[i] == ' ' ){
+                if( charCount>=maxChars2 && _label[i] == ' ' ){
                     _label.insert(i," \n");
                     charCount=0;
                 }
@@ -652,14 +655,13 @@ shared_ptr<ofColor> Settings::getColor(int _index){
 
             ofRectangle rect = settings->font.back()->getStringBoundingBox(label,x,y);
 
-
-
             if(isMouseOn)   color(155);
             else            color(50);
             ofRect(x,y,width,height);
             ofNoFill();
 
             drawString(label,getCenter().x-rect.width/3,getCenter().y );
+//            ofDrawBitmapString(label,getCenter().x-width/3,getCenter().y );
 
         }
 
@@ -1387,7 +1389,7 @@ shared_ptr<ofColor> Settings::getColor(int _index){
 
         void kRectView::draw(ofEventArgs & args) {
 
-            drawString(label,x,y+currentFont->getLineHeight() );
+            drawString(label,x,y-currentFont->getLineHeight() );
             if(isMouseOn) color(1);
             else          color(0);
             ofRect(x,y,width,height);
@@ -1396,7 +1398,7 @@ shared_ptr<ofColor> Settings::getColor(int _index){
 
 
 
-    kCircleView::kCircleView(){autoArrange=true;}
+    kCircleView::kCircleView(){ autoArrange=true; }
 
     void kCircleView::setR(int _r){ r=_r; arrangeWidgets();}
 

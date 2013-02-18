@@ -1,6 +1,7 @@
 
 #include "timeline.h"
 
+
 //{ event classes
 
 
@@ -985,44 +986,45 @@ cout << "IN RANGE" << endl;
 
 //}
 
+
 //{ CLOCK MANAGER:
 
-        ClockManager::ClockManager(){
-            lastMs = 0;
+    //--------------------------------------------------------------
+    ClockManager::ClockManager(){
+        lastMs = 0;
 
-            // Set up clock
-            tempo = 6000.0f;
-            clock.ticksPerBar = 1;
-            clock.start(this);
-
-
-        }
+        // Set up clock
+        tempo = 6000.0f;
+        clock.ticksPerBar = 1;
+        clock.start(this);
 
 
-        //--------------------------------------------------------------
-        void ClockManager::barDone() {
-            lastStep = ofGetElapsedTimeMillis() - lastMs;
-            for (int i=0; i<timelines.size(); i++)
-            {
-                timelines[i]->fwd( lastStep );
-            }
-            lastMs = ofGetElapsedTimeMillis();
-        }
+    }
 
 
-        //--------------------------------------------------------------
-        int ClockManager::calculateTickDuration()
+    //--------------------------------------------------------------
+    void ClockManager::barDone() {
+        lastStep = ofGetElapsedTimeMillis() - lastMs;
+        for (int i=0; i<timelines.size(); i++)
         {
-            // Translate tempo to milliseconds
-            return (int)floor(60000.0000f / tempo);
+            timelines[i]->fwd( lastStep );
         }
+        lastMs = ofGetElapsedTimeMillis();
+    }
 
 
-        void ClockManager::addTimeline( shared_ptr<Timeline>  _timeline){
-            timelines.push_back( _timeline );
-        }
+    //--------------------------------------------------------------
+    int ClockManager::calculateTickDuration()
+    {
+        // Translate tempo to milliseconds
+        return (int)floor(60000.0000f / tempo);
+    }
 
 
+    //--------------------------------------------------------------
+    void ClockManager::addTimeline( shared_ptr<Timeline>  _timeline){
+        timelines.push_back( _timeline );
+    }
 
 
 //}

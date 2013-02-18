@@ -184,11 +184,10 @@ void MainController::loadXml(string _file){
                     // categories
                         boost::split(words, val, boost::is_any_of(","), boost::token_compress_on);
                         //else cout << key << endl;
-                        cout << "key:"<< key << endl;
 
                         for (int i=0; i<words.size(); i++)
                         {
-                            if(fileName!=""){
+                            if(fileName!="" && words[i] != "" && words[i] != " "){
                                 if( catMedia.find(words[i]) != catMedia.end() ) {
                                     catMedia[ words[i] ].push_back( fileName );
                                 }
@@ -201,11 +200,11 @@ void MainController::loadXml(string _file){
                     case 6:
                         //tags
                         boost::split(words, val, boost::is_any_of(","), boost::token_compress_on);
-                        cout << "key:"<< key << endl;
 
                         for (int i=0; i<words.size(); i++)
                         {
-                            if(fileName!=""){
+                            if(fileName!="" && words[i] != "" && words[i] != " "){
+
                                 if( tagMedia.find(words[i]) != tagMedia.end() ) {
                                     tagMedia[ words[i] ].push_back( fileName );
                                 }
@@ -251,7 +250,7 @@ void MainController::loadXml(string _file){
     }
 
 
-    makeOntologies();
+//    makeOntologies();
     }
 
 
@@ -263,6 +262,7 @@ void MainController::loadXml(string _file){
 
 
 //{ SETUP
+
 
 void MainController::createMedia() {
 
@@ -362,30 +362,19 @@ void MainController::createModules() {
 
 
     createMedia();
-
+//
     setOntologies();
-
-
+//
+//
     makeOntologies();
 
     makeTimelines();
 
 
-
     clipInfoLoaded=false;
 
-    map<string,shared_ptr<Clip> >::iterator iter;
 
-    vector<string>c;
-
-    for(iter = videos.begin(); iter != videos.end(); ++iter ){
-        c.push_back( iter->first );
-    }
-
-
-
-
-//    makeScene();
+    makeScene();
 
 
 
@@ -492,12 +481,11 @@ void MainController::createModules() {
 }
 
 
-
 void MainController::makeLogins(){
-
-//            login(catSelect,"selectedWords",make_shared<SelectOntology>( catSelect, graphBrowser ));
+//
+//    login(catSelect,"selectedWords",make_shared<SelectOntology>( catSelect, graphBrowser ));
 //    login(catSelect,"selectedWords",make_shared<ClearOntology>( tagSelect ));
-
+//
     ofAddListener( *catSelect->events.lookup("selectedWords"),this,&MainController::catSelected );
     ofAddListener( *tagSelect->events.lookup("selectedWords"),this,&MainController::tagSelected );
 
@@ -505,11 +493,19 @@ void MainController::makeLogins(){
     login(timeline2,"release",make_shared<SetTimelineClip>( clipView,timeline2 ));
 
 
-    login(clipView,"clipClicked",make_shared<SetTimelineClip>( clipView,timeline));
-    login(clipView,"clipClicked",make_shared<SetTimelineClip>( clipView,timeline2));
+    shared_ptr<FunctorHolder> funcs = make_shared<FunctorHolder>();
+
+    funcs->addFunc(make_shared<SetTimelineClip>( clipView,timeline));
+    funcs->addFunc(make_shared<SetTimelineClip>( clipView,timeline2));
+
+    login(clipView,"clipClicked",funcs);
+//    login(clipView,"clipClicked",make_shared<SetTimelineClip>( clipView,timeline));
+//    login(clipView,"clipClicked",make_shared<SetTimelineClip>( clipView,timeline2));
 
     login(timeline,"playClip",make_shared<PlayTimelineClip>( timeline,output ));
-    login(timeline,"playClip",make_shared<PlayTimelineClip>( timeline2,output ));
+    login(timeline2,"playClip",make_shared<PlayTimelineClip>( timeline2,output2 ));
+
+    login(clipView,"clipDragged",make_shared<SetDraggingClip>(scene,clipView));
 
 //
 //            // archive
@@ -520,23 +516,20 @@ void MainController::makeLogins(){
 //            login(archive,"connectClip",make_shared<ConnectOntology>( archive, library ));
 //
 //            // selected
-//            login(selected,"clipDragged",make_shared<SetDraggingClip>(scene,selected));
 //
 //
 //            // scene
 ////            login(scene,"release",make_shared<AddSceneClip>(scene, selected));
-//            login(scene,"openMedia",make_shared<Say>( "openit" ));
-//            login(scene,"playClip",make_shared<PlayClip>( scene,output ));
+//            login(scene,"playClip",make_shared<Say>( "openit" ));
+            login(scene,"playClip",make_shared<PlayClip>( scene,output ));
 //            login(scene,"sceneEnd",make_shared<VideoStop>( output ));
 //
 //            // videoplayer
-//            login(output,"videoEnd",make_shared<EndClip>( scene ));
+            login(output,"videoEnd",make_shared<EndClip>( scene ));
 //            login(output,"videoEnd",make_shared<Say>( "endit" ));
 
 
 }
-
-
 
 
 //}
@@ -595,7 +588,8 @@ void MainController::makeTimelines(){
     clockmngr = make_shared<ClockManager>( );
 
     timeline = make_shared<TimelineTrack>( );
-    timeline->set(50,600,1180,75 );
+    timeline->set(50,600,1080,95 );
+    timeline->setName("tmln1");
     timeline->applySettings(settings);
     timeline->setWidgetSettings(settings2);
     timeline->initialize();
@@ -604,24 +598,16 @@ void MainController::makeTimelines(){
     clockmngr->addTimeline( timeline );
 
     timeline2 = make_shared<TimelineTrack>( );
-    timeline2->set(50,700,1180,75 );
+    timeline2->set(50,700,1080,95 );
+    timeline2->setName("tmln2");
     timeline2->applySettings(settings);
     timeline2->setWidgetSettings(settings2);
     timeline2->initialize();
     timeline2->arrangeWidgets();
 
     clockmngr->addTimeline( timeline2 );
-
-//            timelines = make_shared<TimelineView>( );
-//            timelines->set(100,100,600,300);
-//            timelines->applySettings(settings);
-//            timelines->setWidgetSettings(settings2);
-//            timelines->initialize();
-//            timelines->arrangeWidgets();
-
-
-
 }
+
 
 void MainController::makeArchive(){
 
@@ -663,6 +649,7 @@ void MainController::makeArchive(){
 
 
 }
+
 
 void MainController::makeLibrary(){
 
@@ -755,21 +742,20 @@ void MainController::makeOntologies(){
 
 vector< shared_ptr<Ontology> > cats = miniLibrary->getOntologies("category");
 vector< shared_ptr<Ontology> > tags = miniLibrary->getOntologies("tag");
-cout << "CATSSSS" << cats.size() << endl;
+
 //CCscout << "a ver "<< miniLibrary->getOntologies("cat")<<"   "<< miniLibrary->getOntologies("cat").size()<<endl;
-shared_ptr<kLabelButton> btn;
 
 
 
     catSelect = make_shared<WordSelect>( );
-    catSelect->set(50,50,250,250);
+    catSelect->set(50,50,250,230);
+    catSelect->setLabel( "Categorías" );
     catSelect->setSpacingY(65);
     catSelect->applySettings(settings);
     catSelect->setWidgetSettings(settings2);
     catSelect->initialize();
     catSelect->arrangeWidgets();
 
-    cout << cats.size() << endl;
     for (int i=0; i<cats.size(); i++){
         catSelect->makeButton(cats[i]->getName());
         cout << "cats:" << cats[i]->getName() << endl;
@@ -780,6 +766,9 @@ shared_ptr<kLabelButton> btn;
 
     tagSelect = make_shared<WordSelect>( );
     tagSelect->set(50,325,250,250 );
+    tagSelect->setLabel( "Tags" );
+    tagSelect->setSpacingY(65);
+
     tagSelect->applySettings(settings);
     tagSelect->setWidgetSettings(settings2);
     tagSelect->initialize();
@@ -806,8 +795,8 @@ void MainController::makeClipView() {
 
 //    clipScrollViews.push_back( clipView );
 
-    ofAddListener( *clipView->events.lookup("clipClicked"),this,&MainController::clipClicked);
-    ofAddListener( *clipView->events.lookup("clipDragged"),this,&MainController::clipDragged);
+//    ofAddListener( *clipView->events.lookup("clipClicked"),this,&MainController::clipClicked);
+//    ofAddListener( *clipView->events.lookup("clipDragged"),this,&MainController::clipDragged);
 
 
 //
@@ -821,23 +810,24 @@ void MainController::makeClipView() {
 
 }
 
+
 void MainController::makePlayLists(){
 //            playlists.push_back( make_shared<PlayList>( ) );
 }
 
+
 void MainController::makeVideoOutput(){
 
     output = make_shared<VideoOutput>( );
+    output->addRect( make_shared<ofRectangle>( 0,ofGetHeight()/6,ofGetWidth()/2,ofGetHeight()/2) );
+    output->addRect( make_shared<ofRectangle>(1130,600,150,100 ));
 
-    output->addRect( make_shared<ofRectangle>( 0,0,ofGetWidth(),ofGetHeight()) );
-
-    output->addRect( make_shared<ofRectangle>(ofGetWidth()-200,ofGetHeight()-150,200,150) );
-
-//            output->changeClip("movies/fingers.mov");
-//
-//            output->play();
+    output2 = make_shared<VideoOutput>( );
+    output2->addRect( make_shared<ofRectangle>( ofGetWidth()/2,ofGetHeight()/6,ofGetWidth()/2,ofGetHeight()/2) );
+    output2->addRect( make_shared<ofRectangle>(1130,700,150,100 ));
 
 }
+
 
 void MainController::makeSelected(){
     selected = make_shared<kClipScrollView>( );
@@ -850,6 +840,7 @@ void MainController::makeSelected(){
     selected->initialize();
 
 }
+
 
 void MainController::makeScene(){
             scene = make_shared<SceneBuilder>( );
@@ -864,6 +855,7 @@ void MainController::makeScene(){
             scene->iiinit();
 
 }
+
 
 void MainController::makeChooser(){
     chooser = make_shared<kRectButtonView>( );
@@ -891,18 +883,11 @@ void MainController::makeChooser(){
 
 
 void MainController::catSelected(widgetEvent & _event){
-//            vector< shared_ptr < kWidget > > widgets = clipView->getWidgets();
-//            for (int j=0; j<widgets.size(); j++)
-//            {
-//                widgets[j]->disable();
-//            }
-
-//cout << "catSelected" << endl;
 
     clipView->clearClips();
-//    clipView->clearWidgets();
     vector<string> vecstr = dynamic_pointer_cast<WordSelect>(_event.sender)->getSelected();
     vector<shared_ptr<Clip> > loadClips;
+    vector<string> loadedTagNames;
 
     tagSelect->clear();
 
@@ -922,16 +907,12 @@ void MainController::catSelected(widgetEvent & _event){
         if(catOnt) {
 
             vector< shared_ptr<Clip> > catClips = miniLibrary->getClips( catOnt );
-            vector<string> loadedTagNames;
 
             for (int j=0; j<catClips.size(); j++)
             {
 //                cout << "ont"<<catOnt->getName()<<" has "<< catClips[j]->getName() << endl;
 
-                if ( find( loadClips.begin(), loadClips.end(), catClips[j] ) != loadClips.end() ) {
-                    cout << "found in vector" << endl;
-                }
-                else {
+                if ( find( loadClips.begin(), loadClips.end(), catClips[j] ) == loadClips.end() ) {
                     loadClips.push_back(catClips[j]);
 
                     vector< shared_ptr < Ontology > > onts = miniLibrary->getOntologies(catClips[j]);
@@ -939,29 +920,28 @@ void MainController::catSelected(widgetEvent & _event){
                     for (int k=0; k<onts.size(); k++)
                     {
                     	if( onts[k]->getType() == "tag" ){
-                    	    cout << "add tag : " << onts[k]->getName() << endl;
-                            loadedTagNames.push_back( onts[k]->getName() );
+                            string ontName = onts[k]->getName();
+
+                            if ( find( loadedTagNames.begin(), loadedTagNames.end(), ontName ) == loadedTagNames.end() ) {
+                                loadedTagNames.push_back( ontName );
+                            }
                     	}
-
-                    }
-
-                    tagSelect->clear();
-
-                    for (int k=0; k<loadedTagNames.size(); k++)
-                    {
-                    	tagSelect->makeButton( loadedTagNames[k] );
                     }
                 }
-
             }
-
 
         }
 
 
-        clipView->addClips(loadClips);
-
     }
+
+        for (int k=0; k<loadedTagNames.size(); k++)
+        {
+            tagSelect->makeButton( loadedTagNames[k] );
+        }
+
+
+        clipView->addClips(loadClips);
 
 
 }
@@ -1005,6 +985,7 @@ void MainController::tagSelected(widgetEvent & _event){
             }
 
         }
+
 
 
 

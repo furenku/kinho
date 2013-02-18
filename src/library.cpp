@@ -530,6 +530,13 @@ void WordSelect::makeButton(string _str){
 }
 
 
+
+//void WordSelect::draw(ofEventArgs & args){
+//    kRectView::draw(args);
+//    drawString(label,x,y-20);
+//}
+
+
 vector<string> & WordSelect::getSelected(){
     return selectedStrings;
 }

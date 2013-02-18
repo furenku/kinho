@@ -48,8 +48,7 @@
             string imgPath = _clip -> getFilename();
             string thumbPath = imgPath.substr(0, imgPath.find(".") )+".png";
 
-    cout << "!!!!!!!!!!!!!!!!!!!thumbpath:  "<<  thumbPath << endl;
-            img.setUseTexture(false);
+            img.setUseTexture(true);
             img.loadImage(thumbPath);
 
             setMedia(_clip);
@@ -82,6 +81,8 @@
             }
 
             if(img.bAllocated()) {
+
+
                 ofSetColor(255,255,255,255);
 ;                img.draw(
                     drawX,

@@ -111,54 +111,43 @@ class ClearOntology: public Functor {
 #endif
 
 
-//{ DISABLED:
-
-/*
-
-class ChangeVideo: public Functor(){
-    public:
-        ChangeVideo( shared_ptr<PlayLists> _playlists, shared_ptr<Outputs> _outputs) {
-            playlists = _playlists;   outputs = _outputs;
-        }
-
-        void execute() {
-            outputs->
-        }
-
-        shared_ptr<PlayLists> playlists;
-        shared_ptr<Outputs> outputs;
+//{ :
 
 
-};
+//
+//class ChangeVideo: public Functor(){
+//    public:
+//        ChangeVideo( shared_ptr<PlayLists> _playlists, shared_ptr<Outputs> _outputs) {
+//            playlists = _playlists;   outputs = _outputs;
+//        }
+//
+//        void execute() {
+//            outputs->
+//        }
+//
+//        shared_ptr<PlayLists> playlists;
+//        shared_ptr<Outputs> outputs;
+//
+//
+//};
 
 class SetDraggingClip: public Functor {
 
     public:
-        SetDraggingClip( shared_ptr<SceneBuilder> _scene, shared_ptr<kThreadClipView> _selected) {
-            selected = _selected; scene = _scene;
-        }
+        SetDraggingClip( shared_ptr<SceneBuilder> _scene, shared_ptr<kThreadClipView> _clipView);
 
-        void execute() {
-            if(selected->draggingClip) {
-                scene->setDraggingClip( selected->draggingClip );
-            }
-        }
+        void execute();
 
-        shared_ptr<kThreadClipView> selected; shared_ptr<SceneBuilder> scene;
+
+        shared_ptr<kThreadClipView> clipView; shared_ptr<SceneBuilder> scene;
 
 };
-
 
 class SetClipPosition: public Functor {
 
     public:
-        SetClipPosition( shared_ptr<SceneBuilder> _scene, shared_ptr<VideoOutput> _output) {
-            output = _output; scene = _scene;
-        }
-
-        void execute() {
-            scene->savePosition( output->getPosition() );
-        }
+        SetClipPosition( shared_ptr<SceneBuilder> _scene, shared_ptr<VideoOutput> _output);
+        void execute();
 
         shared_ptr<VideoOutput> output; shared_ptr<SceneBuilder> scene;
 
@@ -168,13 +157,9 @@ class SetClipPosition: public Functor {
 class EndClip: public Functor {
 
     public:
-        EndClip( shared_ptr<SceneBuilder> _scene ) {
-            scene = _scene;
-        }
+        EndClip( shared_ptr<SceneBuilder> _scene );
 
-        void execute() {
-            scene->mediaEnd();
-        }
+        void execute();
 
         shared_ptr<SceneBuilder> scene;
 
@@ -182,41 +167,32 @@ class EndClip: public Functor {
 
 
 
+//
+//
+//class SetAlpha: public Functor {
+//
+//    public:
+//        SetAlpha( shared_ptr< AlphaControl > _alpha,  shared_ptr<VideoOutput> _output );
+//
+//        void execute();
+//
+//        shared_ptr<AlphaControl> alpha;
+//        shared_ptr<VideoOutput> output;
+//
+//};
+//
+//class VideoStop: public Functor {
+//
+//    public:
+//        VideoStop( shared_ptr<VideoOutput> _output );
+//        void execute();
+//
+//        shared_ptr<VideoOutput> output;
+//
+//};
 
 
-class SetAlpha: public Functor {
 
-    public:
-        SetAlpha( shared_ptr< AlphaControl > _alpha,  shared_ptr<VideoOutput> _output ) {
-            output = _output;
-            alpha = _alpha;
-        }
-
-        void execute() {
-            output->setAlpha(alpha->getAlpha());
-        }
-
-        shared_ptr<AlphaControl> alpha;
-        shared_ptr<VideoOutput> output;
-
-};
-
-
-class VideoStop: public Functor {
-
-    public:
-        VideoStop( shared_ptr<VideoOutput> _output ) {
-            output = _output;
-        }
-
-        void execute() {
-            output->stop();
-        }
-
-        shared_ptr<VideoOutput> output;
-
-};
-*/
 /*
 vector<string> sortAlpha(vector<string> sortThis)
 {

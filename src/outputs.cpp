@@ -150,7 +150,7 @@ createEvents();
             if(playing) {
 
 //              ofEnableAlphaBlending();
-                ofSetColor(brightness,brightness,brightness,brightness);
+//                ofSetColor(brightness,brightness,brightness,brightness);
 
                 for (int i=0; i<canvases.size(); i++)
                 {
@@ -162,21 +162,58 @@ createEvents();
 
                     vh*=canvases[i]->width;
 
-                    if(i==0) setBrightness(205);
-                    if(i==1) setBrightness(255);
-//ofSetColor(255);
-                    video -> draw(
-                        canvases[i]->x,
+
+
+//                    video -> draw(x,y,ofGetWidth(),ofGetHeight());
+//                    ofFill();
+//                    ofSetColor(0,0,0,70);
+//                    ofRect(x,y,ofGetWidth(),ofGetHeight());
+//                    ofNoFill();
+
+//                    setBrightness(255);
+                    if(i==0) {
+                        video -> draw(
+                            canvases[i]->x,
+                            canvases[i]->y,
+                            canvases[i]->width,
+                            vh
+                        );
+
+
+
+//                        setBrightness(255);
+                        ofSetColor(0,220);
+                        ofFill();
+                        ofRect(canvases[i]->x,
                         canvases[i]->y,
                         canvases[i]->width,
-                        vh
-                    );
+                        vh);
+                        ofNoFill();
+
+                    }
+
+                    else {
+
+                        video -> draw(
+                            canvases[i]->x,
+                            canvases[i]->y,
+                            canvases[i]->width,
+                            vh
+                        );
+                    }
+//
+//                    if(i==0){
+
+
+
+//                    }
+
 
 
 
                 }
 
-                ofSetColor(50);
+                ofSetColor(255,255,255,255);
 
             }
         }

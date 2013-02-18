@@ -241,6 +241,8 @@ class kWidget: virtual public MouseObject, virtual public DrawObject {
 
         float mouseX,mouseY;
 
+        int maxChars;
+
 };
 
 
@@ -624,7 +626,7 @@ class kRectView: virtual public kView, virtual public kRect{
 
         ofPoint getGridXY(int _position);
 
-        void draw(ofEventArgs & args);
+        virtual void draw(ofEventArgs & args);
 
 };
 

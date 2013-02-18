@@ -171,6 +171,8 @@ class WordSelect:public kScrollView{
 
         void clear();
 
+//        void draw(ofEventArgs & args);
+
         vector<string> & getSelected();
 
     /*

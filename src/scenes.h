@@ -64,7 +64,7 @@ class SceneWidget: public StoreObject, virtual public kCircleView, virtual publi
 
 
 
-        void draw(ofEventArgs & args);
+        virtual void draw(ofEventArgs & args);
 
         void addBtnView();
 
@@ -159,6 +159,7 @@ class SceneClip: public SceneWidget {
 
 
         void setClip( shared_ptr<Clip> _clip );
+        shared_ptr<Clip> getClip();
 
         void mediaClicked(widgetEvent & _event);
 
@@ -194,6 +195,7 @@ class SceneBuilder: public DBManager, virtual public kRectView{
         void addListeners( shared_ptr<SceneClip> _w );
 
 
+        void rootClicked(widgetEvent & _event);
         void btnClicked(widgetEvent & _event);
 
         void widgetDragged(widgetEvent & _event);
@@ -205,6 +207,7 @@ class SceneBuilder: public DBManager, virtual public kRectView{
 
 
         shared_ptr<Clip> getCurrentClip();
+        void setCurrentClip(shared_ptr<SceneClip> _clip);
 
         void setDraggingClip(shared_ptr<Clip> _clip);
 
@@ -215,6 +218,23 @@ class SceneBuilder: public DBManager, virtual public kRectView{
 
 
 
+        shared_ptr< SceneClip > selectNextClip();
+
+
+        vector< shared_ptr < SceneWidget > > getPossibleConnections(  float _x, float _y , vector< shared_ptr < SceneWidget > > _v );
+
+        shared_ptr<SceneClip> getNextClip();
+
+
+        void mediaEnd();
+
+        void play();
+        void next();
+        void previous();
+        void pause();
+        void stop();
+
+        void savePosition( float _position );
 
 
 //        //atts
@@ -241,22 +261,12 @@ class SceneBuilder: public DBManager, virtual public kRectView{
 //
 //            //media
 
-        shared_ptr< SceneClip > playNextClip();
-
-
-        vector< shared_ptr < SceneWidget > > getPossibleConnections(  float _x, float _y , vector< shared_ptr < SceneWidget > > _v );
-
         int insertThreshold;
 
         shared_ptr<SceneRoot> root;
 //
 //
-        shared_ptr<SceneClip> getNextClip();
 
-
-        void mediaEnd();
-
-        void savePosition( float _position );
 
 //        shared_ptr< SceneClip > getPrevMedia() {
 //            return lastMedia;

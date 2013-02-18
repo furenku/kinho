@@ -40,43 +40,9 @@
         }
 
         void SetTimelineClip::execute() {
-//cout << "set Clip : " << clipView->clickedClip->getFilename() << endl;
 
             timeline->setNextClip(clipView->clickedClip);
-//cout << "dropppp" << endl;
-//            if(clipView->getDraggingClip()){
-//
-//cout << "isdraggoinnnnnn" << endl;
-//                timeline->addEvent(ofGetAppPtr()->mouseX,ofGetAppPtr()->mouseX,clipView->getDraggingClip());
-//            }
-
-
-            /*
-//            if(archive->inside(archive->getX(),archive->getY())){
-            float clickedX = archive->getMouseX() - archive->getX();
-            float clickedY = archive->getMouseY() - archive->getY();
-
-            float newX = (clickedX / archive->getWidth()) +  archive->getScrollPctX();
-            float newY = (clickedY / archive->getHeight()) + archive->getScrollPctY();
-
-            if( library->draggingClip  ) {
-                archive->addClip( library->draggingClip, newX, newY );
-                archive->arrangeWidgets();
-            }
-
-            if( library->draggingOntology != ""  ) {
-                string ontname = library->draggingOntology;
-                archive->addOntology( library->getOntology( ontname ), newX, newY );
-                archive->arrangeWidgets();
-            }
-
-            library->draggingOntology="";
-            library->draggingClip.reset();
-
-            */
-
-//            }
-
+            cout << "TMLN : " << timeline->getName() << endl;
         }
 
 
@@ -122,9 +88,11 @@ cout << "connnnn" << endl;
         }
 
         void PlayClip::execute() {
+            cout << "playClip!!!" << endl;
             output->changeClip ( scene->getCurrentClip()->getFilename() );
             output->play();
         }
+
 
 
 
@@ -200,3 +168,50 @@ cout << "PLAY CLIP : " << timeline->getNextPlayClip()->getFilename() << endl;
         }
 
 */
+
+
+
+    SetDraggingClip::SetDraggingClip( shared_ptr<SceneBuilder> _scene, shared_ptr<kThreadClipView> _clipView) {
+        clipView = _clipView; scene = _scene;
+    }
+
+    void SetDraggingClip::execute() {
+        if(clipView->draggingClip) {
+            scene->setDraggingClip( clipView->getDraggingClip() );
+        }
+    }
+
+
+    SetClipPosition::SetClipPosition( shared_ptr<SceneBuilder> _scene, shared_ptr<VideoOutput> _output) {
+        output = _output; scene = _scene;
+    }
+
+    void SetClipPosition::execute() {
+        scene->savePosition( output->getPosition() );
+    }
+
+    EndClip::EndClip( shared_ptr<SceneBuilder> _scene ) {
+        scene = _scene;
+    }
+
+    void EndClip::execute() {
+        cout << "mediaEND" << endl;
+        scene->mediaEnd();
+    }
+//
+//    SetAlpha::SetAlpha( shared_ptr< AlphaControl > _alpha,  shared_ptr<VideoOutput> _output ) {
+//        output = _output;
+//        alpha = _alpha;
+//    }
+//
+//    void SetAlpha::execute() {
+//        output->setAlpha(alpha->getAlpha());
+//    }
+//
+//    VideoStop::VideoStop( shared_ptr<VideoOutput> _output ) {
+//        output = _output;
+//    }
+//
+//    void VideoStop::execute() {
+//        output->stop();
+//    }

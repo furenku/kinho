@@ -125,7 +125,7 @@ shared_ptr<VideoLoader> videoLoader;
         shared_ptr<kRectButtonView> chooser;
         shared_ptr<kClipScrollView> selected;
 
-        shared_ptr<VideoOutput> output;
+        shared_ptr<VideoOutput> output,output2;
 
         ofTrueTypeFont  font,font2,font3, kinhoFont;
         shared_ptr<Settings> settings,settings2;
