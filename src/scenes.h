@@ -196,6 +196,8 @@ class SceneBuilder: public DBManager, virtual public kRectView{
 
         void addClip( shared_ptr<Clip> _clip, float _x, float _y);
 
+        void disconnectClip( shared_ptr<SceneClip> _clip );
+
         void removeClip( shared_ptr<SceneClip> _clip );
 
 
@@ -204,6 +206,8 @@ class SceneBuilder: public DBManager, virtual public kRectView{
 
 
         void rootClicked(widgetEvent & _event);
+        void clipBtnClicked(widgetEvent & _event);
+
         void btnClicked(widgetEvent & _event);
 
         void widgetDragged(widgetEvent & _event);

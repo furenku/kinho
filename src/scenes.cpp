@@ -472,7 +472,7 @@
 
 
         void SceneBuilder::addListeners( shared_ptr<SceneClip> _w ) {
-            ofAddListener( *_w->events.lookup("btnClicked"),this,&SceneBuilder::btnClicked);
+            ofAddListener( *_w->events.lookup("btnClicked"),this,&SceneBuilder::clipBtnClicked);
             ofAddListener( *_w->events.lookup("drag"),this,&SceneBuilder::widgetDragged);
             ofAddListener( *_w->events.lookup("mainBtnClicked"),this,&SceneBuilder::mainBtnClicked);
 
@@ -491,48 +491,53 @@
             currentClip.reset();
         }
 
-        void SceneBuilder::btnClicked(widgetEvent & _event){
+
+
+        void SceneBuilder::disconnectClip( shared_ptr<SceneClip> _clip ) {
+
+            vector < shared_ptr<StoreObject> > parents = getParents( _clip );
+            vector < shared_ptr<StoreObject> > children = getChildren( _clip );
+
+            shared_ptr<StoreObject> parent;
+
+            if( parents.size() > 0 ) {
+                parent = parents[0];
+                removeHierarchy( parent, _clip );
+            }
+            if( children.size() > 0 ) {
+                for(int i = 0; i<children.size(); i++) {
+                    removeHierarchy( _clip, children[i] );
+                    if( parent ) {
+                        setHierarchy(parent,children[i]);
+                    }
+                }
+            }
+        }
+
+
+
+        void SceneBuilder::clipBtnClicked(widgetEvent & _event){
 
             shared_ptr< SceneClip > clip = dynamic_pointer_cast<SceneClip>(_event.sender);
 
             string command = clip->getCommand();
 
             if(command == "remove") {
-
-
-                vector < shared_ptr<StoreObject> > parents = getParents( clip );
-                vector < shared_ptr<StoreObject> > children = getChildren( clip );
-
-                shared_ptr<StoreObject> parent;
-
-                if( parents.size() > 0 ) {
-                    parent = parents[0];
-
-                    if( parent ) {
-
-                        if( children.size() > 0 ) {
-                            for(int i = 0; i<children.size(); i++) {
-                                setHierarchy(parent,children[i]);
-                            }
-                        }
-
-                        removeHierarchy( parent, clip );
-
-                    }
-                }
-
+                disconnectClip( clip );
                 removeClip( clip );
-
             }
 
 
             if(command == "disconnect") {
-
-                removeClip( clip );
-
+                disconnectClip( clip );
             }
 
-/*
+        }
+
+        void SceneBuilder::btnClicked(widgetEvent & _event){
+
+            shared_ptr< kRectButtonView > view = dynamic_pointer_cast<kRectButtonView>(_event.sender);
+
             switch( view->getValue() ) {
                 // play:
                 case 0:
@@ -552,7 +557,6 @@
                     stop();
                     break;
             }
-*/
         }
 
         void SceneBuilder::widgetDragged(widgetEvent & _event){}
