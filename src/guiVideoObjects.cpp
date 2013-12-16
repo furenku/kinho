@@ -446,10 +446,8 @@ output=-1;
             shared_ptr<kWidget>sender=dynamic_pointer_cast<kWidget>(_event.sender);
             int index = getWidgetIndex( sender );
             value = index;
-            cout << "index"<<index << endl;
             if(clips.size()>index) {
-            draggingClip = clips[index]->getClip();
-                cout << "dragggggggggggg" << endl;
+                draggingClip = clips[index]->getClip();
             }
             notify("clipDragged");
         }

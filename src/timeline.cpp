@@ -462,10 +462,13 @@ cout << "IN RANGE" << endl;
 
             Event::stop();
         }
+
         void ClipEvent::draw( ofEventArgs & args){
             TimelineEventWidget::draw(args);
+            ofSetColor(255);
             img.draw(x,y+(height-(height/1.77))/2,height,height/1.77);
         }
+
         void ClipEvent::setClip( shared_ptr<Clip> _clip ){
             clip = _clip;
             string filePath = _clip -> getFilename();

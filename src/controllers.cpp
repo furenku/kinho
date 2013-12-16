@@ -351,6 +351,8 @@ void MainController::createModules() {
 //
 //
 //
+    makeChooser();
+
     makeClipView();
 //
     makeVideoOutput();
@@ -748,7 +750,7 @@ vector< shared_ptr<Ontology> > tags = miniLibrary->getOntologies("tag");
 
 
     catSelect = make_shared<WordSelect>( );
-    catSelect->set(50,50,250,230);
+    catSelect->set(50,50,225,230);
     catSelect->setLabel( "Categorías" );
     catSelect->setSpacingY(65);
     catSelect->applySettings(settings);
@@ -765,7 +767,7 @@ vector< shared_ptr<Ontology> > tags = miniLibrary->getOntologies("tag");
     catSelect->arrangeWidgets();
 
     tagSelect = make_shared<WordSelect>( );
-    tagSelect->set(50,325,250,250 );
+    tagSelect->set(50,325,225,250 );
     tagSelect->setLabel( "Tags" );
     tagSelect->setSpacingY(65);
 
@@ -782,15 +784,22 @@ vector< shared_ptr<Ontology> > tags = miniLibrary->getOntologies("tag");
 }
 
 
+void MainController::makeSessionGUI() {
+
+
+
+}
+
+
 void MainController::makeClipView() {
 
     clipView = make_shared<kThreadClipView>();
 
-    clipView -> set(300,50,300,525 );
+    clipView -> set(275,50,250,525 );
     clipView -> applySettings ( settings  );
     clipView -> setWidgetSettings ( settings );
     clipView -> cols=2;
-    clipView -> setSpacingX( 110 );
+    clipView -> setSpacingX( 90 );
     clipView -> setSpacingY( 75 );
 
 //    clipScrollViews.push_back( clipView );
@@ -845,7 +854,7 @@ void MainController::makeSelected(){
 void MainController::makeScene(){
             scene = make_shared<SceneBuilder>( );
 
-            scene->set(600,50,630, 525 );
+            scene->set(530,50,670, 525 );
 
             scene->applySettings(settings);
             scene->setWidgetSettings(settings2);
@@ -1017,21 +1026,29 @@ void MainController::clipDragged(widgetEvent & _event){
 void MainController::chooseView(widgetEvent & _event) {
     string command = dynamic_pointer_cast<kButtonView>(_event.sender)->getCommand();
 
-    if(command == "archivo"){
-        archive->show(); archive->enable();
-//                scene->hide(); scene->disable();
-        library->getView()->show();
-        library->getView()->enable();
-        library->arrangeWidgets();
-    }
+
+//    if(command == "archivo"){
+//        archive->show(); archive->enable();
+////                scene->hide(); scene->disable();
+//        library->getView()->show();
+//        library->getView()->enable();
+//        library->arrangeWidgets();
+//    }
     if(command == "escena"){
-//                scene->show(); scene->enable();
-        archive->hide(); archive->disable();
-        library->hide(); library->disable();
-        library->getView()->hide();
-        library->getView()->disable();
-        library->arrangeWidgets();
-    }
+        cout << command << endl;
+
+////                scene->show(); scene->enable();
+        //archive->hide(); archive->disable();
+        clipView->hide();//set(150,50,200,500);
+
+        scene->set(50,50,1180, 700 );
+        catSelect->hide();
+        tagSelect->hide();
+        // library->disable();
+//        library->getView()->hide();
+//        library->getView()->disable();
+//        library->arrangeWidgets();
+   }
 
 
 }

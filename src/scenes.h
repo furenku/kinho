@@ -118,6 +118,9 @@ class SceneWidget: public StoreObject, virtual public kCircleView, virtual publi
 
         void mouseReleased( ofMouseEventArgs & mouse);
 
+        void lockDrag();
+        void unlockDrag();
+
 
     //atts
     //protected:
@@ -129,6 +132,8 @@ class SceneWidget: public StoreObject, virtual public kCircleView, virtual publi
         shared_ptr<kCircleButtonView> btnView;
         shared_ptr<kMediaScrollView> scrollView;
         string command;
+
+        bool dragLocked;
 
 
 };
@@ -191,8 +196,11 @@ class SceneBuilder: public DBManager, virtual public kRectView{
 
         void addClip( shared_ptr<Clip> _clip, float _x, float _y);
 
+        void removeClip( shared_ptr<SceneClip> _clip );
+
 
         void addListeners( shared_ptr<SceneClip> _w );
+        void removeListeners( shared_ptr<SceneClip> _w );
 
 
         void rootClicked(widgetEvent & _event);
@@ -220,10 +228,13 @@ class SceneBuilder: public DBManager, virtual public kRectView{
 
         shared_ptr< SceneClip > selectNextClip();
 
+        int getNearestIndex( float _x, float _y , vector< shared_ptr < SceneWidget > > _v  );
 
         vector< shared_ptr < SceneWidget > > getPossibleConnections(  float _x, float _y , vector< shared_ptr < SceneWidget > > _v );
 
         shared_ptr<SceneClip> getNextClip();
+
+
 
 
         void mediaEnd();

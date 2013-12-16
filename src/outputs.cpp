@@ -182,7 +182,7 @@ createEvents();
 
 
 //                        setBrightness(255);
-                        ofSetColor(0,220);
+                        ofSetColor(0,150);
                         ofFill();
                         ofRect(canvases[i]->x,
                         canvases[i]->y,

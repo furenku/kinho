@@ -67,6 +67,8 @@ class MainController: public Controller {
 
         void makeLibrary();
 
+        void makeSessionGUI();
+
         void makeClipView();
 
         void catSelected(widgetEvent & _event);
