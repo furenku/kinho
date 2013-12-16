@@ -424,7 +424,9 @@ class Dictionary {
 //        bool DrawObject::inside (float px, float py){}
 
         bool DrawObject::inside (float px, float py){
-if(activeRange<1.0f){ cout << "less than 1 <"<<activeRange << endl;}
+            if(activeRange<1.0f){
+                //cout << "less than 1 <"<<activeRange << endl;
+            }
             if( px > x+(width*(1-activeRange))/2 &&
                 py > y+(height*(1-activeRange))/2 &&
                 px < x+width-(width*(1-activeRange))/2 &&

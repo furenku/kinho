@@ -852,17 +852,16 @@ void MainController::makeSelected(){
 
 
 void MainController::makeScene(){
-            scene = make_shared<SceneBuilder>( );
+    scene = make_shared<SceneBuilder>( );
 
-            scene->set(530,50,670, 525 );
+    scene->set(530,50,670, 525 );
 
-            scene->applySettings(settings);
-            scene->setWidgetSettings(settings2);
+    scene->applySettings(settings);
+    scene->setWidgetSettings(settings2);
 
-            scene->initialize();
+    scene->initialize();
 
-            scene->iiinit();
-
+    scene->iiinit();
 }
 
 

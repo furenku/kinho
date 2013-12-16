@@ -196,6 +196,7 @@ class SceneBuilder: public DBManager, virtual public kRectView{
 
         void addClip( shared_ptr<Clip> _clip, float _x, float _y);
 
+        void connectClip( shared_ptr<SceneClip> _clip );
         void disconnectClip( shared_ptr<SceneClip> _clip );
 
         void removeClip( shared_ptr<SceneClip> _clip );
@@ -222,6 +223,9 @@ class SceneBuilder: public DBManager, virtual public kRectView{
         void setCurrentClip(shared_ptr<SceneClip> _clip);
 
         void setDraggingClip(shared_ptr<Clip> _clip);
+
+
+        void setConnectingClip(shared_ptr<SceneClip> _clip);
 
 
         void mouseReleased(ofMouseEventArgs & mouse);
@@ -378,7 +382,7 @@ class SceneBuilder: public DBManager, virtual public kRectView{
 
         shared_ptr<Clip> draggingClip;
 
-        shared_ptr<SceneClip> nextClip, currentClip, lastClip;
+        shared_ptr<SceneClip> nextClip, currentClip, lastClip, connectingClip;
 
 
 

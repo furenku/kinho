@@ -210,14 +210,13 @@
             dragLocked = true;
         }
         void SceneWidget::unlockDrag() {
-            dragLocked = true;
+            dragLocked = false;
         }
 
         void SceneWidget::mouseDragged( ofMouseEventArgs & mouse ){
 
-            //if ( ! dragLocked ) {
+            if ( ! dragLocked ) {
 
-                cout << "dragging!" <<endl;
                 if(isBeingDragged && !view->inside(mouse.x,mouse.y))
                     makeDroppable(mouse.x, mouse.y);
 
@@ -230,6 +229,7 @@
 
 
                 if(inside(mouse.x,mouse.y)) {
+                    cout << "dragging!" <<endl;
                     setRectInView();
                     arrangeWidgets();
                 }
@@ -238,7 +238,7 @@
                 mouseX = mouse.x;
                 mouseY = mouse.y;
 
-//            }
+            }
 
 
         }
@@ -492,6 +492,32 @@
         }
 
 
+        void SceneBuilder::connectClip( shared_ptr<SceneClip> _clip ){
+            int ncsize=nextConnections.size();
+
+            if(ncsize==1){
+                setHierarchy( nextConnections[0], _clip);
+
+                cout << "SET:               -  : " << nextConnections[0]->getName() << endl;
+                cout << "TO:               -  : " << clips.back()->getName() << endl;
+            }
+            else if(ncsize==2) {
+                removeHierarchy( nextConnections[0], nextConnections[1] );
+                removeHierarchy( nextConnections[1], nextConnections[0] );
+                setHierarchy( nextConnections[1], _clip);
+                setHierarchy( clips.back(), nextConnections[0] );
+////                removeHierarchy( nextConnections[1], nextConnections[0] );
+//
+//                cout << "SET:               -  : " << nextConnections[1]->getName() << endl;
+//                cout << "TO:               -  : " << clips.back()->getName() << endl;
+//                cout << "TO 2 :               -  : " << nextConnections[0]->getName() << endl;
+
+            }
+
+
+        }
+
+
 
         void SceneBuilder::disconnectClip( shared_ptr<SceneClip> _clip ) {
 
@@ -527,6 +553,10 @@
                 removeClip( clip );
             }
 
+
+            if(command == "connect") {
+                //disconnectClip( clip );
+            }
 
             if(command == "disconnect") {
                 disconnectClip( clip );
@@ -571,10 +601,11 @@
 
             kRectView::draw(args);
 
-            ofSetColor(20,134,185);
 
             if(draggingClip) {
+
                 if(inside(mouseX,mouseY)) {
+                    ofSetColor(20,134,185);
                     ofCircle( mouseX, mouseY, 10 );
                     for (int i=0; i<nextConnections.size(); i++)
                     {
@@ -640,38 +671,24 @@ vector< shared_ptr < kWidget > > w = widgets;
 
         void SceneBuilder::setDraggingClip(shared_ptr<Clip> _clip){
             draggingClip = _clip;
-            cout << "SET: "<<draggingClip->getName() << endl;
         }
+
+
+        void SceneBuilder::setConnectingClip(shared_ptr<SceneClip> _clip){
+            connectingClip = _clip;
+        }
+
 
         void SceneBuilder::mouseReleased(ofMouseEventArgs & mouse){
 
             if(draggingClip) {
                 if(inside(mouse.x,mouse.y))
                 {
+
+
                     addClip( draggingClip, mouse.x-x, mouse.y-y );
 
-                    int ncsize=nextConnections.size();
-
-                    cout << "NC "<<ncsize << endl;
-                    if(ncsize==1){
-                        setHierarchy( nextConnections[0], clips.back() );
-
-                        cout << "SET:               -  : " << nextConnections[0]->getName() << endl;
-                        cout << "TO:               -  : " << clips.back()->getName() << endl;
-                    }
-                    else if(ncsize==2) {
-                        removeHierarchy( nextConnections[0], nextConnections[1] );
-                        removeHierarchy( nextConnections[1], nextConnections[0] );
-                        setHierarchy( nextConnections[1], clips.back() );
-                        setHierarchy( clips.back(), nextConnections[0] );
-        //                removeHierarchy( nextConnections[1], nextConnections[0] );
-
-                        cout << "SET:               -  : " << nextConnections[1]->getName() << endl;
-                        cout << "TO:               -  : " << clips.back()->getName() << endl;
-                        cout << "TO 2 :               -  : " << nextConnections[0]->getName() << endl;
-
-                    }
-
+                    connectClip( clips.back() );
 
                     arrangeWidgets();
 
