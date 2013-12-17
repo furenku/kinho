@@ -13,9 +13,29 @@ MainController::MainController(){
 
     createSettings();
 
+
+    windowW = int( ofGetScreenWidth() );
+    windowH = int( ofGetScreenHeight() );
+
+
+    paddingX = paddingY = 70;
+    spacingX = spacingY = 15;
+
+    paddedW = windowW - 2 * paddingX;
+    paddedH = windowH - 2 * paddingY;
+//
+//    paddingXpct = (float) paddingX / windowW;
+//    paddingYpct = (float) paddingY /  windowH;
+
+    spacingXpct = (float) spacingX / paddedW;
+    spacingYpct = (float) spacingY /  paddedH;
+
+
     createModules();
 
     loadAllClips();
+
+
 
 }
 
@@ -320,7 +340,7 @@ void MainController::setOntologies(){
         {
             if( videos.find( vecstr[i] ) != videos.end() ) {
                 miniLibrary->setOntology( tmpCat, videos [ vecstr[i] ] );
-                cout<<"added media "<< videos[vecstr[i]]->getName() << " in cat - " << it->first <<endl;
+                //cout<<"added media "<< videos[vecstr[i]]->getName() << " in cat - " << it->first <<endl;
             }
         }
     }
@@ -586,11 +606,19 @@ void MainController::makeEditor(){
 //            editor->set(50,50,1200,700);
 }
 
+
 void MainController::makeTimelines(){
+
     clockmngr = make_shared<ClockManager>( );
 
     timeline = make_shared<TimelineTrack>( );
-    timeline->set(50,600,1080,95 );
+    timeline->set(
+        paddingX,
+        paddingY + ( float(4/6.0f) + 2*spacingYpct) * paddedH,
+        4/5.0f * paddedW,
+        1/6.0f * paddedH
+    );
+
     timeline->setName("tmln1");
     timeline->applySettings(settings);
     timeline->setWidgetSettings(settings2);
@@ -600,7 +628,19 @@ void MainController::makeTimelines(){
     clockmngr->addTimeline( timeline );
 
     timeline2 = make_shared<TimelineTrack>( );
-    timeline2->set(50,700,1080,95 );
+    timeline2->set(
+        paddingX,
+        paddingY + ( float(5/6.0f) + 3*spacingYpct) * paddedH,
+        4/5.0f * paddedW,
+        1/6.0f * paddedH
+    );
+
+//    set(
+//        ( spacingXpct ) * paddedW,
+//        ( 0.833f + 2*spacingYpct  ) * paddedH,
+//        ( 0.8f - spacingXpct  ) * paddedW,
+//        ( 0.166f - spacingYpct  ) * paddedH
+//    );
     timeline2->setName("tmln2");
     timeline2->applySettings(settings);
     timeline2->setWidgetSettings(settings2);
@@ -747,11 +787,17 @@ vector< shared_ptr<Ontology> > tags = miniLibrary->getOntologies("tag");
 
 //CCscout << "a ver "<< miniLibrary->getOntologies("cat")<<"   "<< miniLibrary->getOntologies("cat").size()<<endl;
 
+    int newH = 0.33f * paddedH - spacingY/2;
 
 
     catSelect = make_shared<WordSelect>( );
-    catSelect->set(50,50,225,230);
-    catSelect->setLabel( "Categorías" );
+    catSelect->set(
+        paddingX,
+        paddingY + spacingY,
+        0.166f * paddedW,
+        newH
+    );
+    catSelect->setLabel( "Categorias" );
     catSelect->setSpacingY(65);
     catSelect->applySettings(settings);
     catSelect->setWidgetSettings(settings2);
@@ -760,14 +806,20 @@ vector< shared_ptr<Ontology> > tags = miniLibrary->getOntologies("tag");
 
     for (int i=0; i<cats.size(); i++){
         catSelect->makeButton(cats[i]->getName());
-        cout << "cats:" << cats[i]->getName() << endl;
+        //cout << "cats:" << cats[i]->getName() << endl;
     }
 
 
     catSelect->arrangeWidgets();
 
     tagSelect = make_shared<WordSelect>( );
-    tagSelect->set(50,325,225,250 );
+    tagSelect->set(
+        paddingX,
+        paddingY + 2*spacingY + newH,
+        0.166f * paddedW,
+        newH
+    );
+
     tagSelect->setLabel( "Tags" );
     tagSelect->setSpacingY(65);
 
@@ -778,7 +830,7 @@ vector< shared_ptr<Ontology> > tags = miniLibrary->getOntologies("tag");
 
     for (int i=0; i<tags.size(); i++) {
         tagSelect->makeButton(tags[i]->getName());
-        cout << "tags:" << tags[i]->getName() << endl;
+//        cout << "tags:" << tags[i]->getName() << endl;
     }
 
 }
@@ -795,7 +847,13 @@ void MainController::makeClipView() {
 
     clipView = make_shared<kThreadClipView>();
 
-    clipView -> set(275,50,250,525 );
+    clipView -> set(
+        ( 0.166f ) * paddedW + spacingX + paddingX,
+        spacingY + paddingY,
+        ( 0.166f - spacingXpct  ) * paddedW,
+        ( 0.66f * paddedH )
+    );
+
     clipView -> applySettings ( settings  );
     clipView -> setWidgetSettings ( settings );
     clipView -> cols=2;
@@ -828,12 +886,22 @@ void MainController::makePlayLists(){
 void MainController::makeVideoOutput(){
 
     output = make_shared<VideoOutput>( );
-    output->addRect( make_shared<ofRectangle>( 0,ofGetHeight()/6,ofGetWidth()/2,ofGetHeight()/2) );
-    output->addRect( make_shared<ofRectangle>(1130,600,150,100 ));
+    output->addRect( make_shared<ofRectangle>( 0,ofGetScreenHeight()/6,ofGetScreenWidth()/2,ofGetScreenHeight()/2) );
+    output->addRect( make_shared<ofRectangle>(
+        paddingX + 4.2f/5.0f * paddedW,
+        paddingY + ( float(4/6.0f) + 3*spacingYpct) * paddedH,
+        0.8f/5.0f * paddedW,
+        1/6.0f * paddedH
+    ) );
 
     output2 = make_shared<VideoOutput>( );
-    output2->addRect( make_shared<ofRectangle>( ofGetWidth()/2,ofGetHeight()/6,ofGetWidth()/2,ofGetHeight()/2) );
-    output2->addRect( make_shared<ofRectangle>(1130,700,150,100 ));
+    output2->addRect( make_shared<ofRectangle>( ofGetScreenWidth()/2,ofGetScreenHeight()/6,ofGetScreenWidth()/2,ofGetScreenHeight()/2) );
+    output2->addRect( make_shared<ofRectangle>(
+        paddingX + 4.2f/5.0f * paddedW,
+        paddingY + ( float(5/6.0f) + 3*spacingYpct) * paddedH,
+        0.8f/5.0f * paddedW,
+        1/6.0f * paddedH
+    ) );
 
 }
 
@@ -854,8 +922,12 @@ void MainController::makeSelected(){
 void MainController::makeScene(){
     scene = make_shared<SceneBuilder>( );
 
-    scene->set(530,50,670, 525 );
-
+    scene->set(
+        paddingX + 2*spacingX + ( 0.33f  ) * paddedW,
+        spacingY + paddingX,
+        0.66f * paddedW,
+        0.66f * paddedH
+    );
     scene->applySettings(settings);
     scene->setWidgetSettings(settings2);
 
@@ -867,7 +939,12 @@ void MainController::makeScene(){
 
 void MainController::makeChooser(){
     chooser = make_shared<kRectButtonView>( );
-    chooser->set(50,0,200,50);
+    chooser->set(
+        paddingX,
+        0,
+        200,
+        paddingY
+    );
     chooser->setSpacingX(70);
     chooser->applySettings(settings2);
     chooser->setWidgetSettings(settings);

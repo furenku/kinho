@@ -197,9 +197,7 @@
 //            draggingOntology  = dynamic_pointer_cast<kWidget>(_event.sender)->getLabel();
             notify("mediaBtnClicked");
         }
-
-
-        void SceneWidget::mouseMoved( ofMouseEventArgs & mouse ){
+                void SceneWidget::mouseMoved( ofMouseEventArgs & mouse ){
             isMouseOn=inside(mouse.x,mouse.y);
             mouseX=mouse.x;
             mouseY=mouse.y;

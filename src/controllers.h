@@ -155,6 +155,15 @@ shared_ptr<VideoLoader> videoLoader;
 
         string mediaDirectory, xmlFile;
 
+        int windowW, windowH;
+        int paddedW, paddedH;
+
+        int paddingX, paddingY;
+        int spacingX, spacingY;
+
+//        float paddingXpct, paddingYpct;
+        float spacingXpct, spacingYpct;
+
 };
 
 
