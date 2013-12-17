@@ -470,6 +470,9 @@
 
             arrangeWidgets();
             addListeners(clips.back());
+
+            nextClip = clips.back();
+
         }
 
 

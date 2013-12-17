@@ -89,6 +89,12 @@ class LogData{
         map<string,bool> bools;
 };
 
+
+class TimelineMarker: public Marker, public kRectView {
+    public:
+        TimelineMarker(){}
+};
+
 class Event: public StoreObject {
     public:
 
@@ -214,6 +220,10 @@ class Timeline: public DBManager, public EventSource, public EventTarget {
 
         virtual void addEvent( shared_ptr<TimelineEvent> _event, long _time );
 
+
+        virtual void addMarker( long _time, string _name );
+        virtual void addMarker( long _time, string _name, string _imgFile );
+
         void addEvent( shared_ptr<TimelineEvent> _event, shared_ptr<EventSource> _source, shared_ptr<EventTarget> _target );
 
         virtual void removeEvent( long _time );
@@ -275,6 +285,7 @@ shared_ptr<Clip> nextClip,nextPlayClip;
 
         shared_ptr<Log> log;
 
+        map < long, shared_ptr<TimelineMarker> > timelineMarkers;
         map < long, shared_ptr<TimelineEvent> > timelineEvents;
         map < long, shared_ptr < TimelineEvent > >::iterator iter;
 

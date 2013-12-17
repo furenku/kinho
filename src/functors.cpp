@@ -40,9 +40,7 @@
         }
 
         void SetTimelineClip::execute() {
-
             timeline->setNextClip(clipView->clickedClip);
-            cout << "TMLN : " << timeline->getName() << endl;
         }
 
 
@@ -91,6 +89,25 @@ cout << "connnnn" << endl;
             output->changeClip ( scene->getCurrentClip()->getFilename() );
             output->play();
         }
+
+
+
+
+
+        AddTimelineMarker::AddTimelineMarker( shared_ptr<TimelineTrack> _timeline,  shared_ptr<SceneBuilder> _scene ) {
+            scene = _scene;
+            timeline = _timeline;
+        }
+
+        void AddTimelineMarker::execute() {
+            float position = scene->nextClip->getClip()->getDuration();
+            timeline->addMarker( position, scene->nextClip->getClip()->getName() );
+            //getNextPosition( xToTime(mouse.x), draggingEvent->getDuration() ), draggingEvent->getDuration() );
+            cout<<"---Add Marker! dur:"<<position<<endl;
+//            timeline->addMarker( position );
+        }
+
+
 
 
 

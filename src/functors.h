@@ -82,6 +82,19 @@ class PlayTimelineClip: public Functor {
 };
 
 
+class AddTimelineMarker: public Functor {
+
+    public:
+        AddTimelineMarker( shared_ptr<TimelineTrack> _timeline,  shared_ptr<SceneBuilder> _scene  );
+
+        void execute();
+
+        shared_ptr<TimelineTrack> timeline;
+        shared_ptr<SceneBuilder> scene;
+
+};
+
+
 class SelectOntology: public Functor {
 
     public:

@@ -596,7 +596,12 @@ void MainController::makeLogins(){
 //            // scene
 ////            login(scene,"release",make_shared<AddSceneClip>(scene, selected));
 //            login(scene,"playClip",make_shared<Say>( "openit" ));
-            login(scene,"playClip",make_shared<PlayClip>( scene,output ));
+            funcs.reset();
+            funcs = make_shared<FunctorHolder>();
+            funcs->addFunc( make_shared<PlayClip>( scene,output ) );
+            funcs->addFunc( make_shared<AddTimelineMarker>( timeline , scene) );
+            login(scene,"playClip",funcs);
+
 //            login(scene,"sceneEnd",make_shared<VideoStop>( output ));
 //
 //            // videoplayer
@@ -627,6 +632,7 @@ shared_ptr<Clip> MainController::makeClip( string _name, string _description ){
 //    clip->tags.push_back("tag1");
 
     tmpClip->setFilename( mediaDirectory+_name );
+    loadData(tmpClip);
 
     return tmpClip ;
 
@@ -634,10 +640,10 @@ shared_ptr<Clip> MainController::makeClip( string _name, string _description ){
 
 
 void MainController::loadData( shared_ptr<Clip>  clip){
-//    videoLoader->setFilename( "movies/" + clip->getName() );
-//    videoLoader->loadData();
-//    cout << "duration : " << videoLoader->getDuration() << endl;
-//    clip->setDuration( videoLoader->getDuration() );
+    videoLoader->setFilename( "movies/" + clip->getName() );
+    videoLoader->loadData();
+    cout << "duration : " << videoLoader->getDuration() << endl;
+    clip->setDuration( videoLoader->getDuration() );
 }
 
 

@@ -320,12 +320,22 @@
 
 
         void Timeline::addEvent( shared_ptr<TimelineEvent> _event, long _time ){
-            cout << "ok1" << endl;
             timelineEvents[ _time ] = _event;
-            cout << "ok2" << endl;
         }
 
         void Timeline::addEvent( shared_ptr<TimelineEvent> _event, shared_ptr<EventSource> _source, shared_ptr<EventTarget> _target ){
+        }
+
+
+        void Timeline::addMarker( long _time, string _name ) {
+            shared_ptr<TimelineMarker> marker = make_shared<TimelineMarker>();
+            marker->setName(_name);
+            timelineMarkers[ _time ] = marker;
+
+        }
+
+        void Timeline::addMarker( long _time, string _name, string _imgFile ) {
+
         }
 
 
@@ -351,7 +361,7 @@
                 eventTotalDuration = long( event->getTotalDuration() * 1000 );
                 eventTriggered = event->getTriggered();
                 if( scopeStart <= eventTime ) {
-                    cout << "before and scopestart : " <<  scopeStart << " time: " << eventTime << endl;
+//                    cout << "before and scopestart : " <<  scopeStart << " time: " << eventTime << endl;
                 }
                 if( scopeStart > eventTime ) {
 
@@ -370,7 +380,7 @@
 
             // if playHead greater than event time but shorter than time + duration
             if( scopeStart > eventTime && scopeStart < eventTime + eventTotalDuration ) {
-cout << "IN RANGE" << endl;
+//cout << "IN RANGE" << endl;
                 // check if has been triggered
                 if( !eventTriggered ){
                     // if not trigger it, which locks it from retriggering until it ends
@@ -536,6 +546,9 @@ cout << "IN RANGE" << endl;
             kRectView::draw(args);
             if(tmpEventStart>=0 && tmpEventEnd > 0 )
                 ofRect( tmpEventStart * width, y, ( tmpEventEnd-tmpEventStart ) * width, y+height );
+
+//            if(tmpMarkerStart>=0 && tmpMarkerEnd > 0 )
+//                ofRect( tmpMarkerStart * width, y, ( tmpMarkerEnd-tmpMarkerStart ) * width, y+height );
 
             drawString(ofToString(scopeStart/1000),x-30,y-10);
 //            for (iter = timelineEvents.begin(); iter != timelineEvents.end(); iter++) {
@@ -788,6 +801,11 @@ cout << "IN RANGE" << endl;
             tmpEventStart = timeToX( _start );
             tmpEventEnd = timeToX(_end );
         }
+
+//        void TimelineTrack::setTmpMarker( float _start, float _end ){
+//            tmpMarkerStart = timeToX( _start );
+//            tmpMarkerEnd = timeToX(_end );
+//        }
 
         void TimelineTrack::adjustPreviousEventWidget(){
         }
