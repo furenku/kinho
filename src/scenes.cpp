@@ -46,9 +46,7 @@
 
 
         void SceneWidget::draw(ofEventArgs & args){
-
             ofDrawBitmapString( name , x, y );
-
         }
 
         void SceneWidget::addBtnView() {
@@ -56,7 +54,7 @@
                 btnView = make_shared< kCircleButtonView >();
                 btnView->disableUpdate();
             //setup
-                btnView->set(0.5,0.5,1,1);
+                btnView->set(0,0,1,1);
                 addWidget( btnView );
 
             // create labels
@@ -64,7 +62,7 @@
                 labels.push_back( "play" );
                 labels.push_back( "open" );
                 labels.push_back( "remove" );
-                labels.push_back( "connect" );
+//                labels.push_back( "connect" );
                 labels.push_back( "disconnect" );
                 btnView->addButtons( labels );
                 ofAddListener( *btnView->events.lookup("btnClicked"), this, &SceneWidget::btnClicked );
@@ -197,10 +195,17 @@
 //            draggingOntology  = dynamic_pointer_cast<kWidget>(_event.sender)->getLabel();
             notify("mediaBtnClicked");
         }
-                void SceneWidget::mouseMoved( ofMouseEventArgs & mouse ){
-            isMouseOn=inside(mouse.x,mouse.y);
-            mouseX=mouse.x;
-            mouseY=mouse.y;
+
+
+        void SceneWidget::mouseMoved( ofMouseEventArgs & mouse ){
+//
+//            if( mouseX>x && mouseX<x+width && mouseY>y && mouseY<y+height) {
+//                isMouseOn=true;
+//            } else {
+//                isMouseOn=false;
+//            }
+////
+            isMouseOn = DrawObject::inside(mouse.x,mouse.y);
         }
 
 
@@ -215,6 +220,7 @@
 
             if ( ! dragLocked ) {
 
+
                 if(isBeingDragged && !view->inside(mouse.x,mouse.y))
                     makeDroppable(mouse.x, mouse.y);
 
@@ -224,6 +230,7 @@
 
                 if( hasBeenPressed ) { //(mouse.x,mouse.y)) {
                     kDragObject::mouseDragged(mouse);
+
                     setRectInView();
                     arrangeWidgets();
                 }
@@ -246,13 +253,10 @@
 
             sourceX = mouse.x;
             sourceY = mouse.y;
-
+cout<<inside(mouse.x,mouse.y)<<endl;
             if( ! hasBeenDragged && isMouseOn ) {
                 notify("press");
-                if(!btnView)
-                    addBtnView();
-                else
-                    removeBtnView();
+                toggleViews();
             }
 
             MouseObject::mouseReleased(mouse);
@@ -372,7 +376,7 @@
 
             root = make_shared<SceneRoot>( ),
             root -> set(0.5f, 0.5f,0.05f, 0.05f );
-
+            root->setActiveRange(2);
             addWidget(root);
 
             ofAddListener( *root->events.lookup("press"),this,&SceneBuilder::rootClicked );
@@ -434,7 +438,7 @@
 
         void SceneBuilder::addClip( shared_ptr<Clip> _clip, float _x, float _y){
             clips.push_back(make_shared<SceneClip>( ));
-            clips.back()->set( _x / width, _y / height, 0.1f, 0.1f );
+            clips.back()->set( _x / width, _y / height, 0.05f, 0.05f );
 
             clips.back()->setName( _clip->getName() );
 //            clips.back()->setFilename( _clip->getFilename() );
@@ -594,7 +598,7 @@
 
             if(draggingWidget ){
                 if(nextConnections.size()>=1) {
-                    ofSetColor(0,255,0);
+                    ofSetColor(20,134,185);
                     ofLine(
                         nextConnections[0]->getX(), nextConnections[0]->getY(),
                         mouseX, mouseY
@@ -648,9 +652,12 @@ vector< shared_ptr < kWidget > > w = widgets;
             if(nextClip){
                 ofSetLineWidth(2.5f);
 
-                ofSetColor(255,120,0);
+                ofSetColor(20,134,185);
+                ofSetLineWidth(5);
 //                ofCircle(nextClip->x+nextClip->width/2,nextClip->y+nextClip->height/2,50);
-                ofCircle(nextClip->x+nextClip->width/2,nextClip->y+nextClip->height/4,30);
+
+                ofRect( nextClip->getX(),nextClip->getY(),nextClip->getWidth(),nextClip->getWidth()*9/16.0f);
+                ofSetLineWidth(2);
             }
 
             if(currentClip){
@@ -693,10 +700,11 @@ vector< shared_ptr < kWidget > > w = widgets;
             }
 
 
-            if( draggingWidget ) {
+            if( !newDraggingClip && draggingWidget ) {
                 if(inside(mouse.x,mouse.y))
                 {
                     connectWidget( draggingWidget );
+                    nextConnections.clear();
                     arrangeWidgets();
                 }
             }
@@ -718,6 +726,7 @@ vector< shared_ptr < kWidget > > w = widgets;
                     sw.push_back( clips[i] );
 
                 if(newDraggingClip) {
+                    nextConnections.clear();
                     nextConnections = getPossibleConnections( mouse.x, mouse.y, sw );
                 }
                 else {
@@ -731,8 +740,11 @@ vector< shared_ptr < kWidget > > w = widgets;
                             for (int i=0; i<sw.size(); i++) {
                                 sw[ i ] -> lockDrag();
                             }
-                            sw[ nearestIndex ] -> unlockDrag();
-                            setDraggingWidget( sw[ nearestIndex ] );
+                            if( sw[ nearestIndex ] -> isMouseOn ) { //inside( mouse.x, mouse.y ) ) {
+                                sw[ nearestIndex ] -> unlockDrag();
+                                setDraggingWidget( sw[ nearestIndex ] );
+                            }
+
                         }
                     }
 
