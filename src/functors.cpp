@@ -177,7 +177,7 @@ cout << "PLAY CLIP : " << timeline->getNextPlayClip()->getFilename() << endl;
 
     void SetDraggingClip::execute() {
         if(clipView->draggingClip) {
-            scene->setDraggingClip( clipView->getDraggingClip() );
+            scene->setNewDraggingClip( clipView->getDraggingClip() );
         }
     }
 

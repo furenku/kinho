@@ -223,11 +223,10 @@
                     makeDraggable(x,y);
 
 
-                kDragObject::mouseDragged(mouse);
 
 
-                if(inside(mouse.x,mouse.y)) {
-                    cout << "dragging!" <<endl;
+                if( hasBeenPressed ) { //(mouse.x,mouse.y)) {
+                    kDragObject::mouseDragged(mouse);
                     setRectInView();
                     arrangeWidgets();
                 }
@@ -286,7 +285,6 @@
 
 
 //}
-
 
 
 //{ SCENECLIP
@@ -373,6 +371,7 @@
         SceneBuilder::SceneBuilder(){
             autoArrange = false;
             insertThreshold = 30;
+            autoConnectThreshold = 150;
         }
 
         void SceneBuilder::initialize() {
@@ -552,9 +551,9 @@
             }
 
 
-            if(command == "connect") {
-                //disconnectClip( clip );
-            }
+//            if(command == "connect") {
+//                //disconnectClip( clip );
+//            }
 
             if(command == "disconnect") {
                 disconnectClip( clip );
@@ -600,7 +599,7 @@
             kRectView::draw(args);
 
 
-            if(draggingClip) {
+            if(newDraggingClip) {
 
                 if(inside(mouseX,mouseY)) {
                     ofSetColor(20,134,185);
@@ -667,24 +666,24 @@ vector< shared_ptr < kWidget > > w = widgets;
 
         shared_ptr<Clip> SceneBuilder::getCurrentClip(){ return currentClip->getClip(); }
 
-        void SceneBuilder::setDraggingClip(shared_ptr<Clip> _clip){
-            draggingClip = _clip;
+        void SceneBuilder::setNewDraggingClip( shared_ptr<Clip> _clip ) {
+            newDraggingClip = _clip;
         }
 
 
-        void SceneBuilder::setConnectingClip(shared_ptr<SceneClip> _clip){
-            connectingClip = _clip;
+        void SceneBuilder::setDraggingWidget(shared_ptr<SceneWidget> _widget){
+            draggingWidget = _widget;
         }
 
 
         void SceneBuilder::mouseReleased(ofMouseEventArgs & mouse){
 
-            if(draggingClip) {
+            if(newDraggingClip) {
                 if(inside(mouse.x,mouse.y))
                 {
 
 
-                    addClip( draggingClip, mouse.x-x, mouse.y-y );
+                    addClip( newDraggingClip, mouse.x-x, mouse.y-y );
 
                     connectClip( clips.back() );
 
@@ -695,7 +694,7 @@ vector< shared_ptr < kWidget > > w = widgets;
             }
 
 
-            draggingClip.reset();
+            newDraggingClip.reset();
 
         }
 
@@ -709,8 +708,9 @@ vector< shared_ptr < kWidget > > w = widgets;
                 for (int i=0; i<clips.size(); i++)
                     sw.push_back( clips[i] );
 
-                if(draggingClip)
+                if(newDraggingClip) {
                     nextConnections = getPossibleConnections( mouse.x, mouse.y, sw );
+                }
                 else {
                     nextConnections.clear();
                     int nearestIndex = getNearestIndex(mouse.x,mouse.y,sw);
@@ -719,6 +719,7 @@ vector< shared_ptr < kWidget > > w = widgets;
                             sw[ i ] -> lockDrag();
                         }
                         sw[ nearestIndex ] -> unlockDrag();
+                        setDraggingWidget( sw[ nearestIndex ] );
                     }
                 }
                 mouseX = mouse.x;
@@ -873,7 +874,10 @@ vector< shared_ptr < kWidget > > w = widgets;
 
             if( _v.size() > nearestIndex && nearestIndex >= 0 ){
                 closestDistance = getDistance( _x, _y, _v[nearestIndex]->getX(), _v[nearestIndex]->getY() );
-                possibleConnections.push_back( _v[ nearestIndex ] );
+                if(closestDistance < autoConnectThreshold ) {
+                    possibleConnections.push_back( _v[ nearestIndex ] );
+                }
+
             }
 
             float rootDistance = getDistance ( _x, _y, root->getX(), root->getY() );

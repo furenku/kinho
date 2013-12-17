@@ -222,10 +222,11 @@ class SceneBuilder: public DBManager, virtual public kRectView{
         shared_ptr<Clip> getCurrentClip();
         void setCurrentClip(shared_ptr<SceneClip> _clip);
 
-        void setDraggingClip(shared_ptr<Clip> _clip);
+        void setNewDraggingClip(shared_ptr<Clip> _clip);
+
+        void setDraggingWidget(shared_ptr<SceneWidget> _clip);
 
 
-        void setConnectingClip(shared_ptr<SceneClip> _clip);
 
 
         void mouseReleased(ofMouseEventArgs & mouse);
@@ -238,7 +239,7 @@ class SceneBuilder: public DBManager, virtual public kRectView{
 
         int getNearestIndex( float _x, float _y , vector< shared_ptr < SceneWidget > > _v  );
 
-        vector< shared_ptr < SceneWidget > > getPossibleConnections(  float _x, float _y , vector< shared_ptr < SceneWidget > > _v );
+        vector< shared_ptr < SceneWidget > > getPossibleConnections( float _x, float _y , vector< shared_ptr < SceneWidget > > _v );
 
         shared_ptr<SceneClip> getNextClip();
 
@@ -281,7 +282,7 @@ class SceneBuilder: public DBManager, virtual public kRectView{
 //            //media
 
         int insertThreshold;
-
+        int autoConnectThreshold;
         shared_ptr<SceneRoot> root;
 //
 //
@@ -380,9 +381,11 @@ class SceneBuilder: public DBManager, virtual public kRectView{
         vector< shared_ptr<SceneClip> > clips;
         vector< shared_ptr<SceneWidget> > nextConnections;
 
-        shared_ptr<Clip> draggingClip;
+        shared_ptr<Clip> newDraggingClip;
 
-        shared_ptr<SceneClip> nextClip, currentClip, lastClip, connectingClip;
+
+        shared_ptr<SceneClip> nextClip, currentClip, lastClip;
+        shared_ptr<SceneWidget> draggingWidget;
 
 
 
