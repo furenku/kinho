@@ -1167,27 +1167,30 @@ void MainController::chooseView(widgetEvent & _event) {
     string command = dynamic_pointer_cast<kButtonView>(_event.sender)->getCommand();
 
 
-//    if(command == "archivo"){
-//        archive->show(); archive->enable();
-////                scene->hide(); scene->disable();
-//        library->getView()->show();
-//        library->getView()->enable();
-//        library->arrangeWidgets();
-//    }
+    if(command == "archivo"){
+        clipView->show();//set(150,50,200,500);
+        catSelect->show();
+        tagSelect->show();
+        timeline->show();
+        timeline2->show();
+        scene->setWidgetSize(0.05f);
+        scene->set(
+            paddingX + 2*spacingX + ( 0.33f  ) * paddedW,
+            spacingY + paddingX,
+            0.66f * paddedW,
+            0.66f * paddedH
+        );
+        scene->arrangeWidgets();
+   }
     if(command == "escena"){
-        cout << command << endl;
-
-////                scene->show(); scene->enable();
-        //archive->hide(); archive->disable();
         clipView->hide();//set(150,50,200,500);
-
-        scene->set(50,50,1180, 700 );
         catSelect->hide();
         tagSelect->hide();
-        // library->disable();
-//        library->getView()->hide();
-//        library->getView()->disable();
-//        library->arrangeWidgets();
+        timeline->hide();
+        timeline2->hide();
+        scene->setWidgetSize(0.035f);
+        scene->set(paddingX,paddingY,paddedW, paddedH);
+        scene->arrangeWidgets();
    }
 
 

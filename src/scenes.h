@@ -237,6 +237,7 @@ class SceneBuilder: public DBManager, virtual public kRectView{
         void mouseDragged(ofMouseEventArgs & mouse);
 
 
+        void setWidgetSize( float _ws );
 
         shared_ptr< SceneClip > selectChild();
         shared_ptr< SceneClip > selectParent();

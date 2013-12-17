@@ -54,16 +54,17 @@
                 btnView = make_shared< kCircleButtonView >();
                 btnView->disableUpdate();
             //setup
-                btnView->set(0,0,1,1);
+                btnView->set(0.5,0.5,1,1);
                 addWidget( btnView );
 
             // create labels
                 vector <string> labels;
                 labels.push_back( "play" );
-                labels.push_back( "open" );
+                //labels.push_back( "open" );
+                labels.push_back( "next" );
                 labels.push_back( "remove" );
-//                labels.push_back( "connect" );
                 labels.push_back( "disconnect" );
+
                 btnView->addButtons( labels );
                 ofAddListener( *btnView->events.lookup("btnClicked"), this, &SceneWidget::btnClicked );
 
@@ -91,7 +92,7 @@
 
 
         void SceneWidget::removeBtnViewListeners(){
-//            ofRemoveListener( *btnView->events.lookup("btnClicked"), this, &SceneWidget::btnClicked );
+            ofRemoveListener( *btnView->events.lookup("btnClicked"), this, &SceneWidget::btnClicked );
         }
 
         void SceneWidget::addScrollView() {
@@ -184,6 +185,7 @@
         void SceneWidget::btnClicked(widgetEvent & _event) {
             command = dynamic_pointer_cast<kButtonView>(_event.sender)->getCommand();
             notify("btnClicked");
+            if(btnView) removeBtnView();
         }
 
 
@@ -262,9 +264,16 @@
 
             sourceX = mouse.x;
             sourceY = mouse.y;
-cout<<inside(mouse.x,mouse.y)<<endl;
-            if( ! hasBeenDragged && isMouseOn ) {
-                toggleViews();
+
+            if( name != "root" ) {
+                if( ! hasBeenDragged && isMouseOn ) {
+                    toggleViews();
+                }
+
+                if( !isMouseOn) {
+                    if(btnView)
+                        removeBtnView();
+                }
             }
 
             MouseObject::mouseReleased(mouse);
@@ -569,6 +578,10 @@ cout<<inside(mouse.x,mouse.y)<<endl;
                 disconnectWidget( clip );
             }
 
+
+            if(command == "next") {
+                nextClip = clip;
+            }
         }
 
         void SceneBuilder::btnClicked(widgetEvent & _event){
@@ -608,7 +621,7 @@ cout<<inside(mouse.x,mouse.y)<<endl;
         void SceneBuilder::widgetDragged(widgetEvent & _event){}
 
         void SceneBuilder::mainBtnClicked(widgetEvent & _event){
-            nextClip = dynamic_pointer_cast<SceneClip>(_event.sender);
+//            nextClip = dynamic_pointer_cast<SceneClip>(_event.sender);
 
             //cout << "nextClip:  "<<nextClip->getClip()->getName() << endl;
         }
@@ -729,8 +742,10 @@ vector< shared_ptr < kWidget > > w = widgets;
             if( !newDraggingClip && draggingWidget ) {
                 if(inside(mouse.x,mouse.y))
                 {
-                    connectWidget( draggingWidget );
-                    nextConnections.clear();
+                    if(nextConnections.size()>0) {
+                        connectWidget( draggingWidget );
+                        nextConnections.clear();
+                    }
                     arrangeWidgets();
                 }
             }
@@ -1061,6 +1076,15 @@ vector< shared_ptr < kWidget > > w = widgets;
         void SceneBuilder::previous(){}
         void SceneBuilder::pause(){}
         void SceneBuilder::stop(){}
+
+        void SceneBuilder::setWidgetSize( float _ws ) {
+            root->setSize(_ws*width*0.8);
+            root->setRectInView();
+            for (int i=0; i<clips.size(); i++) {
+            	clips[i]->setSize(_ws*width);
+            	clips[i]->setRectInView();
+            }
+        }
 
 //        shared_ptr< SceneClip > SceneBuilder::getPrevMedia() {
 //            return lastMedia;
