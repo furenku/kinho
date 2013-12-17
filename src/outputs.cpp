@@ -147,6 +147,14 @@ createEvents();
         }
 
         void VideoOutput::draw(ofEventArgs & args) {
+
+            float vh = (
+                float(video->getHeight())
+                /
+                float(video->getWidth())
+            );
+
+
             if(playing) {
 
 //              ofEnableAlphaBlending();
@@ -154,12 +162,6 @@ createEvents();
 
                 for (int i=0; i<canvases.size(); i++)
                 {
-                    float vh = (
-                        float(video->getHeight())
-                        /
-                        float(video->getWidth())
-                    );
-
                     vh*=canvases[i]->width;
 
 
@@ -211,11 +213,25 @@ createEvents();
 
 
 
+
                 }
-
-                ofSetColor(255,255,255,255);
-
             }
+
+
+            for (int i=0; i<canvases.size(); i++)
+            {
+                float vh = canvases[i]->width * 9/16.0f;
+                ofSetColor(55,55,55);
+                ofRect(
+                    canvases[i]->x,
+                    canvases[i]->y + ( canvases[i]->height - vh ) / 2,
+                    canvases[i]->width,
+                    vh
+                );
+            }
+
+            ofSetColor(255,255,255,255);
+
         }
 
         void VideoOutput::changeClip( string _filename )   {

@@ -293,7 +293,8 @@
     SceneRoot::SceneRoot(){ setType("sceneRoot"); setName("root"); }
 
     void SceneRoot::draw(ofEventArgs & args){
-        ofCircle(x,y,20);
+        ofSetColor(255);
+        ofCircle(x,y,width);
         ofDrawBitmapString("root",x,y);
     }
 
@@ -392,7 +393,7 @@
         void SceneBuilder::initialize() {
 
             root = make_shared<SceneRoot>( ),
-            root -> set(0.5f, 0.5f,0.05f, 0.05f );
+            root -> set(0.5f, 0.5f,0.03f, 0.03f );
             root->setActiveRange(2);
             addWidget(root);
 
@@ -1078,7 +1079,7 @@ vector< shared_ptr < kWidget > > w = widgets;
         void SceneBuilder::stop(){}
 
         void SceneBuilder::setWidgetSize( float _ws ) {
-            root->setSize(_ws*width*0.8);
+            root->setSize(_ws*width*0.6);
             root->setRectInView();
             for (int i=0; i<clips.size(); i++) {
             	clips[i]->setSize(_ws*width);

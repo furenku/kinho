@@ -954,7 +954,7 @@ void MainController::makeVideoOutput(){
 
     output->addRect( make_shared<ofRectangle>(
         paddingX + 4.2f/5.0f * paddedW,
-        paddingY + ( float(4/6.0f) + 3*spacingYpct) * paddedH,
+        paddingY + ( float(4/6.0f) + 2*spacingYpct) * paddedH,
         0.8f/5.0f * paddedW,
         1/6.0f * paddedH
     ) );
