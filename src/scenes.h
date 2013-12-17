@@ -196,8 +196,8 @@ class SceneBuilder: public DBManager, virtual public kRectView{
 
         void addClip( shared_ptr<Clip> _clip, float _x, float _y);
 
-        void connectClip( shared_ptr<SceneClip> _clip );
-        void disconnectClip( shared_ptr<SceneClip> _clip );
+        void connectWidget( shared_ptr<SceneWidget> _clip );
+        void disconnectWidget( shared_ptr<SceneWidget> _clip );
 
         void removeClip( shared_ptr<SceneClip> _clip );
 

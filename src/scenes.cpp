@@ -246,22 +246,19 @@
 
             if(hasBeenDragged )
                 setRectInView();
-            MouseObject::mouseReleased(mouse);
 
             sourceX = mouse.x;
             sourceY = mouse.y;
 
-            if(inside(mouse.x,mouse.y)) {
+            if( ! hasBeenDragged && isMouseOn ) {
                 notify("press");
-                if(!isBeingDragged) {
-                    if(!btnView)
-                        addBtnView();
-                    else
-                        removeBtnView();
-                }
+                if(!btnView)
+                    addBtnView();
+                else
+                    removeBtnView();
             }
 
-
+            MouseObject::mouseReleased(mouse);
 
             mouseX = mouse.x;
             mouseY = mouse.y;
@@ -489,11 +486,11 @@
         }
 
 
-        void SceneBuilder::connectClip( shared_ptr<SceneClip> _clip ){
+        void SceneBuilder::connectWidget( shared_ptr<SceneWidget> _widget ){
             int ncsize=nextConnections.size();
 
             if(ncsize==1){
-                setHierarchy( nextConnections[0], _clip);
+                setHierarchy( nextConnections[0], _widget);
 
                 cout << "SET:               -  : " << nextConnections[0]->getName() << endl;
                 cout << "TO:               -  : " << clips.back()->getName() << endl;
@@ -501,7 +498,7 @@
             else if(ncsize==2) {
                 removeHierarchy( nextConnections[0], nextConnections[1] );
                 removeHierarchy( nextConnections[1], nextConnections[0] );
-                setHierarchy( nextConnections[1], _clip);
+                setHierarchy( nextConnections[1], _widget);
                 setHierarchy( clips.back(), nextConnections[0] );
 ////                removeHierarchy( nextConnections[1], nextConnections[0] );
 //
@@ -516,20 +513,20 @@
 
 
 
-        void SceneBuilder::disconnectClip( shared_ptr<SceneClip> _clip ) {
+        void SceneBuilder::disconnectWidget( shared_ptr<SceneWidget> _widget ) {
 
-            vector < shared_ptr<StoreObject> > parents = getParents( _clip );
-            vector < shared_ptr<StoreObject> > children = getChildren( _clip );
+            vector < shared_ptr<StoreObject> > parents = getParents( _widget );
+            vector < shared_ptr<StoreObject> > children = getChildren( _widget );
 
             shared_ptr<StoreObject> parent;
 
             if( parents.size() > 0 ) {
                 parent = parents[0];
-                removeHierarchy( parent, _clip );
+                removeHierarchy( parent, _widget );
             }
             if( children.size() > 0 ) {
                 for(int i = 0; i<children.size(); i++) {
-                    removeHierarchy( _clip, children[i] );
+                    removeHierarchy( _widget, children[i] );
                     if( parent ) {
                         setHierarchy(parent,children[i]);
                     }
@@ -546,17 +543,17 @@
             string command = clip->getCommand();
 
             if(command == "remove") {
-                disconnectClip( clip );
+                disconnectWidget( clip );
                 removeClip( clip );
             }
 
 
 //            if(command == "connect") {
-//                //disconnectClip( clip );
+//                //disconnectWidget( clip );
 //            }
 
             if(command == "disconnect") {
-                disconnectClip( clip );
+                disconnectWidget( clip );
             }
 
         }
@@ -599,7 +596,7 @@
             kRectView::draw(args);
 
 
-            if(newDraggingClip) {
+            if(newDraggingClip || draggingWidget ) {
 
                 if(inside(mouseX,mouseY)) {
                     ofSetColor(20,134,185);
@@ -681,19 +678,23 @@ vector< shared_ptr < kWidget > > w = widgets;
             if(newDraggingClip) {
                 if(inside(mouse.x,mouse.y))
                 {
-
-
                     addClip( newDraggingClip, mouse.x-x, mouse.y-y );
-
-                    connectClip( clips.back() );
-
+                    connectWidget( clips.back() );
                     arrangeWidgets();
-
                 }
-
             }
 
 
+            if( draggingWidget ) {
+                if(inside(mouse.x,mouse.y))
+                {
+                    connectWidget( draggingWidget );
+                    arrangeWidgets();
+                }
+            }
+
+
+            draggingWidget.reset();
             newDraggingClip.reset();
 
         }
