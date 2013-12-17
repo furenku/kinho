@@ -1,4 +1,4 @@
-
+#define TRANSPARENCY 215
 #include "guiVideoObjects.h"
 //#pragma once
 
@@ -71,7 +71,6 @@
                 drawY = y - (drawH)/4;
 
 
-
             }
             else {
                 drawW = width;
@@ -82,16 +81,17 @@
 
             if(img.bAllocated()) {
 
-
-                ofSetColor(255,255,255,255);
+                ofEnableAlphaBlending();
+                ofSetColor(255,255,255,TRANSPARENCY);
 ;                img.draw(
                     drawX,
                     drawY,
                     drawW,
                     drawH
                 );
-//ofSetColor(255,30,125);
-//ofCircle(drawX,drawY,drawW/2);
+
+                ofDisableAlphaBlending();
+
             }
             else {
                 ofRect(

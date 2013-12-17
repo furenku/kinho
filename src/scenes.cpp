@@ -222,9 +222,6 @@
                 if(hasBeenMadeDroppable)
                     makeDraggable(x,y);
 
-
-
-
                 if( hasBeenPressed ) { //(mouse.x,mouse.y)) {
                     kDragObject::mouseDragged(mouse);
                     setRectInView();
@@ -368,7 +365,7 @@
         SceneBuilder::SceneBuilder(){
             autoArrange = false;
             insertThreshold = 30;
-            autoConnectThreshold = 150;
+            autoConnectThreshold = ofGetWidth() / 10;
         }
 
         void SceneBuilder::initialize() {
@@ -492,8 +489,8 @@
             if(ncsize==1){
                 setHierarchy( nextConnections[0], _widget);
 
-                cout << "SET:               -  : " << nextConnections[0]->getName() << endl;
-                cout << "TO:               -  : " << clips.back()->getName() << endl;
+//                cout << "SET:               -  : " << nextConnections[0]->getName() << endl;
+//                cout << "TO:               -  : " << clips.back()->getName() << endl;
             }
             else if(ncsize==2) {
                 removeHierarchy( nextConnections[0], nextConnections[1] );
@@ -588,21 +585,32 @@
         void SceneBuilder::mainBtnClicked(widgetEvent & _event){
             nextClip = dynamic_pointer_cast<SceneClip>(_event.sender);
 
-            cout << "nextClip:  "<<nextClip->getClip()->getName() << endl;
+            //cout << "nextClip:  "<<nextClip->getClip()->getName() << endl;
         }
 
         void SceneBuilder::draw(ofEventArgs & args){
 
             kRectView::draw(args);
 
+            if(draggingWidget ){
+                if(nextConnections.size()>=1) {
+                    ofSetColor(0,255,0);
+                    ofLine(
+                        nextConnections[0]->getX(), nextConnections[0]->getY(),
+                        mouseX, mouseY
+                    );
+                }
 
-            if(newDraggingClip || draggingWidget ) {
+            }
 
-                if(inside(mouseX,mouseY)) {
+            if( newDraggingClip ) {
+
+                if( inside(mouseX,mouseY) ) {
                     ofSetColor(20,134,185);
                     ofCircle( mouseX, mouseY, 10 );
                     for (int i=0; i<nextConnections.size(); i++)
                     {
+                        //cout<<nextConnections[i]->getName()<<endl;
                         ofLine(
                             nextConnections[i]->getX(),
                             nextConnections[i]->getY(),
@@ -713,15 +721,21 @@ vector< shared_ptr < kWidget > > w = widgets;
                     nextConnections = getPossibleConnections( mouse.x, mouse.y, sw );
                 }
                 else {
-                    nextConnections.clear();
-                    int nearestIndex = getNearestIndex(mouse.x,mouse.y,sw);
-                    if( nearestIndex >= 0 && nearestIndex < sw.size() ) {
-                        for (int i=0; i<sw.size(); i++) {
-                            sw[ i ] -> lockDrag();
-                        }
-                        sw[ nearestIndex ] -> unlockDrag();
-                        setDraggingWidget( sw[ nearestIndex ] );
+                    if( draggingWidget ) {
+                        nextConnections.clear();
+                        nextConnections = getPossibleConnections( draggingWidget, sw );
                     }
+                    else {
+                        int nearestIndex = getNearestIndex(mouse.x,mouse.y,sw);
+                        if( nearestIndex >= 0 && nearestIndex < sw.size() ) {
+                            for (int i=0; i<sw.size(); i++) {
+                                sw[ i ] -> lockDrag();
+                            }
+                            sw[ nearestIndex ] -> unlockDrag();
+                            setDraggingWidget( sw[ nearestIndex ] );
+                        }
+                    }
+
                 }
                 mouseX = mouse.x;
                 mouseY = mouse.y;
@@ -865,16 +879,34 @@ vector< shared_ptr < kWidget > > w = widgets;
 
 
 
+        vector< shared_ptr < SceneWidget > > SceneBuilder::getPossibleConnections( shared_ptr<SceneWidget> _widget, vector< shared_ptr < SceneWidget > > _v ) {
+
+            for (int i=0; i<_v.size(); i++)
+            {
+                vector< shared_ptr < SceneWidget > >::iterator it;
+            	it = find( _v.begin(), _v.end(), _widget);
+            	if( it!=_v.end()){
+                    _v.erase(it);
+            	}
+
+            	return getPossibleConnections( _widget->getX(), _widget->getY(), _v );
+
+            }
+
+        }
+
         vector< shared_ptr < SceneWidget > > SceneBuilder::getPossibleConnections(  float _x, float _y , vector< shared_ptr < SceneWidget > > _v ) {
 
             vector< shared_ptr < SceneWidget > > possibleConnections;
 
             int nearestIndex = getNearestIndex(_x, _y, _v );
-
             float closestDistance = 0;
 
             if( _v.size() > nearestIndex && nearestIndex >= 0 ){
+
                 closestDistance = getDistance( _x, _y, _v[nearestIndex]->getX(), _v[nearestIndex]->getY() );
+
+cout << "closest:"<<closestDistance << endl;
                 if(closestDistance < autoConnectThreshold ) {
                     possibleConnections.push_back( _v[ nearestIndex ] );
                 }

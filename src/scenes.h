@@ -240,7 +240,7 @@ class SceneBuilder: public DBManager, virtual public kRectView{
         int getNearestIndex( float _x, float _y , vector< shared_ptr < SceneWidget > > _v  );
 
         vector< shared_ptr < SceneWidget > > getPossibleConnections( float _x, float _y , vector< shared_ptr < SceneWidget > > _v );
-
+        vector< shared_ptr < SceneWidget > > getPossibleConnections( shared_ptr<SceneWidget> _widget, vector< shared_ptr < SceneWidget > > _v );
         shared_ptr<SceneClip> getNextClip();
 
 
