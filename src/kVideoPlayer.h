@@ -164,7 +164,7 @@ cout << "load : "<<_movie << endl;
     //--------------------------------------------------------------
     void draw( int _x, int _y, int _w, int _h ){
         if(playing){
-            ofEnableAlphaBlending();
+//            ofEnableAlphaBlending();
             ofSetColor(255,255,255,brightness);
 
             video->draw(_x,_y,_w,_h);

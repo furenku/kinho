@@ -1,5 +1,16 @@
 #include "controllers.h"
 
+string getFileExt(const string& s) {
+
+   size_t i = s.rfind('.', s.length( ));
+   if (i != string::npos) {
+      return(s.substr(i+1, s.length( ) - i));
+   }
+
+   return("");
+}
+
+
 MainController::MainController(){
 
     videoLoader = make_shared<VideoLoader>( );
@@ -125,8 +136,10 @@ vector<string> MainController::loadAllClips() {
     int nSections = DIR.listDir("movies/");
 
 
-    for (int i=0; i<nSections; i++)
+    for (int i=0; i<nSections; i++) {
         clipsUnsorted.push_back(  DIR.getPath(i) );
+        cout << DIR.getPath(i) << endl;
+    }
 
 //            clips = sortAlpha(clipsUnsorted);
 
@@ -292,22 +305,21 @@ void MainController::loadXml(string _file){
 
 void MainController::createMedia() {
 
+    vector<string>::iterator it;
     vector<string> clips;
+    vector<string> uncategorized;
     vector<string> thumbs;
-cout << "createMeida" << endl;
     for (int i=0; i<loadMedia.size(); i++)
     {
-    	cout << "loadMedia" << loadMedia[i] << endl;
-
-
-        cout << "checkClip! .. " << endl;
 
         string filePath = mediaDirectory + loadMedia[i];
+        it = find (presentClips.begin(), presentClips.end(), filePath);
 
-        if( find (presentClips.begin(), presentClips.end(), filePath) != presentClips.end() ) {
-
+        if( it != presentClips.end() ) {
 
             videos[ loadMedia[i] ] = makeClip( loadMedia[i], "..."  );
+//            presentClips.erase(it);
+
 //cout << "created video: "<< loadMedia[i] << endl;
 
 //            int index = fileName.find(".");
@@ -321,10 +333,29 @@ cout << "createMeida" << endl;
 
 
 
+
 //        cout << "makeclip!  "<<makeClip( fileName, description ) -> getName() << endl;
 //        cout << "videoName" << videos[fileName]->getName() << endl;
 
     }
+
+//    for(int i=0; i<presentClips.size(); i++){
+//        string ext = getFileExt( presentClips[i] );
+//
+////        if( ext == "mov" ) { //|| ext == "avi" || ext = "mp4" || ext == "mpg" ) {
+////            string basename = presentClips[i].substr(7,string::npos);
+//////            cout << " -------------------------------------- " << endl;
+//////            cout << " -------------------------------------- " << endl;
+//////            cout << presentClips[i]<< endl;
+//////            cout << " -------------------------------------- " << endl;
+//////            cout << " -------------------------------------- " << endl;
+////
+//////            videos[  basename ] = makeClip( basename , "..."  );
+//////            uncategorized.push_back( basename );
+////        }
+//
+////        cout << "pC: " << uncategorized.back() << endl;
+//    }
 
 }
 
@@ -366,10 +397,26 @@ void MainController::setOntologies(){
         {
             if( videos.find( vecstr[i] ) != videos.end() ) {
                 miniLibrary->setOntology( tmpTag, videos [ vecstr[i] ] );
-                cout<<"added media "<< videos[vecstr[i]]->getName() << " in tag - " << it->first <<endl;
+//                cout<<"added media "<< videos[vecstr[i]]->getName() << " in tag - " << it->first <<endl;
             }
         }
     }
+//
+//    tmpCat = make_shared<Category>();
+//    tmpCat->setName( "uncategorized" );
+//
+//    miniLibrary->addOntology( tmpCat );
+//
+//
+//    for (int i=0; i<uncategorized.size(); i++)
+//    {
+//        cout << "UNC: "<<uncategorized[i] << endl;
+//        if( videos.find( uncategorized[i] ) != videos.end() ) {
+//            miniLibrary->setOntology( tmpCat, videos [ uncategorized[i] ] );
+//        }
+//    }
+
+
 }
 
 
@@ -862,9 +909,10 @@ void MainController::makeClipView() {
 
     clipView -> applySettings ( settings  );
     clipView -> setWidgetSettings ( settings );
-    clipView -> cols=2;
-    clipView -> setSpacingX( 90 );
-    clipView -> setSpacingY( 75 );
+    clipView -> cols=1;
+    clipView -> setPaddingX( 60 );
+    clipView -> setSpacingX( 60 );
+    clipView -> setSpacingY( 60 );
 
 //    clipScrollViews.push_back( clipView );
 
@@ -894,15 +942,15 @@ void MainController::makeVideoOutput(){
     output = make_shared<VideoOutput>( );
     output2 = make_shared<VideoOutput>( );
 
-    int mode = ofGetWindowMode();
-    if( mode == OF_WINDOW) {
-        output->addRect( make_shared<ofRectangle>( 0,ofGetHeight()/6,ofGetWidth()/2,ofGetHeight()/2) );
-        output2->addRect( make_shared<ofRectangle>( ofGetWidth()/2,ofGetHeight()/6,ofGetWidth()/2,ofGetHeight()/2) );
-
-    } else  {
-        output->addRect( make_shared<ofRectangle>( 0,ofGetScreenHeight()/6,ofGetScreenWidth()/2,ofGetScreenHeight()/2) );
-        output2->addRect( make_shared<ofRectangle>( ofGetScreenWidth()/2,ofGetScreenHeight()/6,ofGetScreenWidth()/2,ofGetScreenHeight()/2) );
-    }
+//    int mode = ofGetWindowMode();
+//    if( mode == OF_WINDOW) {
+//        output->addRect( make_shared<ofRectangle>( 0,ofGetHeight()/6,ofGetWidth()/2,ofGetHeight()/2) );
+//        output2->addRect( make_shared<ofRectangle>( ofGetWidth()/2,ofGetHeight()/6,ofGetWidth()/2,ofGetHeight()/2) );
+//
+//    } else  {
+//        output->addRect( make_shared<ofRectangle>( 0,ofGetScreenHeight()/6,ofGetScreenWidth()/2,ofGetScreenHeight()/2) );
+//        output2->addRect( make_shared<ofRectangle>( ofGetScreenWidth()/2,ofGetScreenHeight()/6,ofGetScreenWidth()/2,ofGetScreenHeight()/2) );
+//    }
 
     output->addRect( make_shared<ofRectangle>(
         paddingX + 4.2f/5.0f * paddedW,
@@ -917,6 +965,7 @@ void MainController::makeVideoOutput(){
         0.8f/5.0f * paddedW,
         1/6.0f * paddedH
     ) );
+
 
 }
 

@@ -163,50 +163,50 @@ createEvents();
                     vh*=canvases[i]->width;
 
 
-
-//                    video -> draw(x,y,ofGetWidth(),ofGetHeight());
-//                    ofFill();
-//                    ofSetColor(0,0,0,70);
-//                    ofRect(x,y,ofGetWidth(),ofGetHeight());
-//                    ofNoFill();
-
-//                    setBrightness(255);
-                    if(i==0) {
-                        video -> draw(
-                            canvases[i]->x,
-                            canvases[i]->y,
-                            canvases[i]->width,
-                            vh
-                        );
-
-
-
-//                        setBrightness(255);
-                        ofSetColor(0,150);
-                        ofFill();
-                        ofRect(canvases[i]->x,
-                        canvases[i]->y,
-                        canvases[i]->width,
-                        vh);
-                        ofNoFill();
-
-                    }
-
-                    else {
-
-                        video -> draw(
-                            canvases[i]->x,
-                            canvases[i]->y,
-                            canvases[i]->width,
-                            vh
-                        );
-                    }
 //
-//                    if(i==0){
-
-
-
+////                    video -> draw(x,y,ofGetWidth(),ofGetHeight());
+////                    ofFill();
+////                    ofSetColor(0,0,0,70);
+////                    ofRect(x,y,ofGetWidth(),ofGetHeight());
+////                    ofNoFill();
+//
+////                    setBrightness(255);
+//                    if(i==0) {
+//                        video -> draw(
+//                            canvases[i]->x,
+//                            canvases[i]->y,
+//                            canvases[i]->width,
+//                            vh
+//                        );
+//
+//
+//
+////                        setBrightness(255);
+//                        ofSetColor(0,150);
+//                        ofFill();
+//                        ofRect(canvases[i]->x,
+//                        canvases[i]->y,
+//                        canvases[i]->width,
+//                        vh);
+//                        ofNoFill();
+//
 //                    }
+//
+//                    else {
+
+                        video -> draw(
+                            canvases[i]->x,
+                            canvases[i]->y,
+                            canvases[i]->width,
+                            vh
+                        );
+//                    }
+////
+////                    if(i==0){
+//
+//
+//
+////                    }
 
 
 

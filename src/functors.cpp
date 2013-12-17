@@ -88,7 +88,6 @@ cout << "connnnn" << endl;
         }
 
         void PlayClip::execute() {
-            cout << "playClip!!!" << endl;
             output->changeClip ( scene->getCurrentClip()->getFilename() );
             output->play();
         }
@@ -103,7 +102,6 @@ cout << "connnnn" << endl;
         }
 
         void PlayTimelineClip::execute() {
-cout << "PLAY CLIP : " << timeline->getNextPlayClip()->getFilename() << endl;
             output->changeClip ( timeline->getNextPlayClip()->getFilename() );
             output->play();
         }

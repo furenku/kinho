@@ -96,6 +96,8 @@ bool clipInfoLoaded;
 
 
 map< string,  shared_ptr < Clip > > videos;
+vector<string> uncategorized;
+
 vector< shared_ptr<Ontology> > onts;
 shared_ptr<Category> tmpCat;
 shared_ptr<Tag> tmpTag;

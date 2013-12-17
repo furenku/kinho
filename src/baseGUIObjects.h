@@ -2,12 +2,13 @@
 #define DEFAULT_COLOR 255
 #define WIDGET_SIZE 20
 #define TEXT_SIZE 20
-#define CLIPVIEW_SIZE 80
+#define CLIPVIEW_SIZE 55
 #define ARCHIVE_CLIP_SIZE 40
 #define MAX_ROWS 200
 #define MAX_COLS 200
 #define SPACING_X 30
 #define SPACING_Y 30
+#define TRANSPARENCY 215
 
 
 #pragma once
@@ -16,6 +17,7 @@
 //#pragma once
 
 #include "mainClasses.h"
+
 
 //#ifndef base_gui_objects
 //#define base_gui_objects
@@ -254,8 +256,6 @@ class kRect: virtual public kWidget {
         kRect(){ }
 
         void draw(ofEventArgs & draw);
-
-//        virtual bool inside (float px, float py);
 
 };
 

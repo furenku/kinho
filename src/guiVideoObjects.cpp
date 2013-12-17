@@ -1,4 +1,3 @@
-#define TRANSPARENCY 215
 #include "guiVideoObjects.h"
 //#pragma once
 
@@ -505,7 +504,7 @@ bool kThreadClipView::addClip(shared_ptr<Clip> _clip) {
         clip->set( 0, 0, CLIPVIEW_SIZE, CLIPVIEW_SIZE );
         clip->setActiveRange(0.5f);
         addWidget( clip );
-        cout << "added "<< clip->getName() << endl;
+
         clips.push_back(clip);
 //
 

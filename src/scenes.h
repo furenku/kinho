@@ -116,6 +116,7 @@ class SceneWidget: public StoreObject, virtual public kCircleView, virtual publi
         void mouseDragged( ofMouseEventArgs & mouse );
 
 
+        void mousePressed( ofMouseEventArgs & mouse);
         void mouseReleased( ofMouseEventArgs & mouse);
 
         void lockDrag();
@@ -124,6 +125,7 @@ class SceneWidget: public StoreObject, virtual public kCircleView, virtual publi
 
     //atts
     //protected:
+
         shared_ptr<kWidget> mainWidget;
         shared_ptr<MediaWidget> draggingMedia;
         string draggingOntology;
@@ -211,6 +213,7 @@ class SceneBuilder: public DBManager, virtual public kRectView{
 
         void btnClicked(widgetEvent & _event);
 
+        void widgetPressed(widgetEvent & _event);
         void widgetDragged(widgetEvent & _event);
 
         void mainBtnClicked(widgetEvent & _event);
@@ -284,6 +287,9 @@ class SceneBuilder: public DBManager, virtual public kRectView{
         int insertThreshold;
         int autoConnectThreshold;
         shared_ptr<SceneRoot> root;
+
+    vector< ofVec2f > draggingWidgetChildrenPositions;
+
 //
 //
 

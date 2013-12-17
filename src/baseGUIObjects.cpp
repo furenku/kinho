@@ -480,6 +480,7 @@ shared_ptr<ofColor> Settings::getColor(int _index){
         void kDragObject::createEvents() { saveEvent("drag");  }
 
         void kDragObject::mouseDragged( ofMouseEventArgs & mouse ){
+
             if(isMouseOn) {
                 if(!hasBeenDragged) {
                     sourceX = mouse.x;
@@ -1388,13 +1389,13 @@ shared_ptr<ofColor> Settings::getColor(int _index){
 
 
         void kRectView::draw(ofEventArgs & args) {
-
-            ofEnableAlphaBlending();
-                ofSetColor(70,70,70,80);
-                ofFill();
-                ofRect(x,y,width,height);
-                ofNoFill();
-            ofDisableAlphaBlending();
+//
+//            ofEnableAlphaBlending();
+//                ofSetColor(70,70,70,80);
+//                ofFill();
+//                ofRect(x,y,width,height);
+//                ofNoFill();
+//            ofDisableAlphaBlending();
 
             drawString(label,x,y-currentFont->getLineHeight() );
             if(isMouseOn) color(1);

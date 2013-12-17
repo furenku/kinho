@@ -205,6 +205,7 @@
 //                isMouseOn=false;
 //            }
 ////
+            kWidget::mouseMoved(mouse);
             isMouseOn = DrawObject::inside(mouse.x,mouse.y);
         }
 
@@ -220,7 +221,6 @@
 
             if ( ! dragLocked ) {
 
-
                 if(isBeingDragged && !view->inside(mouse.x,mouse.y))
                     makeDroppable(mouse.x, mouse.y);
 
@@ -233,6 +233,7 @@
 
                     setRectInView();
                     arrangeWidgets();
+
                 }
 
 
@@ -246,6 +247,14 @@
 
 
 
+        void SceneWidget::mousePressed( ofMouseEventArgs & mouse){
+             kWidget::mousePressed(mouse);
+             if( isMouseOn ) {
+                notify("press");
+             }
+        }
+
+
         void SceneWidget::mouseReleased( ofMouseEventArgs & mouse){
 
             if(hasBeenDragged )
@@ -255,7 +264,6 @@
             sourceY = mouse.y;
 cout<<inside(mouse.x,mouse.y)<<endl;
             if( ! hasBeenDragged && isMouseOn ) {
-                notify("press");
                 toggleViews();
             }
 
@@ -468,6 +476,7 @@ cout<<inside(mouse.x,mouse.y)<<endl;
 
         void SceneBuilder::addListeners( shared_ptr<SceneClip> _w ) {
             ofAddListener( *_w->events.lookup("btnClicked"),this,&SceneBuilder::clipBtnClicked);
+            ofAddListener( *_w->events.lookup("press"),this,&SceneBuilder::widgetPressed);
             ofAddListener( *_w->events.lookup("drag"),this,&SceneBuilder::widgetDragged);
             ofAddListener( *_w->events.lookup("mainBtnClicked"),this,&SceneBuilder::mainBtnClicked);
 
@@ -476,6 +485,7 @@ cout<<inside(mouse.x,mouse.y)<<endl;
 
         void SceneBuilder::removeListeners( shared_ptr<SceneClip> _w ) {
             ofRemoveListener( *_w->events.lookup("btnClicked"),this,&SceneBuilder::btnClicked);
+            ofRemoveListener( *_w->events.lookup("press"),this,&SceneBuilder::widgetPressed);
             ofRemoveListener( *_w->events.lookup("drag"),this,&SceneBuilder::widgetDragged);
             ofRemoveListener( *_w->events.lookup("mainBtnClicked"),this,&SceneBuilder::mainBtnClicked);
         }
@@ -583,6 +593,16 @@ cout<<inside(mouse.x,mouse.y)<<endl;
                     break;
             }
         }
+
+        void SceneBuilder::widgetPressed(widgetEvent & _event){
+            shared_ptr<SceneWidget> widget = dynamic_pointer_cast<SceneWidget>(_event.sender);
+
+            vector< shared_ptr < StoreObject > > children = getChildren( widget );
+
+            cout << "CH: " << children.size() << endl;
+
+        }
+
 
         void SceneBuilder::widgetDragged(widgetEvent & _event){}
 
@@ -731,6 +751,11 @@ vector< shared_ptr < kWidget > > w = widgets;
                 }
                 else {
                     if( draggingWidget ) {
+//                        cout << "DW<"<<draggingWidget->getName() << endl;
+//                        draggingWidget->setX(mouse.x);
+//                        draggingWidget->setY(mouse.y);
+//                        draggingWidget->setRectInView();
+//                        arrangeWidgets();
                         nextConnections.clear();
                         nextConnections = getPossibleConnections( draggingWidget, sw );
                     }
@@ -918,7 +943,6 @@ vector< shared_ptr < kWidget > > w = widgets;
 
                 closestDistance = getDistance( _x, _y, _v[nearestIndex]->getX(), _v[nearestIndex]->getY() );
 
-cout << "closest:"<<closestDistance << endl;
                 if(closestDistance < autoConnectThreshold ) {
                     possibleConnections.push_back( _v[ nearestIndex ] );
                 }
