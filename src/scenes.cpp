@@ -398,9 +398,11 @@ cout<<inside(mouse.x,mouse.y)<<endl;
             vector<string> labels;
 
             labels.push_back("play");
-            labels.push_back(">>");
-            labels.push_back("<<");
             labels.push_back("pause");
+
+            labels.push_back("->");
+            labels.push_back("<-");
+            labels.push_back("|");
 
             btns->addButtons( labels );
 
@@ -579,17 +581,16 @@ cout<<inside(mouse.x,mouse.y)<<endl;
                     play();
                     break;
                 case 1:
-                    next();
-                    break;
-                case 2:
-
-                    previous();
-                    break;
-                case 3:
                     pause();
                     break;
+                case 2:
+                    nextClip = selectChild();
+                    break;
+                case 3:
+                    nextClip = selectParent();
+                    break;
                 case 4:
-                    stop();
+                    nextClip = selectSibling();
                     break;
             }
         }
@@ -677,16 +678,21 @@ vector< shared_ptr < kWidget > > w = widgets;
 //                ofCircle(nextClip->x+nextClip->width/2,nextClip->y+nextClip->height/2,50);
 
                 ofRect( nextClip->getX(),nextClip->getY(),nextClip->getWidth(),nextClip->getWidth()*9/16.0f);
-                ofSetLineWidth(2);
+
             }
 
             if(currentClip){
-                ofSetLineWidth(1.5f);
+                ofSetLineWidth(2.5f);
 
-                ofSetColor(255,255,255);
-                ofCircle(currentClip->x+currentClip->width/2,currentClip->y+currentClip->height/4,25);
+                ofSetColor(80,184,185);
+                ofSetLineWidth(5);
+//                ofCircle(nextClip->x+nextClip->width/2,nextClip->y+nextClip->height/2,50);
+
+                ofRect( currentClip->getX(),currentClip->getY(),currentClip->getWidth(),currentClip->getWidth()*9/16.0f);
+
             }
 
+            ofSetLineWidth(1);
 //
 
 
@@ -779,7 +785,64 @@ vector< shared_ptr < kWidget > > w = widgets;
             }
         }
 
+
+        shared_ptr< SceneClip > SceneBuilder::selectChild() {
+            shared_ptr< SceneClip > next;
+            vector < shared_ptr<StoreObject> > possibleNext;
+            if( nextClip ) {
+                possibleNext = getChildren( nextClip );
+            }
+            else if( currentClip )
+                possibleNext = getChildren( currentClip );
+            if(possibleNext.size()>0) {
+                int index = rand() % possibleNext.size();
+                next = dynamic_pointer_cast<SceneClip>(possibleNext[index]);
+            }
+            return next;
+
+        }
+
+
+        shared_ptr< SceneClip > SceneBuilder::selectParent() {
+            shared_ptr< SceneClip > next;
+            vector < shared_ptr<StoreObject> > possibleNext;
+            if( nextClip ) {
+                possibleNext = getParents( nextClip );
+            }
+            else if( currentClip )
+                possibleNext = getParents( currentClip );
+            if(possibleNext.size()>0) {
+                int index = rand() % possibleNext.size();
+                next = dynamic_pointer_cast<SceneClip>(possibleNext[index]);
+            }
+            return next;
+        }
+
+
+        shared_ptr< SceneClip > SceneBuilder::selectSibling() {
+            shared_ptr< SceneClip > next;
+            vector < shared_ptr<StoreObject> > possibleNext;
+            if( nextClip ) {
+                possibleNext = getSiblings( nextClip );
+                for(int i = 0; i<possibleNext.size(); i++){
+                    cout << possibleNext[i]->getName() << endl;
+                }
+            }
+            else if( currentClip )
+                possibleNext = getSiblings( currentClip );
+
+            if(possibleNext.size()>0) {
+                int index = rand() % possibleNext.size();
+                next = dynamic_pointer_cast<SceneClip>(possibleNext[index]);
+            }
+            return next;
+        }
+
+
+
         shared_ptr< SceneClip > SceneBuilder::selectNextClip() {
+
+
             vector < shared_ptr<StoreObject> > c;
             vector < shared_ptr<SceneClip> > possibleNext;
             shared_ptr<SceneClip> next;
@@ -973,7 +1036,7 @@ vector< shared_ptr < kWidget > > w = widgets;
 //            cout << "kill---"<<lastClip->getClip()->getName() << endl;
             alreadyPlayed.push_back(lastClip);
             next();
-
+            play();
         }
 
         void SceneBuilder::savePosition( float _position ) {
@@ -994,7 +1057,6 @@ vector< shared_ptr < kWidget > > w = widgets;
         }
         void SceneBuilder::next(){
             nextClip = selectNextClip();
-
         }
         void SceneBuilder::previous(){}
         void SceneBuilder::pause(){}

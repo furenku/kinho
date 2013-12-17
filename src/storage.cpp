@@ -609,13 +609,15 @@ vector< shared_ptr<StoreObject> > Storage::getObjects(){
 
         vector< shared_ptr<StoreObject> > Relationships::getSiblings( shared_ptr<StoreObject> _obj ){
             vector< shared_ptr<StoreObject> > parentsVec = parents[_obj];
+            vector< shared_ptr<StoreObject> > tmpSiblings;
             for(u_int i = 0; i<parentsVec.size(); i++ ) {
                 vector<shared_ptr<StoreObject> > childrenVec = getChildren(parentsVec[i]);
                 for(u_int j = 0; j<childrenVec.size(); j++ ) {
-                    siblings.push_back(childrenVec[j]);
+                    if(childrenVec[j] != _obj )
+                        tmpSiblings.push_back(childrenVec[j]);
                 }
             }
-            return siblings;
+            return tmpSiblings;
         }
 
 

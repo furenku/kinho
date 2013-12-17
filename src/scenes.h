@@ -238,6 +238,10 @@ class SceneBuilder: public DBManager, virtual public kRectView{
 
 
 
+        shared_ptr< SceneClip > selectChild();
+        shared_ptr< SceneClip > selectParent();
+        shared_ptr< SceneClip > selectSibling();
+
         shared_ptr< SceneClip > selectNextClip();
 
         int getNearestIndex( float _x, float _y , vector< shared_ptr < SceneWidget > > _v  );
