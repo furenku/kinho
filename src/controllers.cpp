@@ -13,9 +13,15 @@ MainController::MainController(){
 
     createSettings();
 
+    int mode = ofGetWindowMode();
 
-    windowW = int( ofGetScreenWidth() );
-    windowH = int( ofGetScreenHeight() );
+    if( mode == OF_WINDOW) {
+        windowW = int( ofGetWidth() );
+        windowH = int( ofGetHeight() );
+    } else  {
+        windowW = int( ofGetScreenWidth() );
+        windowH = int( ofGetScreenHeight() );
+    }
 
 
     paddingX = paddingY = 70;
@@ -886,7 +892,18 @@ void MainController::makePlayLists(){
 void MainController::makeVideoOutput(){
 
     output = make_shared<VideoOutput>( );
-    output->addRect( make_shared<ofRectangle>( 0,ofGetScreenHeight()/6,ofGetScreenWidth()/2,ofGetScreenHeight()/2) );
+    output2 = make_shared<VideoOutput>( );
+
+    int mode = ofGetWindowMode();
+    if( mode == OF_WINDOW) {
+        output->addRect( make_shared<ofRectangle>( 0,ofGetHeight()/6,ofGetWidth()/2,ofGetHeight()/2) );
+        output2->addRect( make_shared<ofRectangle>( ofGetWidth()/2,ofGetHeight()/6,ofGetWidth()/2,ofGetHeight()/2) );
+
+    } else  {
+        output->addRect( make_shared<ofRectangle>( 0,ofGetScreenHeight()/6,ofGetScreenWidth()/2,ofGetScreenHeight()/2) );
+        output2->addRect( make_shared<ofRectangle>( ofGetScreenWidth()/2,ofGetScreenHeight()/6,ofGetScreenWidth()/2,ofGetScreenHeight()/2) );
+    }
+
     output->addRect( make_shared<ofRectangle>(
         paddingX + 4.2f/5.0f * paddedW,
         paddingY + ( float(4/6.0f) + 3*spacingYpct) * paddedH,
@@ -894,8 +911,6 @@ void MainController::makeVideoOutput(){
         1/6.0f * paddedH
     ) );
 
-    output2 = make_shared<VideoOutput>( );
-    output2->addRect( make_shared<ofRectangle>( ofGetScreenWidth()/2,ofGetScreenHeight()/6,ofGetScreenWidth()/2,ofGetScreenHeight()/2) );
     output2->addRect( make_shared<ofRectangle>(
         paddingX + 4.2f/5.0f * paddedW,
         paddingY + ( float(5/6.0f) + 3*spacingYpct) * paddedH,

@@ -65,12 +65,10 @@
             ofSetColor(255);
             float drawX,drawY,drawW,drawH;
             if(isMouseOn){
-                drawW = width*1.5f;
-                drawH = drawW/aspectRatio;
-                drawX = x - drawW/4;
-                drawY = y - (drawH)/4;
-
-
+                drawW = width * 2.5f;
+                drawH = drawW / aspectRatio;
+                drawX = x - drawW / 4;
+                drawY = y - drawH / 4;
             }
             else {
                 drawW = width;

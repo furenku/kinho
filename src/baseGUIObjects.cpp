@@ -170,7 +170,7 @@ shared_ptr<ofColor> Settings::getColor(int _index){
         }
 
         void kWidget::mouseMoved( ofMouseEventArgs & mouse ){
-            isMouseOn=inside(mouse.x,mouse.y);
+            isMouseOn = inside(mouse.x,mouse.y);
             mouseX=mouse.x;
             mouseY=mouse.y;
         }
@@ -1389,10 +1389,19 @@ shared_ptr<ofColor> Settings::getColor(int _index){
 
         void kRectView::draw(ofEventArgs & args) {
 
+            ofEnableAlphaBlending();
+                ofSetColor(70,70,70,80);
+                ofFill();
+                ofRect(x,y,width,height);
+                ofNoFill();
+            ofDisableAlphaBlending();
+
             drawString(label,x,y-currentFont->getLineHeight() );
             if(isMouseOn) color(1);
             else          color(0);
             ofRect(x,y,width,height);
+
+
         }
 
 

@@ -478,7 +478,7 @@ void Library::mouseReleased(ofMouseEventArgs & mouse) {
 
 
 
-WordSelect::WordSelect(){ orientation="vertical"; autoArrange="true"; spacingX=100; spacingY=30; }
+WordSelect::WordSelect(){ orientation="vertical"; autoArrange="true"; spacingX=80; spacingY=30; }
 WordSelect::~WordSelect(){
     for (int i=0; i<widgets.size(); i++)
     {
@@ -521,8 +521,16 @@ void WordSelect::clear(){
 
 void WordSelect::makeButton(string _str){
     btn = make_shared<kLabelButton>( );
-    btn->setLabel(_str);
-    btn->set(0,0,100,80);
+
+    string newString;
+
+    if( _str.length() <= 20 )
+        newString = _str;
+    else
+        newString = _str.substr(0,20);
+
+    btn->setLabel( newString );
+    btn->set(0,0,80,70);
     btn->setMode(TOGGLE_ON);
     addWidget(btn);
     ofAddListener(*btn->events.lookup("press"),this,&WordSelect::btnClicked);

@@ -295,7 +295,8 @@ class Dictionary {
         }
 
 
-        void MouseObject::mouseMoved( ofMouseEventArgs & mouse ){}
+        void MouseObject::mouseMoved( ofMouseEventArgs & mouse ){
+        }
         void MouseObject::mousePressed( ofMouseEventArgs & mouse ){
             mouseClick.set(mouse.x,mouse.y);
 
@@ -425,7 +426,7 @@ class Dictionary {
 
         bool DrawObject::inside (float px, float py){
             if(activeRange<1.0f){
-                //cout << "less than 1 <"<<activeRange << endl;
+                cout << "less than 1 <"<<activeRange << endl;
             }
             if( px > x+(width*(1-activeRange))/2 &&
                 py > y+(height*(1-activeRange))/2 &&
